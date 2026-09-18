@@ -5,29 +5,30 @@ slug: docs/platforms
 sidebar:
   label: Overview
   order: 0
-lastUpdated: 2026-09-15
+lastUpdated: 2026-09-18
 ---
 
 FilmOpen reaches AI models on several platforms. With your own key, you open an account with a platform, add money there, create an API key, and add the key in FilmOpen under **Settings → Provider keys**. FilmOpen then sends your requests to that platform, and the platform bills you directly, at its own prices.
 
-FilmOpen's first version works with three platforms: [OpenRouter](/docs/platforms/openrouter/) for writing and structured text, [fal](/docs/platforms/fal/) for images, video and voices, and [OpenAI](/docs/platforms/openai/) for live transcription. The others are listed here as pending, with what stands in their way.
+FilmOpen works with four platforms: [OpenRouter](/docs/platforms/openrouter/) for writing and structured text, [fal](/docs/platforms/fal/) for images, video and voices, and [OpenAI](/docs/platforms/openai/) and [xAI](/docs/platforms/xai/) for live transcription. The others are listed here as pending, with what stands in their way.
 
 :::note[Prices change]
-Every price and minimum on these pages was checked on 14 or 15 September 2026. Platforms change them often, so each platform's own page links to its current pricing. Where a table says **Not published**, the platform's own pages don't say.
+Every price and minimum on these pages was checked between 14 and 18 September 2026. Platforms change them often, so each platform's own page links to its current pricing. Where a table says **Not published**, the platform's own pages don't say.
 :::
 
 ## Supported now, and pending
 
-**Supported in the first version:**
+**Supported now:**
 - **OpenRouter:** every language model, for writing and structured text.
 - **fal:** images and video, and ElevenLabs' voices for now.
 - **OpenAI:** live transcription, as you dictate.
+- **xAI:** live transcription with Grok, a second engine beside OpenAI's at about a fifth of the price. You choose the engine in Settings.
 
 **Pending.** These platforms are described below, but FilmOpen doesn't take their keys yet:
 - **Anthropic, and Google's Gemini API:** their text models are reached through OpenRouter. Google's Veo and Nano Banana models are reached through fal.
 - **Google Cloud Vertex AI:** its credential is a Google Cloud project, not a key you paste.
 - **ElevenLabs:** its voices are reached through fal. Eleven Music waits for this platform, since nothing else reaches it.
-- **Deepgram:** a lower-cost live transcription to add later.
+- **Deepgram:** another lower-cost live transcription, to add later.
 - **Kling:** its API is sold in packages from $700; fal charges about the same per second, with no package.
 - **BytePlus:** Seedance 2.5 needs USD 30 of credits that can't be withdrawn, and BytePlus isn't offered in the United States.
 - **MiniMax:** its video model is reached through fal.
@@ -37,7 +38,7 @@ Every price and minimum on these pages was checked on 14 or 15 September 2026. P
 
 ## Directly from the maker, or through a marketplace
 
-- **Directly:** OpenAI, Anthropic, Google, ElevenLabs, Deepgram, MiniMax and LTX sell their own models.
+- **Directly:** OpenAI, xAI, Anthropic, Google, ElevenLabs, Deepgram, MiniMax and LTX sell their own models.
 - **Through a marketplace:** fal and Replicate offer many makers' image, video and voice models from one account; OpenRouter does the same for text and image models.
   - **Price:** a marketplace often charges the maker's price, but not always; the tables below show where they differ.
   - **Delay:** a marketplace adds one more service between FilmOpen and the model.
@@ -49,6 +50,7 @@ Every price and minimum on these pages was checked on 14 or 15 September 2026. P
 | OpenRouter | Every language model: writing (Claude Opus 5, GPT-5.6 Sol, Gemini 3.1 Pro) and structured text (Claude Sonnet 5, GPT-5.6 Terra, Gemini 3.8 Flash) | Prepaid credits, plus 5.5% (at least $0.80) when you buy them by card | $5 |
 | fal | Images and video from many makers, and ElevenLabs voices | Prepaid credits | Not published |
 | OpenAI | Live transcription (GPT-Live-Transcribe); also writing, structured text and images, not used in the first version | Prepaid credits | $5 |
+| xAI | Live transcription (grok-voice-transcribe-2.0); also writing, images and video, not used by FilmOpen | Prepaid credits, bought once; auto top-up is on at the first purchase unless you turn it off | $5 |
 | Anthropic | Writing (Claude Opus 5), structured text (Claude Sonnet 5) | Prepaid credits | Not published |
 | Google (Gemini API) | Writing (Gemini 3.1 Pro), structured text (Gemini 3.8 Flash), images (Nano Banana Pro, Nano Banana 2), video (Veo 3.1) | Prepaid by default, or billed monthly | $5 |
 | Replicate | Video (Kling 3.0, Seedance 2.5, MiniMax H3, Veo 3.1, LTX-2.5 Fast) and Z-Image-Turbo images | Prepaid credit | Not published |
@@ -68,6 +70,7 @@ Every price and minimum on these pages was checked on 14 or 15 September 2026. P
 | OpenRouter | A GitHub, Google or MetaMask account, or an e-mail address and a password | You must be 18 or over; signing up with Google asked for nothing else | No country list; some model providers exclude certain countries or regions |
 | fal | A GitHub, Google or Microsoft account, or single sign-on; there is no password sign-up | Not published; signing up with Google asked for no phone or identity check | No country list; its terms exclude places under US embargo |
 | OpenAI | An e-mail address, or a Google, Microsoft or Apple account | A phone code before your first key, not to sign up. It may also ask for organisation verification (a business check, an identity check with an ID, or both) before the image models | [Supported countries](https://developers.openai.com/api/docs/supported-countries) |
+| xAI | A Google, X, Apple or GitHub account, or an e-mail address | A code sent by e-mail, when you sign up with one; signing up asked for no phone or identity check | No country list |
 | Anthropic | A Google account, or a sign-in link sent by e-mail | Not published | [Supported countries](https://www.anthropic.com/supported-countries) |
 | Google (Gemini API) | A Google account | Billing details; in some countries, a tax ID | [Available regions](https://ai.google.dev/gemini-api/docs/available-regions) |
 | Replicate | A GitHub account | Not published | No country list; its terms exclude places under US embargo |
@@ -92,6 +95,7 @@ What you copy from each platform and paste into FilmOpen:
 | OpenRouter | A key starting `sk-or-v1-` | No | Yes: your first workspace's key, shown once during sign-up |
 | fal | A key with the API scope | No | No: a new account has no key until you add one |
 | OpenAI | A secret key, with an expiry you choose when you create it | No | Not published |
+| xAI | A key starting `xai-`, which you can limit to some models and endpoints and give an expiry | No | No: a new account has no key until you add one |
 | Anthropic | A key starting `sk-ant-`; choose one workspace for it when you create it | No | Not published |
 | Google (Gemini API) | An API key | Not published | Yes, a default key once you accept the terms |
 | Replicate | A token starting `r8_` | Not published | Yes, a default token |
@@ -169,6 +173,7 @@ Per second of video. Each row compares the same tier on every platform.
 | Eleven v3 | ElevenLabs: $0.10 per 1,000 characters, once a plan's monthly allowance is used | $0.10 per 1,000 characters |
 | Eleven Music v2.5 | ElevenLabs: $0.15 per minute, with a paid plan or a prepaid balance | — |
 | GPT-Live-Transcribe | OpenAI: $0.017 per minute | — |
+| grok-voice-transcribe-2.0 | xAI: $0.20 per hour while streaming, about $0.0033 per minute | — |
 | Nova-3 | Deepgram: $0.0048 per minute while streaming (promotional; $0.0077 regular) | — |
 
 ## Before you pay
@@ -176,12 +181,13 @@ Per second of video. Each row compares the same tier on every platform.
 - **Credits are usually prepaid and not refunded, and many expire.**
   - After a year: OpenAI, Anthropic, Google, fal, Replicate, LTX, and ElevenLabs' balance. OpenRouter may also expire credits after a year, and fal's promotional credits expire after 90 days.
   - Kling's packages last 180 days.
-  - Deepgram's credit does not expire.
+  - Deepgram's credit does not expire, and xAI's billing pages give no expiry date for its credit.
   - OpenRouter refunds unused credits if you ask within 24 hours of buying them.
 - **Extra charges.** Tax may be added at checkout, depending on where you live, and your card issuer may charge for purchases in US dollars.
-- **Check auto-recharge when you add money.** OpenAI turns it on by default at your first purchase, and Deepgram turns it on too, adding $100 when your credit falls to $10. OpenRouter offers it as an option when you buy credits, and ElevenLabs leaves it off; the others don't say.
+- **Check auto-recharge when you add money.** OpenAI turns it on by default at your first purchase. So does xAI, set to buy the amount of your first purchase again whenever your credit falls below $5, with no monthly cap until you set one. Deepgram turns it on too, adding $100 when your credit falls to $10. OpenRouter offers it as an option when you buy credits, and ElevenLabs leaves it off; the others don't say.
 - **Set a spending limit where you can:**
   - OpenAI: per organisation or project.
+  - xAI: a monthly maximum for auto top-up. Its per-key limits are on tokens and requests per minute, not on spending.
   - Anthropic: per organisation or workspace.
   - OpenRouter: per key.
   - ElevenLabs: per key, plus a monthly cap.
@@ -216,3 +222,6 @@ Read on 15 September 2026:
 - **OpenAI:** help centre, in a browser: [prepaid billing](https://help.openai.com/en/articles/8264644-how-can-i-set-up-prepaid-billing), [phone verification](https://help.openai.com/en/articles/8983040-what-does-phone-verification-look-like), [sign-in methods](https://help.openai.com/en/articles/4936824-can-i-change-how-i-log-into-my-account-authentication-method), [organisation verification](https://help.openai.com/en/articles/10910291-api-organization-verification); [changelog](https://developers.openai.com/api/docs/changelog)
 - **OpenRouter:** its sign-up page and first-run steps, while an account was opened; [terms](https://openrouter.ai/terms), read in a browser; [limits](https://openrouter.ai/docs/api_reference/limits); each model's endpoints, such as [Claude Opus 5's](https://openrouter.ai/api/v1/models/anthropic/claude-opus-5/endpoints)
 - **fal:** its sign-in page, dashboard, Settings menu and API Keys page, with the *New Key* window, while an account was opened and a key made; [terms](https://fal.ai/legal/terms-of-service), read in a browser; [accounts and identity](https://fal.ai/docs/documentation/setting-up/accounts-and-identity); [Nano Banana 2](https://fal.ai/models/fal-ai/nano-banana-2)
+
+Read on 18 September 2026:
+- **xAI:** its sign-up page, console, Billing page and API keys page, while an account was opened, credit bought and a key made; [pricing](https://docs.x.ai/developers/pricing), [billing](https://docs.x.ai/console/billing), [billing FAQ](https://docs.x.ai/docs/resources/faq-api/billing), [rate limits and tiers](https://docs.x.ai/developers/rate-limits), [speech to text](https://docs.x.ai/developers/model-capabilities/audio/speech-to-text), [regional endpoints](https://docs.x.ai/developers/regions); [enterprise terms](https://x.ai/legal/terms-of-service-enterprise), read in a browser
