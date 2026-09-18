@@ -1,0 +1,49 @@
+{
+  "name": "filmopen-docs",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "The FilmOpen documentation site: the specifications as snapshots, the platform guides and the plug-in author's guide",
+  "license": "(MIT AND CC-BY-4.0)",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "import": "node scripts/import.ts",
+    "snapshot:verify": "node scripts/verify-snapshot.ts",
+    "generate": "node scripts/generate.ts",
+    "predev": "npm run generate",
+    "dev": "astro dev",
+    "prebuild": "npm run check:config && npm run snapshot:verify && npm run generate",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "npm run check:config && npm run snapshot:verify && npm run generate && npm run check:types && npm run lint",
+    "check:config": "node scripts/check-config.ts",
+    "check:types": "astro check && tsc --noEmit",
+    "lint": "eslint .",
+    "pretest": "npm run build",
+    "test": "vitest run",
+    "deploy:dev": "scripts/deploy.sh dev"
+  },
+  "dependencies": {
+    "@astrojs/starlight": "0.42.2",
+    "astro": "7.3.3",
+    "sharp": "0.35.4"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.10",
+    "@eslint/js": "10.0.1",
+    "@types/node": "24.13.5",
+    "eslint": "10.10.0",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.70.0",
+    "vitest": "4.1.11",
+    "wrangler": "4.134.0"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true,
+    "esbuild@0.28.1": true,
+    "workerd@1.20260917.1": true,
+    "sharp@0.35.4": true
+  }
+}

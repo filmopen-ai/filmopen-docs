@@ -1,0 +1,11 @@
+# The documentation is public and static; these hold for every page.
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+# The development site is public too, since the documentation is (the plan's
+# D6) — and is not what a search engine should offer anyone.
+https://docs.dev.filmopen.ai/*
+  X-Robots-Tag: noindex

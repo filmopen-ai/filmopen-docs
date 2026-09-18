@@ -1,0 +1,36 @@
+# The check that runs on every pull request, and that a maintainer looks for
+# before merging one — GitHub does not yet *require* it: no branch rule here
+# names a status check. It holds the configuration to what it must be and the
+# snapshot to its manifest, then the types, the lint, the site built, and the
+# tests over what was built.
+#
+# It needs no secret and has none: a pull request from a fork runs exactly
+# this, with read access to the repository and nothing else.
+name: check
+
+on:
+  pull_request:
+    branches: [dev, main]
+  push:
+    branches: [dev, main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npm test

@@ -4,5 +4,17 @@ dist/
 .wrangler/
 .env
 .env.*
+.dev.vars
+.dev.vars.*
+*.tsbuildinfo
 npm-debug.log*
 .DS_Store
+
+# Written by scripts/generate.ts from the snapshot, before every dev, check
+# and build, and never committed: snapshot/files/ is the truth, and these are
+# derived from it. test/manifest.spec.ts holds this list to placement.ts.
+src/content/docs/docs/specifications/project.md
+src/content/docs/docs/specifications/software.md
+src/content/docs/docs/specifications/mcp.md
+src/content/docs/docs/guides/plugins.md
+src/content/docs/docs/platforms/
