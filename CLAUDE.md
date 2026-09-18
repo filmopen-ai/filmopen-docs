@@ -62,7 +62,7 @@ author's guide are **copies**, and the rule is simple: **nothing under
 `snapshot/` is ever edited, added or removed by hand.**
 
 - **What is public is decided in the application's repository**, in its
-  `docs/publish.json`. `npm run import -- --source ../filmopen` copies exactly
+  `docs/publish.json`. `npm run import -- --source ../filmopen-publish` copies exactly
   what that names and **refuses** anything else — a path given to it that the
   manifest does not name, a never-published document whatever names it
   (`src/snapshot/publish.ts`), a symbolic link or a submodule, a file that is
@@ -81,7 +81,7 @@ author's guide are **copies**, and the rule is simple: **nothing under
   untracked file or an ignored one cannot reach a public site.
 - **`npm run snapshot:verify`** holds every copy to its SHA-256 in
   `snapshot/manifest.json`, in every build and in the pull-request check; with
-  `-- --source ../filmopen` it also holds them to the commit they name, which
+  `-- --source ../filmopen-publish` it also holds them to the commit they name, which
   is what *byte for byte* means, **and to `publish.json`, at that commit and
   at the checkout's `HEAD`**: bytes that match a private document are still a
   private document, and the commit a manifest names is a claim in a file
@@ -117,8 +117,8 @@ npm run dev                    # the site at http://localhost:4321
 npm run check                  # check:config, snapshot:verify, generate, astro check, tsc, eslint
 npm test                       # builds the site, then vitest over the code and the build
 npm run build                  # what Cloudflare runs
-npm run import -- --source ../filmopen            # a new snapshot
-npm run snapshot:verify -- --source ../filmopen   # the copies against their commit
+npm run import -- --source ../filmopen-publish    # a new snapshot
+npm run snapshot:verify -- --source ../filmopen-publish   # the copies against their commit
 scripts/deploy.sh dev          # rarely: see §6
 ```
 

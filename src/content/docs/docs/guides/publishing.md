@@ -58,7 +58,13 @@ Put them in a folder of their own under `src/content/docs/docs/guides/`, named a
    git switch -c my-page upstream/dev
    ```
 
-   Start every change on a branch of its own, made from `upstream/dev` as it is that day. If `dev` moves on while you work, `git fetch upstream` and `git merge upstream/dev` bring your branch up to date, without rewriting what you have already pushed to your fork.
+   Start every change on a branch of its own, made from `upstream/dev` as it is that day, and push it to your fork, not to FilmOpen's repository:
+
+   ```bash
+   git push -u origin my-page
+   ```
+
+   Then open the pull request from that branch. If `dev` moves on while you work, `git fetch upstream` and `git merge upstream/dev` bring your branch up to date, without rewriting what you have already pushed to your fork.
 2. **Install Node 24** (the version in `.node-version`, which is what the site is built with), then the site's packages:
 
    ```bash
@@ -135,7 +141,7 @@ This is the maintainers' part: a copy can only come from FilmOpen's repository, 
 
 The [xAI (Grok) guide](/docs/platforms/xai/) was added on 18 September 2026 this way:
 1. **An account, step by step.** A new xAI account was opened in a browser, and each page was pictured as it came: sign-up, the team, buying credit (with auto top-up, which is on by default), and creating the key. Each picture was cropped to its step, and the button outlined in red. The key was blacked out on the page before its picture was taken, and the full-screen captures were deleted once cropped. The owner signed in, paid and copied the key; nothing private went through the person taking the pictures.
-2. **FilmOpen's side.** A development build was started without a screen, through its MCP server. Its Provider keys card was pictured with a stand-in value, and so was *Key was accepted*. The owner then saved the real key in their own FilmOpen and dictated with it, to be sure the steps worked.
+2. **FilmOpen's side.** A development build was started without a screen, through its MCP server. Its Provider keys card was pictured with a stand-in value, and so was *Key was accepted*. The owner then saved the real key in their own FilmOpen, and xAI accepted it, to be sure the steps worked.
 3. **Facts, from their sources.** What $5 and $50 buy, whether they are subscriptions (they aren't) and what auto top-up does were checked against xAI's billing pages, and each claim in the guide links to the page it came from.
-4. **Written where it is kept.** The guide went into FilmOpen's repository as `docs/platforms/xai.md` with 14 pictures, beside its [technical notes](/docs/platforms/xai-notes/), and the overview of platforms was updated with it. FilmOpen's file for xAI names the guide, which gives the xAI card its *How to get a key* button.
+4. **Written where it is kept.** The guide went into FilmOpen's repository as `docs/platforms/xai.md` with 14 pictures, beside its [technical notes](/docs/platforms/xai-notes/), and the overview of platforms was updated with it. Naming the guide in FilmOpen's own file for xAI is what gives the xAI card its *How to get a key* button.
 5. **Imported, checked, reviewed, pushed.** The import copied them here at that commit, `npm run check` and `npm test` passed, a separate review read every page and looked at every picture, and what it found was fixed before the push to `dev`.
