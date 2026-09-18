@@ -1,0 +1,17 @@
+{
+  "extends": "astro/tsconfigs/strict",
+  "compilerOptions": {
+    // Astro's preset gives strict mode, `noEmit`, ESNext modules and `.ts`
+    // import extensions — which is what lets `node scripts/*.ts` run the same
+    // modules the tests do, with no build step.
+    "types": ["node"],
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
+  },
+  "include": [".astro/types.d.ts", "**/*.ts", "**/*.astro", "**/*.mjs", "**/*.js"],
+  "exclude": ["dist", "node_modules", ".wrangler"]
+}

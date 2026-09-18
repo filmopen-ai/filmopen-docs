@@ -1,0 +1,34 @@
+{
+  // The documentation site: static files and nothing else, one Worker per
+  // branch. `dev` builds to docs.dev.filmopen.ai and `main` to
+  // docs.filmopen.ai, each by its own Git connection in Workers Builds; both
+  // are public, as the documentation is.
+  //
+  // There is no script, no binding, no variable and no build command here, and
+  // `npm run check:config` holds this file to exactly that: it is compared,
+  // whole, with `src/config/site.ts`. Anything added here fails the build —
+  // in a repository that takes pull requests from anyone, a quiet line in
+  // this file is how a deploy comes to run somebody else's command.
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "filmopen-docs",
+  "compatibility_date": "2026-09-17",
+  "assets": {
+    "directory": "./dist",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  },
+  "env": {
+    "dev": {
+      "name": "filmopen-docs-dev",
+      "routes": [{ "pattern": "docs.dev.filmopen.ai", "custom_domain": true }],
+      "workers_dev": false,
+      "preview_urls": false
+    },
+    "production": {
+      "name": "filmopen-docs-production",
+      "routes": [{ "pattern": "docs.filmopen.ai", "custom_domain": true }],
+      "workers_dev": false,
+      "preview_urls": false
+    }
+  }
+}

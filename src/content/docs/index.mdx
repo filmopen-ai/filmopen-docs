@@ -1,0 +1,40 @@
+---
+title: FilmOpen documentation
+description: Guides to FilmOpen, the AI platforms it works with, and the specifications of its file format, its software and its agent layer.
+template: splash
+editUrl: https://github.com/filmopen-ai/filmopen-docs/edit/dev/src/content/docs/index.mdx
+hero:
+  tagline: FilmOpen describes a film as plain text — its script, its shots, its cast, its prompts — and the app reads, browses and generates from it. This is where that is written down.
+  actions:
+    - text: Start with the guides
+      link: /docs/guides/account/
+      icon: right-arrow
+    - text: Read the file format
+      link: /docs/specifications/project/
+      variant: minimal
+---
+
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+<CardGrid>
+  <LinkCard
+    title="Guides"
+    description="Your FilmOpen account, and how to write a plug-in for the app."
+    href="/docs/guides/account/"
+  />
+  <LinkCard
+    title="AI platforms and API keys"
+    description="The platforms FilmOpen works with, what their models cost, and how to get a key for each."
+    href="/docs/platforms/"
+  />
+  <LinkCard
+    title="Specifications"
+    description="The project format, the software and the agent layer, each as its authors maintain it."
+    href="/docs/specifications/"
+  />
+  <LinkCard
+    title="Contribute"
+    description="The documentation is a public repository. A correction or a new guide is a pull request."
+    href="https://github.com/filmopen-ai/filmopen-docs/blob/dev/CONTRIBUTING.md"
+  />
+</CardGrid>
