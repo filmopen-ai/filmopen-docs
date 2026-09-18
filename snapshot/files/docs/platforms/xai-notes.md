@@ -41,7 +41,7 @@ These notes gather what xAI documents about its API, for anyone comparing platfo
 ## Calling the API
 
 - **Base URL and header:** `https://api.x.ai/v1`, with `Authorization: Bearer <key>` ([quickstart](https://docs.x.ai/developers/quickstart)).
-- **Regional hosts:** `us.api.x.ai` handles requests in the United States, and serves none of the image, video or voice APIs. `eu-west-1.api.x.ai` is for requests from Europe. The global host routes to every model a team has ([regional endpoints](https://docs.x.ai/developers/regions)).
+- **Regional hosts:** `us.api.x.ai` handles requests in the United States, and serves none of the image, video or voice APIs; the global host, `api.x.ai`, is the one for voice ([regional endpoints](https://docs.x.ai/developers/regions)).
 - **Keys in a browser:** xAI's voice pages say never to put a key in client-side code, and to reach the WebSocket through your own server ([speech to text](https://docs.x.ai/developers/model-capabilities/audio/speech-to-text)). FilmOpen's desktop app sends your own key from the operating system's credential store, as it does OpenAI's.
 - **Rate limits:** by tier, which rises with what a team has paid xAI since 1 January 2026 and never goes down: Tier 1 from $50, Tier 2 from $250, Tier 3 from $1,000, Tier 4 from $5,000. Voice endpoints are limited by requests per second and sessions at once: speech to text allows 10 requests a second, and 100 sessions at Tier 0 or 200 at Tier 1 ([rate limits](https://docs.x.ai/developers/rate-limits)).
 - **SDKs:** there is none for Dart, so FilmOpen speaks the WebSocket directly.
