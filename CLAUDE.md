@@ -144,7 +144,7 @@ branches off. **Deploying is pushing**, so:
   nothing more, by the owner's decision of 18 September 2026 — the required
   review of a code owner is switched on the day the first outside pull request
   arrives, and from then on a session delivers through pull requests too;
-- never force-push, never rewrite a pushed commit, never delete a branch.
+- never force-push, never rewrite a pushed commit, never delete an unmerged branch or a branch on the remote: a merged branch becomes an `archive/` tag (§7).
 
 **`wrangler.jsonc` is held to `src/config/site.ts`, whole**: parsed, it must
 *equal* the expected object — no script, no binding, no variable, no `build`
@@ -204,11 +204,21 @@ website repository's. **The coder designs** what a page says and how it is
 laid out; the style and the messaging are reviewed once, in the website's
 milestone 1.6, over the pages as built.
 
+### Milestones, branches and worktrees
+
+The owner's rules of 20 September 2026, the same in the four repositories that stand side by side on a development machine — `filmopen-app`, `filmopen-web`, `filmopen-docs`, `filmopen-plugins`:
+
+- **A milestone's number is written with a hyphen**: 1-2, 1-10. Its plan and its note are the website repository's `docs/FilmOpen-Milestone <n> Plan.md` and `… Results.md`.
+- **Work on a milestone starts by making its branch and its worktree, both named `filmopen-docs-milestone-<n>`, beside the checkout**: told to work on milestone 1-3, from the checkout on `dev`, `git worktree add ../filmopen-docs-milestone-1-3 -b filmopen-docs-milestone-1-3 dev`, and everything of the milestone happens there. Where the worktree exists the milestone is open: continue in it. A track opened before 20 September keeps its branch and its worktree until it is merged.
+- **What is still to be done is written in the website repository's `docs/FilmOpen-Open items.md`, never only in a note**: a gap, a defect left, a question for the owner, a proposal, a change proposed for this file, each under the milestone that raised it, as it arises, and struck in the change that settles it. A note says what was built and why; it is archived at the merge, and what is archived is not read again.
+- **A milestone is merged into `dev` only when the owner says so.** Before the merge, on the milestone's branch: check that everything the milestone leaves to be done is in the open-items file, then `git mv` its plan, its note and any other document of its own into the website repository's `docs/archive/` and commit, so that its `docs/` holds active work only. The merge: from the checkout on `dev`, `git merge --no-ff`, then `npm run check` and `npm test` on the merged tree, then the commit; `dev` is pushed as §5 says, and `main` still takes a pull request the owner merges.
+- **After the merge the branch becomes a tag and its worktree goes**: `git tag -a archive/<branch> <branch> -m "<branch>: <what it did>. Merged into dev at <short sha>, <date>."`, then `git worktree remove ../<branch>` and `git branch -d <branch>`; `git switch -c <branch> archive/<branch>` brings one back. Never force either: a worktree that is not clean, or a branch git will not delete, is left and named in the report. Never delete an unmerged branch, and never delete a branch on the remote or push a tag unless the owner says so.
+
 ## 8 Hard stops
 
 Stop and ask the owner: anything that would make a **private document public**
 — a new entry in the application's `publish.json` is the owner's; a key, a
 token, an e-mail address or an address of ours in a page, a picture, a test or
-a commit; moving or removing an address the app opens; deleting a Worker, a
-branch or a DNS record; a change to the branch rules; a sign-in or an account
+a commit; moving or removing an address the app opens; deleting a Worker, a DNS
+record, or a branch that is unmerged or on the remote; a change to the branch rules; a sign-in or an account
 creation by a session; and merging anything into `main`.
