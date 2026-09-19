@@ -1,6 +1,6 @@
 {
   "about": "Copies of the application's public documents, byte for byte from one commit of its repository. Written by scripts/import.ts and never by hand; checked by scripts/verify-snapshot.ts. To change a document, change it there and import again.",
-  "source": {"commit":"e600684c7dbba83f63d5596c29f8d978b932ff1b","committedAt":"2026-09-18T16:10:41+02:00"},
+  "source": {"commit":"556c09840363f93fb9b8f7a713ebc72cf658b2a4","committedAt":"2026-09-18T15:28:13-03:00"},
   "importedOn": "2026-09-18",
   "files": [
     {"path":"docs/FilmOpen-MCP Specification v1.0.md","sha256":"77f50cd68b57e2eba73cdc315824b606571a11eebdead4f8768db768b2986204","bytes":73341,"version":"1.5"},
@@ -14,7 +14,7 @@
     {"path":"docs/platforms/fal/key-2.png","sha256":"c784a31526d27f769dad262bcce74a4ba8ecd3d36451cce5c3de66dec0a46093","bytes":37079},
     {"path":"docs/platforms/fal/key-3.png","sha256":"a1f3d2acc9acee0f4fd41adb6708e7b7edca16b4064ef49e7abaae0ae0d6badc","bytes":38052},
     {"path":"docs/platforms/fal/sign-up-1.png","sha256":"4a0309561ca303d380942a85d94202e5e6b8a3da2362f7cc08640244732eb4cd","bytes":53746},
-    {"path":"docs/platforms/index.md","sha256":"590deefa3ee63bc0ac096e7f260a76020be89f398c4a1d0f3a0b70a0b97adac0","bytes":20774},
+    {"path":"docs/platforms/index.md","sha256":"47233d5ed4631f02ffb53e003ff9da406680fc2e46db655292b00208d7affd4c","bytes":22515},
     {"path":"docs/platforms/openai-notes.md","sha256":"cef78d25c4e9f83e0a9c057848d8db7516811388c7c3777adde14116556b8d52","bytes":21021},
     {"path":"docs/platforms/openai.md","sha256":"b1ca562222c5c37af02cdf211be1bae82d54d828567b10defc636af0ceaac14b","bytes":15356},
     {"path":"docs/platforms/openai/add-key-1.png","sha256":"949feb75a00b7b58915d9ea15b66b79dfcdcf69dcdf9efb20f088e36e3fc54e7","bytes":10898},
@@ -36,6 +36,22 @@
     {"path":"docs/platforms/openrouter/sign-up-1.png","sha256":"ceb942dffc39d21cbb1b5a4a985523bf516bfde0b362c1c34054ec1bf8d3b59d","bytes":40760},
     {"path":"docs/platforms/openrouter/sign-up-2.png","sha256":"0028f1b7431af5b76eb6bed892bb2840be09d8a3eb1e45964411ffe6545a476e","bytes":36526},
     {"path":"docs/platforms/openrouter/sign-up-3.png","sha256":"43466ccafed17f833cfa419af7c9ff3007c0c10af666fb1c3245053bc5103d22","bytes":80563},
+    {"path":"docs/platforms/xai-notes.md","sha256":"b12501ca9f267d666cb9c064068298887f7863315b6ce7557490a43adc9da1f6","bytes":10919},
+    {"path":"docs/platforms/xai.md","sha256":"f9a7a6e0a72adf111adf2544b19c5be5f36400e2a0bc48806f0225a9b9795016","bytes":14384},
+    {"path":"docs/platforms/xai/add-key-1.png","sha256":"0833057d5321b3ac44050b96be4a5520f3dcfb209fb755dd019bd4465bbd9705","bytes":22661},
+    {"path":"docs/platforms/xai/add-key-2.png","sha256":"1f2c755569b47e2203ed2bba3678f3c718161f62b0a8927b0ee9bd58dbad0392","bytes":28968},
+    {"path":"docs/platforms/xai/add-key-3.png","sha256":"5a7764d7073ecea0b09823ea12cebb32527c5fa4219b9b6796a2c568532237bc","bytes":56258},
+    {"path":"docs/platforms/xai/key-1.png","sha256":"9b9b2298e4c4cc0a900442bf8ffb16fa5f559fdb38b171d9ee7043277faa9c70","bytes":24328},
+    {"path":"docs/platforms/xai/key-2.png","sha256":"ba496cb39793a87afb7c591ac87899edfcdbb22f83f8151bb839762fcf53137d","bytes":39467},
+    {"path":"docs/platforms/xai/key-3.png","sha256":"8c334cc8907605b05bad9b1b67f41cc4a56d51c2907fa60700fa9e93500d2669","bytes":33665},
+    {"path":"docs/platforms/xai/key-4.png","sha256":"806907887408ef220dfe2bc3fbbde2a6d6e1342377d0d4aed52cd2257a21c076","bytes":10332},
+    {"path":"docs/platforms/xai/money-1.png","sha256":"241f618ce884b1a0c35d8acb24baea28f760bed9ddf2e0dc9838b3e3eeb7d5e2","bytes":73617},
+    {"path":"docs/platforms/xai/money-2.png","sha256":"f87ec8499f1b678dd45fe8963d0f0e6d905c7d0fcba67bfdaa8a2696715ea3a6","bytes":86461},
+    {"path":"docs/platforms/xai/money-3.png","sha256":"018897c35db4d0c3d0a1a369ff11b03c19fd13372ef12b8173e27e726d741146","bytes":61672},
+    {"path":"docs/platforms/xai/money-4.png","sha256":"d78c6c2654567c0085eb4c9c62d2eb95d89c2dad385e583566dc3e812b9bd100","bytes":33239},
+    {"path":"docs/platforms/xai/money-5.png","sha256":"3b67a670d05702b4b216fd59776c436622b565f6340f85df5a07e7cfbc4e0732","bytes":57196},
+    {"path":"docs/platforms/xai/sign-up-1.png","sha256":"d2f9fe49b120a3f0529dca053f111a33c2ccaa4856d5dc452b0d1379521c03aa","bytes":59827},
+    {"path":"docs/platforms/xai/sign-up-2.png","sha256":"80c443a2534a73d2e0a653b7952810e51e52e86bc0daddc110b95fc8d31ad1ab","bytes":41143},
     {"path":"plugins/README.md","sha256":"9ae096f5e2904ec64e13ec36a9f7aa214b030659aaf899933fd2b4808f6b39a4","bytes":12917}
   ]
 }
