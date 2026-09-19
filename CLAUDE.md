@@ -144,7 +144,25 @@ branches off. **Deploying is pushing**, so:
   nothing more, by the owner's decision of 18 September 2026 — the required
   review of a code owner is switched on the day the first outside pull request
   arrives, and from then on a session delivers through pull requests too;
-- never force-push, never rewrite a pushed commit, never delete a branch.
+- never force-push, never rewrite a pushed commit, never delete a branch on
+  GitHub;
+- **a local branch merged into `dev` or `main` is archived as a tag**, so the
+  branch pickers list only live work while the graph keeps the record. After
+  every merge into `dev` or `main`, from the checkout on that branch (the
+  target), for the branch just merged and any other local branch whose tip a
+  merge brought into the target — `git merge-base --is-ancestor <branch>
+  <target>` holds and the tip is not on `git rev-list --first-parent
+  <target>`, which a branch made from the target and not yet worked on is —
+  and never `dev` or `main` themselves:
+  `git tag -a archive/<branch> <branch> -m "<branch>: <what it did, from its
+  closing commit's first line>. Merged into <target> at <short sha of the
+  target>, <date>."`, then `git branch -d <branch>`;
+  `git switch -c <branch> archive/<branch>` brings one back.
+  A branch checked out in a worktree is left as it is: never remove a
+  worktree, name the branch in the report, and it is archived at a later
+  merge once the owner has removed the worktree. Never delete an unmerged
+  branch; the tags stay local and the branch on GitHub stays, the owner's to
+  push or delete.
 
 **`wrangler.jsonc` is held to `src/config/site.ts`, whole**: parsed, it must
 *equal* the expected object — no script, no binding, no variable, no `build`
