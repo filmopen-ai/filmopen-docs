@@ -1,71 +1,102 @@
 ---
-title: "fo-cui-zimage: the Z-Image workflow adapter"
-description: "A planning draft of fo-cui-zimage, the proposed FilmOpen plug-in that presents Z-Image text-to-image through fo-cui: its inputs, workflow assets, dependencies, stacks and test results."
+title: "fo-cui-zimage: Z-Image Turbo"
+description: "Render a character image with the pinned Z-Image Turbo INT8 workflow through FilmOpen and ComfyUI."
 editUrl: https://github.com/filmopen-ai/filmopen-docs/edit/dev/src/content/docs/docs/guides/fo-cui-zimage/index.md
 sidebar:
-  label: fo-cui-zimage (planning draft)
+  label: fo-cui-zimage
   order: 1
 ---
 
-Status: successful local experiments and implementation plan, 20 September 2026. This is not yet a packaged FilmOpen plugin. The agreed target is API 1, revision 1, with host integration still in development.
+The first JavaScript package is implemented for FilmOpen API 1/revision 1.
+It makes one PNG from text using a pinned Z-Image Turbo INT8 workflow. App
+5-2b and the permanent Render UI remain app-agent work; the current actual-app
+proof uses a temporary character button on a disposable integration branch.
 
-The proposed plugin presents a text-to-image operation, chooses a compatible Z-Image stack, validates input, prepares a versioned official workflow and calls `fo-cui`. Users supply a prompt and resolution; the stack selects model files and sampling defaults.
+## Preparation
 
-## Input contract
+Enable and allow both fo-cui and fo-cui-zimage. Configure the running ComfyUI
+server in fo-cui. This adapter owns no separate server address or key.
 
-The experiment includes a JSON Schema 2020-12 file with these fields:
-
-| Field | Required | Experiment rules |
-|---|---|---|
-| `prompt` | Yes | Nonempty text |
-| `width` | Yes | Integer, 256–1024, multiple of 16 |
-| `height` | Yes | Integer, 256–1024, multiple of 16 |
-| `seed` | No | Nonnegative JavaScript-safe integer; default 42 |
-| `steps` | No | Integer 1–20; default 8 |
-
-These are conservative experiment limits, not a declaration of every resolution the model can generate. Unknown fields are rejected. Final ranges and defaults belong to the selected stack and operation schema. Seed, prompt and workflow/model versions are recorded with results.
-
-The planned **FilmOpen interface differs from this research input**: it receives the catalogue model ID, prompt, named inputs, `params.resolution`, `params.steps`, and a separate top-level seed supplied by the host. Valid seeds, including zero, are preserved in the range 0–4294967295. Normal app acceptance initially targets one PNG at 1024×1024 and eight steps, which is both tested and present in the current catalogue. Smaller research presets and additional formats are not automatically supported app options; provider/stack constraints must be respected.
-
-## Workflow assets
-
-The stock official Z-Image Turbo and INT8 workflows already expose native subgraph ports for prompt, width, height, seed and steps. Additional ports select diffusion, text-encoder and VAE files. The original templates did not select inputs/outputs for App Mode.
-
-The planning package retains both original templates, the executable API graph produced by ComfyUI's frontend, and an adapted INT8 workflow with native App Mode metadata. The adapted workflow displays the five user controls and SaveImage output without third-party nodes. A separate JSON Schema states which values FilmOpen requires from callers.
-
-Bindings are generated from native boundary links and checked against the exported API graph. Render code sets semantic inputs through those mappings. Graph hashes and class/input checks reject unreviewed workflow changes. This avoids fixed widget-array positions and JSON string replacement; upstream changes still require compatibility review and regenerated bindings.
-
-## INT8 dependencies
+Install these files at the roots of their ComfyUI categories:
 
 | Category | File | Bytes |
 |---|---|---:|
-| `diffusion_models` | `z_image_turbo_int8_convrot.safetensors` | 6,201,001,296 |
-| `text_encoders` | `qwen_3_4b_fp8_mixed.safetensors` | 5,631,994,051 |
-| `vae` | `ae.safetensors` | 335,304,388 |
+| diffusion_models | z_image_turbo_int8_convrot.safetensors | 6,201,001,296 |
+| text_encoders | qwen_3_4b_fp8_mixed.safetensors | 5,631,994,051 |
+| vae | ae.safetensors | 335,304,388 |
 
-The experiment downloaded and SHA-256 verified these files from official revision `08d04455279082882deaabc8d0d09fc914c071e1`. The package's model manifest carries exact URLs and hashes. Weights are external dependencies, not bundled workflow assets. Workflow licensing and model licensing are separate.
+The package's assets/models.json pins URLs and hashes at revision
+08d04455279082882deaabc8d0d09fc914c071e1. The prepared test server's files were
+downloaded and SHA-256 verified separately. Runtime status checks filenames,
+node availability and loader selections; it cannot rehash remote weights.
+Missing, nested-only or ambiguous filenames are refused. No automatic model
+download is provided.
 
-## Proposed stacks
+The first supported stack requires CUDA with approximately 8 GB or more VRAM.
+Tests use an RTX 4060 laptop; this is not a minimum-memory guarantee across
+machines. There is no automatic fallback after OOM.
 
-| Label | Workflow / default | Evidence |
-|---|---|---|
-| 8GB VRAM fast | INT8 Turbo, 512×512, 8 steps | JavaScript render passed on an RTX 4060 laptop |
-| 8GB VRAM quality | INT8 Turbo, 1024×1024, 8 steps | Native template render passed; larger-resolution preset, not a measured quality ranking |
-| 24GB VRAM fast | INT8 Turbo, 1024×1024, 8 steps | Candidate; 24 GB hardware not tested |
-| 24GB VRAM quality | Official BF16 Turbo workflow, 1024×1024 | Candidate; dependencies/export/benchmark still required |
+## Input
 
-The stack array is a planning proposal. “8GB” does not specify a tested minimum RAM/VRAM envelope, and “quality” does not imply a proven superiority of one precision mode. Do not silently substitute a different stack after OOM.
+```json
+{
+  "model": "t2i-z-image-turbo",
+  "prompt": "woman in a hat",
+  "inputs": {},
+  "params": { "resolution": "1024x1024", "steps": 8 },
+  "seed": 0
+}
+```
 
-## Test results
+The host supplies the seed, preserving a caller's integer from 0 through
+4294967295. This includes zero. Prompt is nonempty text up to 16000 characters.
+The stack accepts text only; reference images and negative prompts are not
+supported.
 
-On ComfyUI 0.36.0 with frontend 1.53.6 and template package 0.11.62, the native 1024×1024 run succeeded. Two independent JavaScript requests succeeded at 512×512 and 768×512, taking approximately 24 and 30 seconds end to end. The second prompt contained quotes and a newline. Both downloaded PNGs matched the requested dimensions and were visually inspected. A native App Mode run also succeeded at 512×1024.
+The plugin permits 512×512, 768×512, 512×1024 and 1024×1024, always eight steps,
+one PNG. Normal app acceptance uses 1024×1024, the current catalogue/stack
+intersection. Smaller presets are development options until the app filters
+capabilities. num_images must be 1 and output_format must be png when supplied.
+Unsupported parameters fail before submission.
 
-The JavaScript tests exercised handshake, model preflight, submission, WebSocket progress, history reconciliation and HTTP output retrieval. Additional tests covered image/WAV transfer, nested image loading, invalid graph rejection and local input validation. These are smoke tests on one machine, not performance guarantees.
+## The character image
 
-## Next phase
+The temporary app button reads the character's positive prompt and calls the
+normal host dispatcher. The plugin binds typed values onto a freshly parsed
+graph, submits through fo-cui and returns one final descriptor. FilmOpen
+downloads it through its media importer, creates the thumbnail/batch and adds
+the reference just as for an uploaded image. The first image supplies preview
+when absent; later renders create new takes.
 
-Implement the QuickJS package against the reviewed contract, then verify it through the actual app: choose a character, prepare the render through the shared host path, and save the returned image as a take with seed/model/parameter/stack provenance. Existing Node renders and developer-panel arithmetic calls do not establish that complete integration. Recovery/cancellation and hardware-matrix tests follow. Qwen, LTX and MiniMax adapters need their own operation schemas, frame constraints, dependencies and evidence.
+The batch records model, platform, prompt, parameters, seed, inputs, stack,
+source character and output hash/bytes. The current integration proof checks
+seeds 0, 0 and 1 and reopening the project. Repeated pixels on the pinned
+same-machine stack do not promise byte identity across hardware or versions.
 
-The future sharing contract should make this model's render operation eligible for sharing while keeping ComfyUI's internal operations private. Eligibility will not enable sharing: the owner chooses devices/audience, availability and price in the app. Relay transfers, verification and credits belong to the host/service; local execution's zero external API charge is separate from a public provider's per-image price. This is planned behavior, not a sharing feature available in the current package.
+See the plugin repository's
+[milestone 1-1 results](https://github.com/filmopen-ai/filmopen-plugins/blob/filmopen-plugins-milestone-1-1/docs/FilmOpen-Milestone%201-1%20Results.md)
+for actual acceptance and limitations. Permanent app contract validation must
+be tested again after 5-2b lands.
 
-Sources: [official templates](https://github.com/Comfy-Org/workflow_templates), [official App Mode](https://docs.comfy.org/interface/app-mode), [pinned Z-Image model files](https://huggingface.co/Comfy-Org/z_image_turbo/tree/08d04455279082882deaabc8d0d09fc914c071e1).
+## Workflow and future capabilities
+
+Assets retain official UI templates, the native exported API graph, a native
+App Mode variant, bindings, hashes and attribution. Each render verifies graph
+bytes and binding node classes/fields. inputs.schema.json is the earlier
+research input schema; use the production request above for the plugin.
+
+The 8 GB INT8 fast/quality IDs refer to smaller/native resolution presets,
+not measured precision-quality rankings. 24 GB/BF16 entries are candidates and
+are not selected by the implementation. Model weights are not bundled;
+workflow and model licenses are separate.
+
+Local estimateCost is zero external API charge. It does not determine a public
+sharing price. x.sharingProposal marks only this model's render as a future
+candidate, disabled by default; it enables no sharing. App/web will own audience,
+availability, image-unit pricing, job storage, meaningful-output verification
+and credits. ComfyUI's internal operations stay private. Durable jobs,
+targeted cancellation and media-input models follow later milestones.
+
+Sources: [official templates](https://github.com/Comfy-Org/workflow_templates),
+[official App Mode](https://docs.comfy.org/interface/app-mode),
+[pinned model files](https://huggingface.co/Comfy-Org/z_image_turbo/tree/08d04455279082882deaabc8d0d09fc914c071e1).
