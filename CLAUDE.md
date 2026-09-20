@@ -27,6 +27,9 @@ src/content/docs/         the pages written here; a file's place is its address
   index.mdx               /                 the landing page
   404.md                  the page for an address that names nothing
   docs/                   /docs/…           everything else — see §2
+  docs/guides/            the guides written here — and **a plug-in's own pages, in
+                          a folder named after the plug-in** (`guides/fo-cui/`), as
+                          the publishing guide says (`guides/publishing.md`)
 snapshot/files/           the application's public documents, byte for byte
 snapshot/manifest.json    which commit they are from, and each one's SHA-256
 src/snapshot/             publish.ts (what may be imported), manifest.ts,
@@ -60,6 +63,14 @@ app's builds are in people's hands, and a link in one cannot be edited.
 The specifications, the platform guides with their pictures and the plug-in
 author's guide are **copies**, and the rule is simple: **nothing under
 `snapshot/` is ever edited, added or removed by hand.**
+
+**So a new page is never written there** — it happened once, on 20 September
+2026, and `dev` could not build until the commit was reverted. A page written
+for this site goes under `src/content/docs/docs/guides/` (§1; a plug-in's in a
+folder of its own), on `dev`, and is on `docs.dev.filmopen.ai` a minute after
+the push. A document that is *kept* in the application's repository is changed
+there, made public by its `docs/publish.json` — the owner's decision — and
+arrives here by an import, whole.
 
 - **What is public is decided in the application's repository**, in its
   `docs/publish.json`. `npm run import -- --source ../filmopen-publish` copies exactly
