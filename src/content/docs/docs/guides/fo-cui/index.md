@@ -55,7 +55,8 @@ media. Temporary previews, invalid paths and absent final output are rejected.
 The nominal default polling budget is five minutes; network latency adds to
 that budget, and the host has an absolute call limit. A submission/polling
 timeout is not permission to resubmit. The diagnostic lastJob receipt is not
-a durable job database. Check the server before manually starting another job
+a durable job database. The Z-Image adapter explicitly requests eight minutes.
+Check the server before manually starting another job
 whose acceptance is uncertain.
 
 The package never uses global interrupt or whole-queue clearing. Stopping a

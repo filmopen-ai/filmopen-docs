@@ -49,7 +49,8 @@ machines. There is no automatic fallback after OOM.
 ```
 
 The host supplies the seed, preserving a caller's integer from 0 through
-4294967295. This includes zero. Prompt is nonempty text up to 16000 characters.
+4294967295. This includes zero. Prompt is nonempty text up to 16000 JavaScript
+UTF-16 code units.
 The stack accepts text only; reference images and negative prompts are not
 supported.
 
@@ -58,6 +59,13 @@ one PNG. Normal app acceptance uses 1024×1024, the current catalogue/stack
 intersection. Smaller presets are development options until the app filters
 capabilities. num_images must be 1 and output_format must be png when supplied.
 Unsupported parameters fail before submission.
+
+The adapter requests a bounded eight-minute nominal polling budget. A tested
+8 GB GPU render took about 309 seconds, beyond the earlier five-minute wait.
+Network latency adds to the budget and the host retains its own call limit.
+If waiting ends first, the job may still complete: it is never automatically
+resubmitted. Recovering and attaching its result after the call ends requires
+the planned durable host lifecycle.
 
 ## The character image
 
