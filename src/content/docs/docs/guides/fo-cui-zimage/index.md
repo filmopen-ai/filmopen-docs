@@ -7,7 +7,7 @@ sidebar:
   order: 1
 ---
 
-Status: phase-one planning and successful local experiments, 20 September 2026. This is not yet a packaged FilmOpen plugin.
+Status: successful local experiments and implementation plan, 20 September 2026. This is not yet a packaged FilmOpen plugin. The agreed target is API 1, revision 1, with host integration still in development.
 
 The proposed plugin presents a text-to-image operation, chooses a compatible Z-Image stack, validates input, prepares a versioned official workflow and calls `fo-cui`. Users supply a prompt and resolution; the stack selects model files and sampling defaults.
 
@@ -24,6 +24,8 @@ The experiment includes a JSON Schema 2020-12 file with these fields:
 | `steps` | No | Integer 1–20; default 8 |
 
 These are conservative experiment limits, not a declaration of every resolution the model can generate. Unknown fields are rejected. Final ranges and defaults belong to the selected stack and operation schema. Seed, prompt and workflow/model versions are recorded with results.
+
+The planned **FilmOpen interface differs from this research input**: it receives the catalogue model ID, prompt, named inputs, `params.resolution`, `params.steps`, and a separate top-level seed supplied by the host. Valid seeds, including zero, are preserved in the range 0–4294967295. Normal app acceptance initially targets one PNG at 1024×1024 and eight steps, which is both tested and present in the current catalogue. Smaller research presets and additional formats are not automatically supported app options; provider/stack constraints must be respected.
 
 ## Workflow assets
 
@@ -62,6 +64,8 @@ The JavaScript tests exercised handshake, model preflight, submission, WebSocket
 
 ## Next phase
 
-Compare required host hooks with the existing plugin specification, implement the final plugin ABI, and add recovery/cancellation and hardware-matrix tests. Qwen, LTX and MiniMax plugins should follow the same division of responsibilities with their own operation schemas, frame constraints, dependencies and evidence.
+Implement the QuickJS package against the reviewed contract, then verify it through the actual app: choose a character, prepare the render through the shared host path, and save the returned image as a take with seed/model/parameter/stack provenance. Existing Node renders and developer-panel arithmetic calls do not establish that complete integration. Recovery/cancellation and hardware-matrix tests follow. Qwen, LTX and MiniMax adapters need their own operation schemas, frame constraints, dependencies and evidence.
+
+The future sharing contract should make this model's render operation eligible for sharing while keeping ComfyUI's internal operations private. Eligibility will not enable sharing: the owner chooses devices/audience, availability and price in the app. Relay transfers, verification and credits belong to the host/service; local execution's zero external API charge is separate from a public provider's per-image price. This is planned behavior, not a sharing feature available in the current package.
 
 Sources: [official templates](https://github.com/Comfy-Org/workflow_templates), [official App Mode](https://docs.comfy.org/interface/app-mode), [pinned Z-Image model files](https://huggingface.co/Comfy-Org/z_image_turbo/tree/08d04455279082882deaabc8d0d09fc914c071e1).

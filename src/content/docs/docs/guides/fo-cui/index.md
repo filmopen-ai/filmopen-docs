@@ -7,9 +7,9 @@ sidebar:
   order: 1
 ---
 
-Status: phase-one planning and tested research adapter, 20 September 2026. Final FilmOpen plugin packaging and function signatures await the plugin architecture review.
+Status: tested research adapter and implementation plan, 20 September 2026. The architecture review has been answered. The first package targets FilmOpen API 1, revision 1; the host's new interface support and production plug-in integration are still in development.
 
-`fo-cui` is the proposed shared service used by model plugins such as `fo-cui-zimage`. It handles connection health, hardware and dependency discovery, media upload, job submission, progress, errors and output retrieval. Model plugins supply operation schemas, stack selection and executable workflow graphs.
+`fo-cui` is the proposed shared service used by model plugins such as `fo-cui-zimage`. Its first implementation handles health, hardware/dependency discovery, bounded workflow jobs, errors and output references. Model plugins supply operation schemas, stack selection and executable graphs. Large-file installation, reference-media uploads and durable jobs are later capabilities, not available package features.
 
 ## Connection and discovery
 
@@ -24,13 +24,12 @@ The base service should delegate installation to a host download/filesystem serv
 The direct server API expects executable API JSON, not the UI-save graph. Obtain it using ComfyUI's native exporter/submission path. Native subgraphs and App Mode provide authoring interfaces; model adapters bind a stable public input schema to a reviewed, versioned API graph.
 
 1. Validate typed inputs and required dependencies.
-2. Upload input media and assign the returned server-relative references.
-3. Open `/ws?clientId=<uuid>` and register listeners.
-4. POST `/prompt` with `{prompt: graph, client_id: uuid}`.
-5. Persist the returned `prompt_id` immediately.
-6. Follow job events and reconcile with `/history/{prompt_id}`.
-7. Read file references from successful history and download through `/view`.
-8. Return host-owned assets with MIME type, dimensions/duration and generation provenance.
+2. POST `/prompt` with `{prompt: graph}` and retain the returned `prompt_id`.
+3. Poll `/history/{prompt_id}` through `ctx.http`, using `ctx.sleep` and a bounded poll count.
+4. Require successful completion and read final file references from history.
+5. Return server-relative output descriptors; FilmOpen downloads through `/view`, validates the media and records it with generation provenance.
+
+The Node research adapter also used WebSocket progress, but the first FilmOpen package needs neither a WebSocket nor a generated client ID. It runs inside the host's bounded call. Reference-media upload and durable receipt/reconnect support require later host interfaces.
 
 Use a freshly parsed/copied graph and structured assignments followed by JSON serialization. Never replace raw text inside workflow JSON. Bindings should include a workflow hash and expected node class/input names, so incompatible changes fail before submission.
 
@@ -52,9 +51,15 @@ Prefer capability-tested job-specific cancellation. Do not use a legacy global i
 
 ## Host integration needs
 
-The host must provide async service calls between plugins, events/progress, binary asset handles, package-relative asset reads, durable job storage, HTTP/WebSocket or equivalent transports, cancellation, and trusted large-file installation. The research adapter runs in Node 24; this does not establish availability of Node APIs in the Dart-hosted JavaScript engine.
+The first package uses the QuickJS host's `ctx.http`, `ctx.call`, `ctx.assets`, `ctx.sleep`, logging and progress. The sandbox has no Node imports, fetch, WebSocket, timers, Date or random-number API. The platform interface supplies `run` and `request`, plus universal `status`; the model plugin calls that platform. The host owns media bytes and project ingestion. The existing developer panel can exercise typed functions through MCP, but the new interface contract still needs end-to-end host validation.
+
+Durable jobs, scoped cancellation after a call ends, binary upload and trusted large-file installation remain separate host work. A stopped call does not prove that ComfyUI stopped the GPU job.
 
 An optional transport can use the official TypeScript SDK and Comfy API v2 through a compatible deployment or local proxy. The directly tested ComfyUI server supports the raw endpoints above; its `/api/v2/jobs` route returned 404. Keep those transports distinct.
+
+## Future sharing
+
+This platform service's raw requests, workflows, queue controls and discovery are not intended for remote sharing. A future shareable model operation, such as Z-Image render, will accept a constrained model input through FilmOpen's authenticated dispatcher. The app and relay will own opt-in, access, pricing, transfer and result verification. Local plugin calls do not automatically enable sharing.
 
 ## References
 
