@@ -29,7 +29,7 @@ Uploaded recordings remain local inspiration and have no invented voice ID. They
 | Save voice | Selected candidate and voice name | Persistent provider voice ID |
 | Eleven v3 speech | Saved voice ID; spoken text: 1–5000 characters | One 24 kHz WAV |
 
-The plugin also accepts v3 stability values 0, 0.5 or 1; the temporary UI uses 0.5. Uploaded audio follows the same project media importer as images. No voice cloning, audio-to-description, streaming or deterministic seed is implemented.
+The plugin also accepts v3 stability values 0, 0.5 or 1; the temporary UI uses 0.5. Uploaded audio follows the same project media importer as images. No voice cloning, streaming or deterministic seed is implemented in this package. For optional audio-to-description, use the separate [fal voice analyzer](../fo-fal-voice/); its structured result fills voice traits and the design prompt.
 
 ## Audio and identity
 

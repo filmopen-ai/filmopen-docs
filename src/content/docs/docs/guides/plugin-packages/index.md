@@ -21,6 +21,8 @@ Platform packages own connections and credentials. Model adapters own workflows 
 | [fo-fal-gptimage25](../fo-fal-gptimage25/) | GPT Image 2.5 through fal |
 | [fo-openrouter](../fo-openrouter/) | Text completions |
 | [fo-elevenlabs](../fo-elevenlabs/) | Voice Design v3, persistent voice IDs and speech WAV |
+| [fo-openai-vision](../fo-openai-vision/) | GPT-6 Astra photo attributes and generation prompt |
+| [fo-fal-voice](../fo-fal-voice/) | Audio understanding and original voice-design prompt |
 | [fo-assist](../fo-assist/) | Assistant action over host AI routing |
 
 The plugin-lab render UI is a temporary integration example. Permanent render management, insertion, upload/inline-media support and extended accounting remain application integration work; installing a package alone does not add that UI. No package's sharing proposal enables a live relay.
