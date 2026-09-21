@@ -12,6 +12,7 @@ Platform packages own connections and credentials. Model adapters own workflows 
 | Package | Purpose |
 |---|---|
 | [fo-cui](../fo-cui/) | ComfyUI transport and discovery |
+| [fo-salad](../fo-salad/) | On-demand ComfyUI GPU servers and shutdown leases (experimental) |
 | [fo-cui-zimage](../fo-cui-zimage/) | Local Z-Image stacks and verification |
 | [fo-cui-ltx](../fo-cui-ltx/) | Short local image-to-silent-video |
 | [fo-fal](../fo-fal/) | fal key, queue, pricing and billing |
