@@ -17,7 +17,7 @@ Enable **fo-cui** and **fo-cui-zimage**, allow both packages and configure your 
 
 The 8 GB stacks share `qwen_3_4b_fp8_mixed.safetensors`; the 24 GB stack uses `qwen_3_4b.safetensors`. All use `ae.safetensors`. Files belong in their exact ComfyUI categories: `diffusion_models`, `text_encoders`, and `vae`. The package assets pin URLs, sizes, hashes, workflow templates and bindings.
 
-Each stack selects its own graph and settings. The 8 GB Quality stack uses CPU offloading; its name is a preset label, not a measured quality ranking. Available system RAM and other workloads also matter. The 24 GB stack refuses an 8 GB GPU before submission and has not been benchmarked on 24 GB hardware.
+Each stack selects its own graph and settings. The 8 GB Quality stack uses CPU offloading; its name is a preset label, not a measured quality ranking. Available system RAM and other workloads also matter. The 24 GB stack refuses an 8 GB GPU before submission. It passed a 1024×1024 render and character-media import on a Salad RTX 3090, with 48.54 seconds reported by ComfyUI for the first job. That is one acceptance run, not a broad hardware or quality benchmark. See [the Salad server guide](../fo-salad/).
 
 ## Verification and repair
 
