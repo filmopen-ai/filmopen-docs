@@ -7,6 +7,9 @@ sidebar:
   order: 1
 ---
 
+Plugin types: [Platform Connectors](../plugin-types/platform-connectors/).
+
+
 Enable **fo-fal** and allow its permissions. Its declaration adds a **fal key** input in FilmOpen's existing Provider keys UI. Saving verifies the credential and stores it using the host's credential store. Model plugins never receive the secret.
 
 Enable a model adapter separately: [Z-Image Turbo](../fo-fal-zimage/) or [GPT Image 2.5](../fo-fal-gptimage25/).

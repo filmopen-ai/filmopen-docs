@@ -7,6 +7,8 @@ sidebar:
   order: 1
 ---
 
+Browse **[Types of plugins](../plugin-types/)** for capabilities and subtypes.
+
 Platform packages own connections and credentials. Model adapters own workflows or API mappings. The host owns consent, credential storage, media ingestion and the Usage ledger. These packages use FilmOpen API 1/revision 1; experimental host extensions are identified in their guides.
 
 | Package | Purpose |
@@ -23,6 +25,7 @@ Platform packages own connections and credentials. Model adapters own workflows 
 | [fo-openrouter](../fo-openrouter/) | Text completions |
 | [fo-elevenlabs](../fo-elevenlabs/) | Voice Design v3, persistent voice IDs and speech WAV |
 | [fo-openai-vision](../fo-openai-vision/) | GPT-6 Astra photo attributes and generation prompt |
+| [fo-openai-style](../fo-openai-style/) | Visual treatment, project defaults and folder overrides |
 | [fo-openai-character](../fo-openai-character/) | Character JSON changes and version comparison with GPT-6 Astra |
 | [fo-fal-voice](../fo-fal-voice/) | Audio understanding and original voice-design prompt |
 | [fo-assist](../fo-assist/) | Assistant action over host AI routing |

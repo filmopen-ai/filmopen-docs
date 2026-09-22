@@ -7,6 +7,9 @@ sidebar:
   order: 1
 ---
 
+Plugin types: [Voice Generation](../plugin-types/voice-generation/), [Speech Synthesis](../plugin-types/speech-synthesis/).
+
+
 **fo-elevenlabs** is one package for ElevenLabs Voice Design v3 and Eleven v3 speech. It owns its API key and model functions; its HTTP helpers are internal. FilmOpen owns credential storage, consent, network access, logging and media imports.
 
 The character Voice controls and audio/usage extensions described here are currently a **temporary plugin-lab integration**. The permanent application UI is being developed separately. Installing the package in an older app does not supply the required audio output capability.

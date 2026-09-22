@@ -7,6 +7,9 @@ sidebar:
   order: 1
 ---
 
+Plugin types: [Image Generation](../plugin-types/image-generation/).
+
+
 Enable **fo-openai** and **fo-openai-gptimage25** for direct OpenAI rendering. Save/verify the app's existing OpenAI key and allow the platform plugin to use it. The direct adapter also checks for host inline-image support before it allows rendering. A host without that bridge can still use the [fal adapter](../fo-fal-gptimage25/).
 
 

@@ -7,6 +7,9 @@ sidebar:
   order: 1
 ---
 
+Plugin types: [Platform Connectors](../plugin-types/platform-connectors/).
+
+
 `fo-openai` is the transport plugin for [GPT Image 2.5 on OpenAI](../fo-openai-gptimage25/). Enable both packages and allow their declared permissions.
 
 It borrows the **existing OpenAI key** in FilmOpen's Provider keys (`app:openai`). It does not add another OpenAI input box or put credentials in JavaScript. The host inserts the credential into HTTPS requests to OpenAI. A stored key must also be allowed for the plugin.

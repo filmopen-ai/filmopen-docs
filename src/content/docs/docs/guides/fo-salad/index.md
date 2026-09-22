@@ -7,6 +7,9 @@ sidebar:
   order: 1
 ---
 
+Plugin types: [Server Providers](../plugin-types/server-providers/).
+
+
 **fo-salad** manages servers. [fo-cui](../fo-cui/) connects to ComfyUI, and [fo-cui-zimage](../fo-cui-zimage/) owns the model workflow. Selecting a cloud server does not require a Salad-specific copy of the Z-Image plugin.
 
 This is an **experimental plugin-lab integration**. Live acceptance has demonstrated a 24 GB-stack image saved into character media, deadline renewal without replacing the GPU instance, and automatic provider shutdown after the app process exited. Durable session recovery and compute billing reconciliation still belong to the production app integration.

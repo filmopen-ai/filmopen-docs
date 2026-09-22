@@ -7,6 +7,9 @@ sidebar:
   order: 1
 ---
 
+Plugin types: [Platform Connectors](../plugin-types/platform-connectors/).
+
+
 Enable **fo-cui**, allow its permissions and set **ComfyUI server** to your running server. The default is `http://127.0.0.1:8188`. Enable a model adapter separately: [Z-Image Turbo](../fo-cui-zimage/) or [LTX video](../fo-cui-ltx/).
 
 The platform provides status, hardware profile, model-file and node discovery, bounded queue information, relative HTTP requests and one-submit workflow execution. It handles exported executable API graphs, not ComfyUI's UI-save documents. Model adapters bind prompts, inputs and seeds into their pinned graphs.

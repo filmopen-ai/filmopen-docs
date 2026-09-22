@@ -7,6 +7,9 @@ sidebar:
   order: 1
 ---
 
+Plugin types: [Image Generation](../plugin-types/image-generation/).
+
+
 Enable **fo-cui** and **fo-cui-zimage**, allow both packages and configure your ComfyUI server. The adapter renders one PNG from a text prompt with the host-assigned seed. The temporary render popup gets its stacks, resolutions and repair action names from the plugin.
 
 | Stack | Diffusion file | Resolution | Default settings |

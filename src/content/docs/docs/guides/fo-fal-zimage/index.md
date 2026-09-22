@@ -7,6 +7,9 @@ sidebar:
   order: 1
 ---
 
+Plugin types: [Image Generation](../plugin-types/image-generation/).
+
+
 Enable **fo-fal** and **fo-fal-zimage**, allow both packages and save the fal key in Provider keys. This adapter uses `fal-ai/z-image/turbo`; it owns no key or local ComfyUI connection. No stacks or safetensors are needed.
 
 ## Options

@@ -7,6 +7,9 @@ sidebar:
   order: 1
 ---
 
+Plugin types: [Image Generation](../plugin-types/image-generation/).
+
+
 Enable **fo-fal** and **fo-fal-gptimage25**, then save/verify the fal key supplied by the platform plugin in Provider keys. This model adapter adds no separate key field and requires no local model downloads.
 
 It invokes `openai/gpt-image-2.5/flare/text-to-image` or `openai/gpt-image-2.5/sunburst/text-to-image` through fal's queue. The host downloads the resulting image and adds it to the character's media through the normal ingestion flow.

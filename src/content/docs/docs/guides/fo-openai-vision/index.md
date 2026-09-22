@@ -7,6 +7,9 @@ sidebar:
   order: 1
 ---
 
+Plugin types: [Character Analysis](../plugin-types/character-analysis/).
+
+
 **fo-openai-vision** analyzes a character reference. The character controls and media bridge described here are currently a **temporary plugin-lab integration**, not yet a feature of the permanent Flutter app.
 
 ## Use

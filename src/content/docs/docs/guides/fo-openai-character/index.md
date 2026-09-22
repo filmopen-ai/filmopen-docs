@@ -7,6 +7,9 @@ sidebar:
   order: 1
 ---
 
+Plugin types: [Character Transformation](../plugin-types/character-transformation/).
+
+
 **fo-openai-character** transforms an existing fictional character from written
 instructions. It uses **OpenAI GPT-6 Astra** through the saved OpenAI API key.
 “ChatGPT” is not a separate API model or a ChatGPT subscription credential. This

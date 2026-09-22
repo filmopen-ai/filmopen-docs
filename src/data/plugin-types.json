@@ -1,0 +1,136 @@
+[
+  {
+    "slug": "image-generation",
+    "title": "Image Generation",
+    "packages": [
+      "fo-cui-zimage",
+      "fo-fal-zimage",
+      "fo-openai-gptimage25",
+      "fo-fal-gptimage25"
+    ],
+    "description": "Create still images from a generation request.",
+    "subtypes": [
+      "Text to image — implemented",
+      "Image to image / reference-guided editing — future adapters"
+    ]
+  },
+  {
+    "slug": "video-generation",
+    "title": "Video Generation",
+    "packages": [
+      "fo-cui-ltx"
+    ],
+    "description": "Create moving images from text or reference media.",
+    "subtypes": [
+      "Image to video — implemented, short silent LTX clips",
+      "Text to video — future adapters",
+      "Reference to video / video to video — future adapters"
+    ]
+  },
+  {
+    "slug": "character-analysis",
+    "title": "Character Analysis",
+    "packages": [
+      "fo-openai-vision"
+    ],
+    "description": "Extract visible character traits and a reusable character prompt from reference media.",
+    "subtypes": [
+      "Image to character JSON — implemented"
+    ]
+  },
+  {
+    "slug": "voice-analysis",
+    "title": "Voice Analysis",
+    "packages": [
+      "fo-fal-voice"
+    ],
+    "description": "Describe reference audio as voice traits and an original voice-design prompt.",
+    "subtypes": [
+      "Audio to voice JSON — implemented"
+    ]
+  },
+  {
+    "slug": "style-analysis",
+    "title": "Style Analysis",
+    "packages": [
+      "fo-openai-style"
+    ],
+    "description": "Extract reusable visual treatment, independently of characters and locations.",
+    "subtypes": [
+      "Image to style JSON — implemented in the temporary plugin lab"
+    ]
+  },
+  {
+    "slug": "character-transformation",
+    "title": "Character Transformation",
+    "packages": [
+      "fo-openai-character"
+    ],
+    "description": "Apply written or transcribed changes to existing character JSON.",
+    "subtypes": [
+      "Character JSON + instructions to revised character JSON — implemented"
+    ]
+  },
+  {
+    "slug": "voice-generation",
+    "title": "Voice Generation",
+    "packages": [
+      "fo-elevenlabs"
+    ],
+    "description": "Design and audition an original reusable voice from a description.",
+    "subtypes": [
+      "Prompt to voice design — implemented",
+      "Save selected design as a provider voice — implemented"
+    ]
+  },
+  {
+    "slug": "speech-synthesis",
+    "title": "Speech Synthesis",
+    "packages": [
+      "fo-elevenlabs"
+    ],
+    "description": "Generate spoken audio from text and a saved voice ID.",
+    "subtypes": [
+      "Text + provider voice ID to WAV — implemented"
+    ]
+  },
+  {
+    "slug": "platform-connectors",
+    "title": "Platform Connectors",
+    "packages": [
+      "fo-cui",
+      "fo-fal",
+      "fo-openai",
+      "fo-openrouter"
+    ],
+    "description": "Provide authenticated transport, discovery and reusable provider operations.",
+    "subtypes": [
+      "ComfyUI workflow backend",
+      "Cloud queue and billing backend",
+      "Structured response / text completion backend"
+    ]
+  },
+  {
+    "slug": "server-providers",
+    "title": "Server Providers",
+    "packages": [
+      "fo-salad"
+    ],
+    "description": "Discover, deploy and manage rendering servers on demand.",
+    "subtypes": [
+      "On-demand GPU ComfyUI server — experimental Salad implementation"
+    ]
+  },
+  {
+    "slug": "assistants",
+    "title": "Assistants",
+    "packages": [
+      "fo-assist"
+    ],
+    "description": "Expose user-facing assistance through host-selected AI routing.",
+    "subtypes": [
+      "Prompt-to-answer action — implemented"
+    ]
+  }
+]
+

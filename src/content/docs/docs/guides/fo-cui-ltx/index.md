@@ -7,6 +7,9 @@ sidebar:
   order: 1
 ---
 
+Plugin types: [Video Generation](../plugin-types/video-generation/).
+
+
 This adapter implements `i2v-ltx-video-2b-0.9.8-distilled` through **fo-cui**. It uses LTX-Video 2B 0.9.8 distilled FP8 and the T5 XXL FP8 text encoder; exact URLs, sizes, hashes and workflow bindings are pinned in the package assets.
 
 The tested envelope is a short **silent** clip from one project reference image, using a low-resolution 8 GB GPU stack. The proof exercised square 384/512-pixel clips with 49 frames. This is not an implementation of newer LTX-2, MiniMax H3, generated speech or lip synchronization.

@@ -7,6 +7,9 @@ sidebar:
   order: 1
 ---
 
+Plugin types: [Platform Connectors](../plugin-types/platform-connectors/).
+
+
 Enable **fo-openrouter** and allow its package. It declares its own OpenRouter key in the existing Provider keys UI; the host verifies/stores the key and inserts it into permitted HTTPS requests. It is separate from fal and its image adapters.
 
 The platform supports status, relative requests, one-request execution and text completion using FilmOpen catalogue access rows for `openrouter`. It maps supported completion options, preserves zero-valued parameters, returns provider usage/cost when present and exposes a catalogue-rate estimate when enough information is available.
