@@ -23,6 +23,7 @@ Platform packages own connections and credentials. Model adapters own workflows 
 | [fo-openrouter](../fo-openrouter/) | Text completions |
 | [fo-elevenlabs](../fo-elevenlabs/) | Voice Design v3, persistent voice IDs and speech WAV |
 | [fo-openai-vision](../fo-openai-vision/) | GPT-6 Astra photo attributes and generation prompt |
+| [fo-openai-character](../fo-openai-character/) | Character JSON changes and version comparison with GPT-6 Astra |
 | [fo-fal-voice](../fo-fal-voice/) | Audio understanding and original voice-design prompt |
 | [fo-assist](../fo-assist/) | Assistant action over host AI routing |
 
