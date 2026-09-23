@@ -155,7 +155,7 @@ export function expand(
  * this repository is public, and a push is forever.
  */
 const CREDENTIAL =
-  /(^|[^A-Za-z0-9_-])((sk|rk)_(test|live)_[A-Za-z0-9]{20,}|whsec_[A-Za-z0-9]{20,}|re_[A-Za-z0-9_-]{20,}|sb_(publishable|secret)_[A-Za-z0-9_-]{20,}|eyJ[A-Za-z0-9_-]{10,}\.eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}|GOCSPX-[A-Za-z0-9_-]{20,}|ya29\.[A-Za-z0-9_-]{30,}|AKIA[0-9A-Z]{16}|gh[pousr]_[A-Za-z0-9]{36}|github_pat_[A-Za-z0-9_]{60,}|AIza[0-9A-Za-z_-]{35}|xox[baprs]-[A-Za-z0-9-]{10,}|sk-(proj-|ant-|or-)?[A-Za-z0-9_-]{32,})|BEGIN (RSA |EC |OPENSSH |ENCRYPTED )?PRIVATE KEY/;
+  /(^|[^A-Za-z0-9_-])((sk|rk)_(test|live)_[A-Za-z0-9]{20,}|whsec_[A-Za-z0-9]{20,}|re_[A-Za-z0-9_-]{20,}|sb_(publishable|secret)_[A-Za-z0-9_-]{20,}|eyJ[A-Za-z0-9_-]{10,}\.eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}|GOCSPX-[A-Za-z0-9_-]{20,}|ya29\.[A-Za-z0-9_-]{30,}|AKIA[0-9A-Z]{16}|gh[pousr]_[A-Za-z0-9]{36}|github_pat_[A-Za-z0-9_]{60,}|AIza[0-9A-Za-z_-]{35}|xox[baprs]-[A-Za-z0-9-]{10,}|sk-(proj-|ant-|or-)?[A-Za-z0-9_-]{32,}|xai-[A-Za-z0-9_-]{40,})|BEGIN (RSA |EC |OPENSSH |ENCRYPTED )?PRIVATE KEY/;
 
 /**
  * Whether a file carries something shaped like a credential. Never says what.

@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 import { parseManifest, sha256, versionOf, writeManifest } from '../src/snapshot/manifest.ts';
-import { DOCUMENTS, FOLDERS, GENERATED, placementOf } from '../src/snapshot/placement.ts';
+import { DOCUMENTS, DOCUMENT_FOLDERS, FOLDERS, GENERATED, pageOf, placementOf, urlOf } from '../src/snapshot/placement.ts';
 
 describe('the manifest', () => {
   it('hashes bytes, not text', () => {
@@ -41,7 +41,7 @@ describe("the site's own snapshot", () => {
     expect(manifest.files.filter((file) => placementOf(file.path) === null)).toEqual([]);
     const held = new Set(manifest.files.map((file) => file.path));
     for (const document of DOCUMENTS) expect(held.has(document.source), document.source).toBe(true);
-    for (const folder of FOLDERS) {
+    for (const folder of [...DOCUMENT_FOLDERS, ...FOLDERS]) {
       expect(manifest.files.some((file) => file.path.startsWith(`${folder.sourceFolder}/`)), folder.sourceFolder).toBe(true);
     }
   });
@@ -55,7 +55,20 @@ describe('where a document appears', () => {
   it('is under /docs/, since the website sends ‹site›/docs/… here with the path kept', () => {
     for (const document of DOCUMENTS) expect(document.page).toMatch(/^docs\/(specifications|guides)\/[a-z-]+$/);
     for (const folder of FOLDERS) expect(folder.folder).toMatch(/^docs\/[a-z-]+$/);
+    for (const placed of DOCUMENT_FOLDERS) expect(placed.folder).toMatch(/^docs\/(specifications|guides)\/[a-z-]+$/);
     expect(new Set(DOCUMENTS.map((document) => document.page)).size).toBe(DOCUMENTS.length);
+  });
+
+  it("is, for a part of a specification kept in parts, its file's name: the number orders it, index.md is the folder's own page", () => {
+    const placed = { sourceFolder: 'docs/software', folder: 'docs/specifications/software', kind: 'specification' as const };
+    expect(pageOf(placed, 'docs/software/index.md')).toEqual({ page: 'docs/specifications/software/index', order: 0 });
+    expect(pageOf(placed, 'docs/software/03-architecture.md')).toEqual({ page: 'docs/specifications/software/architecture', order: 3 });
+    expect(pageOf(placed, 'docs/software/packages/filmopen_jobs.md')).toEqual({ page: 'docs/specifications/software/packages/filmopen_jobs', order: 1000 });
+    expect(pageOf(placed, 'docs/software/packages/index.md')).toEqual({ page: 'docs/specifications/software/packages/index', order: 0 });
+    expect(urlOf('docs/specifications/software/index')).toBe('/docs/specifications/software/');
+    expect(urlOf('docs/specifications/software/architecture')).toBe('/docs/specifications/software/architecture/');
+    // The address the app opens, letter for letter, is still a page.
+    expect(urlOf(pageOf(placed, 'docs/software/index.md').page)).toBe('/docs/specifications/software/');
   });
 
   it('is never committed: .gitignore names everything the generator writes', () => {
