@@ -19,4 +19,3 @@ For visual treatment without subject content, use [Style Analysis](../style-anal
 - [fo-openai-vision](../../fo-openai-vision/)
 
 [All types of plugins](../)
-

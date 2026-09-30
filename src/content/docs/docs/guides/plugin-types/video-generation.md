@@ -21,4 +21,3 @@ The tested package targets the documented 8 GB stack. Other text, reference and 
 - [fo-cui-ltx](../../fo-cui-ltx/)
 
 [All types of plugins](../)
-

@@ -23,4 +23,3 @@ Z-Image via ComfyUI has model stacks and GPU constraints. Cloud Z-Image and GPT 
 - [fo-fal-gptimage25](../../fo-fal-gptimage25/)
 
 [All types of plugins](../)
-

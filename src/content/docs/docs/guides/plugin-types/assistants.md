@@ -17,4 +17,3 @@ The assistant package exposes its settings and Ask action while delegating model
 - [fo-assist](../../fo-assist/)
 
 [All types of plugins](../)
-

@@ -24,4 +24,3 @@ The app owns credential storage, consent, network permissions and usage persiste
 - [fo-openrouter](../../fo-openrouter/)
 
 [All types of plugins](../)
-

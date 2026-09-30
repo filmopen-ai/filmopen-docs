@@ -19,4 +19,3 @@ The Salad adapter includes deployment and shutdown-lease work described in its g
 - [fo-salad](../../fo-salad/)
 
 [All types of plugins](../)
-
