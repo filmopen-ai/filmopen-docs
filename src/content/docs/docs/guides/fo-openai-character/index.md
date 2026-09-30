@@ -9,67 +9,31 @@ sidebar:
 
 Plugin types: [Character Transformation](../plugin-types/character-transformation/).
 
+Describe changes to an existing fictional character and save a coherent revised version. This adapter uses GPT-6 Astra through the saved OpenAI API key; a ChatGPT subscription is not an API credential.
 
-**fo-openai-character** transforms an existing fictional character from written
-instructions. It uses **OpenAI GPT-6 Astra** through the saved OpenAI API key.
-“ChatGPT” is not a separate API model or a ChatGPT subscription credential. This
-is a **temporary plugin-lab integration** pending adoption in the permanent app.
+## Set up and modify
 
-## Use
+1. [Install and allow](../plugin-packages/#install-and-allow) **fo-openai** and **fo-openai-character**. Save the app's OpenAI key and grant the connector access.
+2. Open your character in **Edit**, then choose **Describe changes**.
+3. Choose the transformation plugin. Keep **Fork to a new version and compare** checked to preserve the original version; uncheck it to modify the current editable version.
+4. Type or dictate a request, such as “Make her twenty years older, with gray hair, wrinkles and a more mature voice.”
+5. Press **Modify** once. It requires a ready plugin and nonempty instructions.
+6. For a fork, check Compare shows the new version on the left and the source version on the right. For an in-place change, review the revised fields and reopen the character to check persistence.
 
-1. Enable `fo-openai` and `fo-openai-character`, save the OpenAI key in Provider
-   keys, and grant `fo-openai` access to it.
-2. Open a character in Edit and choose **Describe changes**.
-3. Select the transformation plugin. **Fork to new character version and compare**
-   is checked by default. Uncheck it to modify the current editable version.
-4. Type or dictate a request, such as “Make her twenty years older, with gray
-   hair, wrinkles and a more mature voice.” Then choose **Modify**.
-5. A fork opens Compare with the new version on the **left** and the original
-   on the **right**. Review the changes before generating new images or voices.
+Dictation has its own provider/key requirements. Typing does not require a speech provider.
 
-Modify requires instructions and a ready provider key. Cancel discards a late
-result. Failed or stale results do not overwrite the character, and a response
-with no changes does not create a new version. Installing this plugin alone does
-not add the temporary controls to a normal app build.
+## What the change preserves
 
-## JSON and coherent edits
+The provider receives the character JSON, the user's instructions and English system instructions. Structured output proposes permitted changes. The host validates and writes them together, preserving identity, authorship, references, provider voice IDs, unrelated fields and extensions.
 
-The provider receives character JSON, the user's instructions and English system
-instructions. Strict structured output describes allowed leaf changes. The
-plugin merges validated changes into the original JSON and returns a complete
-character; the host validates it independently before saving.
+Appearance, age/birthdate, voice descriptions and generation prompts can change together. Missing facts are not invented merely to fill the schema. A changed voice description does not regenerate audio or replace a saved voice ID; use the voice workflow separately.
 
-Age, birthdate, appearance, voice descriptions and generation prompts can change
-together. At the same story time, increasing age by twenty normally moves the
-birth year back twenty years. Missing facts are not filled merely to complete
-the schema. Changes affect the selected version/epoch, not every character file.
+A no-op response creates no new version. An invalid response or one made stale by a changed character is not applied. If a valid answer was kept but writing failed, **Write again** retries the local write without requesting another paid transformation.
 
-Identity, authorship, references, relationships, provider voice IDs and unknown
-extensions survive unchanged. The app creates version IDs and provenance.
-Changing a voice description does not regenerate its audio or change the saved
-voice ID: use the voice-design workflow separately. Existing photographs and
-rendered media also remain available.
+## Test language and usage
 
-## Language, costs and future adapters
+Try a Spanish instruction and review the newly written descriptive text in Spanish. JSON keys and enum tokens remain stable; unrelated existing prose is preserved.
 
-Newly authored prose follows the instruction language or an explicit language
-request. Spanish input can produce Spanish descriptions and prompts while JSON
-keys and enums remain stable. Unrelated existing prose is preserved. Interface
-labels and errors have English and Spanish ARB translations.
+Inspect Usage after the request. Measured tokens and a price-based cost estimate are different from a provider invoice amount. A paid response rejected as invalid can still cost money, and no paid call is automatically repeated.
 
-Each Modify request can incur a charge, including a response rejected as invalid.
-The app's proposed usage bridge stores measured tokens, a request receipt and an
-estimated dollar cost at published rates; it does not claim an invoice amount.
-There are no automatic paid retries. Logs contain operation/receipt metadata,
-not the character's descriptions or key. Interrupted billing reconciliation is
-still production work.
-
-This package is the first character/model adapter, not a claim that Astra is
-best at every edit. Future Claude or other model adapters can expose the same
-`transformCharacter` offer; other document types need their own validation.
-The proposed completion intent asks the app to open its saved result in Compare
-or Edit. Model text cannot select arbitrary files or navigation destinations.
-
-Source and milestone 1-12: [filmopen-plugins](https://github.com/filmopen-ai/filmopen-plugins).
-Provider references: [GPT-6 Astra](https://developers.openai.com/api/docs/models/gpt-6-astra)
-and [Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs).
+This is an adapter for character changes, not a claim that one model is best for every writing task. Logs should contain operation/receipt metadata rather than the character's private descriptions. [GPT-6 Astra](https://developers.openai.com/api/docs/models/gpt-6-astra), [structured outputs](https://developers.openai.com/api/docs/guides/structured-outputs).

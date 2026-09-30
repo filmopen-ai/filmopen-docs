@@ -22,11 +22,10 @@ A **type** describes what a plugin does. A **subtype** describes its input/outpu
 | [Server Providers](./server-providers/) | [fo-salad](../fo-salad/) |
 | [Assistants](./assistants/) | [fo-assist](../fo-assist/) |
 
-Each type page lists implemented and planned subtypes separately. The [package index](../plugin-packages/) and individual guides describe requirements and integration status. Several controls are temporary plugin-lab proposals; installing a package does not add them to a normal app build.
+Each type page lists implemented and planned subtypes separately. The [package index](../plugin-packages/) gives installation steps; individual guides explain the permanent milestone 6-9 controls, requirements and remaining limitations. Older app builds may not have these controls. Installing a package does not supply a missing application feature.
 
 ## Keep the catalog complete
 
 For every new package, create its guide, register all of its types in `src/data/plugin-types.json`, link this index to any new type page, and add links in both directions between the type page and package guide. A new JSON document contract gets a distinct type when implemented; a second model for an existing contract usually does not.
 
 The `plugin-types` documentation test checks every `fo-*` guide, each registered type and all package/type links. Plugin authors must also compare the shipping inventory in filmopen-plugins with this catalog when adding a package. Generated specification snapshots are not edited for this workflow.
-

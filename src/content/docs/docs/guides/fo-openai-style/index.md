@@ -6,42 +6,35 @@ sidebar:
   order: 1
 ---
 
-**fo-openai-style** extracts visual treatment from a reference photo. It is a separate adapter from character analysis, with its own strict JSON schema and prompt, using the saved OpenAI key through **fo-openai**.
-
 Plugin type: [Style Analysis](../plugin-types/style-analysis/).
 
-## Use in the temporary app
+Describe a photograph's visual treatment independently of its subjects. This adapter uses GPT-6 Astra through [fo-openai](../fo-openai/), with a schema for mood, palette, grading, film/camera-like appearance, lighting and a style prompt.
 
-1. Enable **fo-openai** and **fo-openai-style**. Save and verify the OpenAI key in Provider keys and grant the connector permission to use it.
-2. Open a project or script folder in **Edit**. In Reference images, upload a PNG or JPEG using the ordinary media uploader.
-3. Select **GPT-6 Astra** in the style analyzer and choose **Analyze**. It sends the most recently uploaded reference image, not an arbitrary thumbnail.
-4. Review the editable **Visual style** fields, the reusable positive/negative prompt and the reported limitations.
-5. Expand **Effective visual style** to see the value used by the inheritance preview and its project/folder source. **Clear local style overrides** restores inheritance while retaining uploaded media.
+## Set up and analyze
 
-These controls require the opt-in plugin-lab app branch/build. Installing the plugin does not add them to the canonical application. An enabled, permitted key and an owned uploaded image are required before analysis can run.
+1. [Install and allow](../plugin-packages/#install-and-allow) **fo-openai** and **fo-openai-style**. Save the app's OpenAI key and grant the connector access.
+2. Open a project or script folder you can edit. In **Reference images**, use the add control and **Upload** a PNG or JPEG.
+3. Under the references, choose the style analyzer where several are available. Check **Picture to describe**: the most recent compatible upload is the default, and you can select another.
+4. Press **Analyze** once. Review the **Visual treatment** fields and **What one picture cannot tell** limitations.
+5. On a folder, inspect inherited values and their source. **Clear local overrides** removes the folder's own treatment while retaining its reference images.
+6. Open a render at that project/folder's scope or a descendant. Review **The film's treatment** and **The film's treatment: what to avoid** before submitting. Edits inside that render dialog apply only to that render.
 
-## What the JSON contains
+Analysis is a paid provider request; uploading alone is not. A useful test is to set a project treatment, override one field in a folder, then clear that override and check inheritance returns.
 
-The adapter returns description, mood, medium, stock-like appearance, grain, halation, contrast, saturation, sharpness, vignette, a representative palette, temperature bias, lens character, apparent depth of field, camera-like appearance, lighting, composition, texture, shadow/midtone/highlight grading descriptions and a style-only generation prompt.
+## What is saved
 
-It excludes people, objects, locations and story. Unknown observations are nullable and do not overwrite existing values. The schema and host both reject extra fields, invalid palette colors and translated enum tokens before applying any result.
+The canonical project/folder field is `visual_style`. It describes treatment, including mood, medium, palette, grain, halation, contrast, saturation, sharpness, vignette, temperature bias, lens/camera-like appearance, depth of field, lighting, composition, texture, grading and positive/negative prompt text.
 
-A single photo does not establish its exact camera body, lens focal length, aperture, film stock or LUT. Camera/stock descriptions are resemblances, and limitations remain visible beside the analysis. Colors are approximate appearance observations, not calibrated measurements or an executable color transform.
+Missing leaves inherit. Local values override inherited leaves, and arrays replace rather than append. A project supplies defaults; enclosing folders supply progressively more specific values. An explicit scene Style and a render's own values are applied at the relevant render context. Ambiguous folder parentage is reported instead of guessing.
 
-## Project defaults and folder overrides
+The app resolves this treatment when preparing a render. Its prompt text is shown in the dialog and joined to the image prompt; it is no longer only a lab preview. A field cleared inside one render does not erase the project or folder's stored profile.
 
-The proposed `visualStyle` object reuses the format's Style vocabulary plus descriptive extensions. The temporary preview merges project → enclosing folders → local profile, leaf by leaf. Omitted fields inherit; arrays replace; local values win. This changes the selected file only, never every child file. Ambiguous folder parentage is flagged rather than arbitrarily chosen.
+## Interpretation, privacy and cost
 
-The current canonical specification does not yet define project style profiles or folder style cascading. This is an explicit app handoff proposal. The temporary preview does **not** silently change production scene rendering or delivery settings. The app agent must bind the resolved style to a specific render context and settle its priority relative to explicit scene/style selections.
+The analyzer excludes people, objects, locations and story. A photograph cannot reliably establish exact camera hardware, focal length, aperture, film stock or a LUT. The result describes visible resemblance, not a calibrated grade. Review it before using it.
 
-## Language, privacy and usage
+Only validated style leaves are applied. Unknown observations preserve existing values; invalid tokens or palette colors reject the result. Identity, children, delivery settings and other fields remain unchanged. A stale result is not applied to another version.
 
-English and Spanish interface labels use translation tokens. The model always receives English instructions and the JSON schema; prose and prompts follow the UI language, while keys/enums stay stable.
+Descriptions follow the app language; JSON keys and enums are stable. Usage records available tokens, a receipt and a price-based estimate. A rejected paid result can still cost money. No paid request is automatically repeated, and logs must not contain image bytes or generated descriptions.
 
-The host reads only bounded PNG/JPEG bytes already owned by the selected project/folder. The image is sent to OpenAI for the requested analysis. Prompts and image bytes are not written to plugin logs. Only validated style leaves are saved; identity, children, delivery format and unrelated extensions are preserved. Cancelled or stale responses are ignored by the editor.
-
-The normal Usage ledger records measured tokens, a request receipt and an **estimated** USD cost at published model rates. Rejected paid outputs can still cost money. The plugin does not retry paid requests automatically or claim its estimate is a final invoice.
-
-Source and milestone 1-13: [filmopen-plugins](https://github.com/filmopen-ai/filmopen-plugins).
-Provider: [GPT-6 Astra](https://developers.openai.com/api/docs/models/gpt-6-astra) and [image inputs](https://developers.openai.com/api/docs/guides/images-vision).
-
+[GPT-6 Astra](https://developers.openai.com/api/docs/models/gpt-6-astra), [image inputs](https://developers.openai.com/api/docs/guides/images-vision).

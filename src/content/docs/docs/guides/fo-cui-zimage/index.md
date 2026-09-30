@@ -9,8 +9,21 @@ sidebar:
 
 Plugin types: [Image Generation](../plugin-types/image-generation/).
 
+Render a still image from a prompt through [ComfyUI](../fo-cui/). This model adapter owns the pinned workflow and stack settings; FilmOpen owns the render dialog, jobs and media insertion.
 
-Enable **fo-cui** and **fo-cui-zimage**, allow both packages and configure your ComfyUI server. The adapter renders one PNG from a text prompt with the host-assigned seed. The temporary render popup gets its stacks, resolutions and repair action names from the plugin.
+Use **fo-cui-zimage v2 or later** with an app supporting plugin interface revision **2**. This release supplies all three stacks to the permanent render dialog, including their resolution choices and reasons a stack cannot run.
+
+## Set up and render
+
+1. [Install and allow](../plugin-packages/#install-and-allow) **fo-cui** and **fo-cui-zimage**. Configure the full ComfyUI URL and complete its **Check**.
+2. For automatic file verification/downloads, start and configure the separate [model verification service](../fo-cui/#enable-model-verification-and-downloads). A connection Check does not install any weights.
+3. Open the Z-Image plugin's **Actions**. Run **Download missing files: 8 GB Fast** for a small local test, or the matching Quality action. Wait for a successful result; follow any reported missing-service or file error. This action prepares files and **does not render an image**.
+4. Open an editable character. In **Reference images**, use its add control and choose **Render**.
+5. Select Z-Image Turbo under **Model**, the local ComfyUI destination under **Runs on** when there is a choice, and **8 GB Fast** under **Way of running it**.
+6. Choose **512×512**, enter a short **Prompt**, and press **Render**. Follow the job until it completes. Open the new image tile and confirm it was added to this character.
+7. Change **Way of running it** to **8 GB Quality**. Resolution now offers **512×512** and **1024×1024**, while Fast offers only **512×512**. Choose the desired size before another render. On an 8 GB GPU, **24 GB Quality** must be unavailable with a message explaining its 24 GB VRAM requirement.
+
+## Stacks
 
 | Stack | Diffusion file | Resolution | Default settings |
 |---|---|---|---|
@@ -18,16 +31,16 @@ Enable **fo-cui** and **fo-cui-zimage**, allow both packages and configure your 
 | 8 GB Quality | `z_image_turbo_bf16.safetensors` | 512×512 or 1024×1024 | 9 steps, res_multistep, simple scheduler |
 | 24 GB Quality | `z_image_turbo_bf16.safetensors` | 1024×1024 | 9 steps, res_multistep, simple scheduler |
 
-The 8 GB stacks share `qwen_3_4b_fp8_mixed.safetensors`; the 24 GB stack uses `qwen_3_4b.safetensors`. All use `ae.safetensors`. Files belong in their exact ComfyUI categories: `diffusion_models`, `text_encoders`, and `vae`. The package assets pin URLs, sizes, hashes, workflow templates and bindings.
+The 8 GB stacks use `qwen_3_4b_fp8_mixed.safetensors`; the 24 GB stack uses `qwen_3_4b.safetensors`. All use `ae.safetensors`. These belong at the category roots `diffusion_models`, `text_encoders` and `vae`. Package assets pin the source URLs, byte sizes, hashes and graphs.
 
-Each stack selects its own graph and settings. The 8 GB Quality stack uses CPU offloading; its name is a preset label, not a measured quality ranking. Available system RAM and other workloads also matter. The 24 GB stack refuses an 8 GB GPU before submission. It passed a 1024×1024 render and character-media import on a Salad RTX 3090, with 48.54 seconds reported by ComfyUI for the first job. That is one acceptance run, not a broad hardware or quality benchmark. See [the Salad server guide](../fo-salad/).
+Quality uses BF16 with CPU offloading on the tested 8 GB configuration. Its name is a preset label, not a measured quality ranking. System RAM, available GPU memory and other workloads can still prevent rendering. The selected stack controls its graph, requirements and supported sizes; unsupported combinations are refused.
 
-## Verification and repair
+## If preparation or rendering fails
 
-Before rendering, the adapter checks the stack's hardware, nodes, loader choices and exact files. With the separate verification service configured, the pinned bytes/hashes can be checked on the server machine. The explicit **Verify / repair files** action downloads missing files into their specified categories and validates them. Without that service the plugin cannot establish hashes merely by listing filenames.
+- **Check succeeds, download does nothing:** confirm the separate model helper is running and **Model verification service** is set. An unset helper makes the Z-Image action fail with `model-service-unconfigured`; an unreachable helper returns `model-service-unavailable`. A UI that only says Done has not established that files were installed.
+- **Files missing or corrupt:** inspect the action result and helper process. Verification checks the pinned byte sizes and SHA-256 hashes; repair downloads missing files only. Run **Verify** again after repair, then return to **Render**. Existing corrupt files require operator review before removal and repair.
+- **No stack ready:** confirm the selected server, GPU, model categories and required nodes. Model files on another ComfyUI installation do not count.
+- **Salad selected:** choose a stack that its deployed recipe actually installed. The supplied Salad recipe installs BF16 Quality weights, not the local INT8 Fast stack.
+- **Render timed out:** inspect the outstanding job before retrying. Rechecking dependencies is read-only; it is not a second render.
 
-If ComfyUI fails, the adapter rechecks dependencies and logs the original failure plus diagnostics. It does not silently re-render a potentially charged or already-running job. Repair and another render remain explicit actions.
-
-Changing stacks refreshes the permitted resolutions and corrects an incompatible previous choice. The adapter rejects unknown stack/size/options even if a caller bypasses the UI. The only output is a final PNG descriptor; FilmOpen performs media ingestion and attachment. Permanent render/insertion UI integration is app-owned work.
-
-Only the bounded named render operation is proposed for future sharing. File installation, workflow submission and platform internals remain ineligible. See [ComfyUI platform behavior](../fo-cui/).
+The package logs dependency and backend failures without logging prompt text. The local estimate means no external image API charge; electricity and cloud GPU time are separate. This adapter currently takes a text prompt, not reference-image editing. Proposed sharing exposes only a bounded named render; it enables no relay.

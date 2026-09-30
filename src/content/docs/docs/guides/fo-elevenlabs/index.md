@@ -9,53 +9,42 @@ sidebar:
 
 Plugin types: [Voice Generation](../plugin-types/voice-generation/), [Speech Synthesis](../plugin-types/speech-synthesis/).
 
+Design an original voice with Voice Design v3, save a selected provider voice, then generate speech with Eleven v3. One plugin owns these operations and its ElevenLabs key. FilmOpen owns consent, credentials, media insertion and Usage.
 
-**fo-elevenlabs** is one package for ElevenLabs Voice Design v3 and Eleven v3 speech. It owns its API key and model functions; its HTTP helpers are internal. FilmOpen owns credential storage, consent, network access, logging and media imports.
+## Set up and design a voice
 
-The character Voice controls and audio/usage extensions described here are currently a **temporary plugin-lab integration**. The permanent application UI is being developed separately. Installing the package in an older app does not supply the required audio output capability.
+1. [Install and allow](../plugin-packages/#install-and-allow) **fo-elevenlabs** in **Settings → Plugins**.
+2. In **Settings → Provider keys**, save and verify the ElevenLabs plugin's key. Its slot belongs to `fo-elevenlabs`, not to a separate connector.
+3. Open a character you can edit. Under **Voice samples**, use the add control and choose **Voice**. This opens **Generate voice**.
+4. Enter a **Voice prompt** describing tone, apparent age, accent and pace. You may enter **Audition text**; leave it empty to use the plugin's localized default sample.
+5. Press **Generate voice** once. Wait for the previews, then open each audio tile to listen.
+6. Under **Previews to audition**, choose **Use this voice** for the candidate you want. In **Keep this voice?**, enter **Name of the voice** and press **Keep**. This saves a voice to your provider account and consumes a voice slot.
 
-## Set up and use
+Uploading a WAV/MP3 through **Upload** stores a local reference sample. It does not clone that voice, create an ElevenLabs voice ID or send it to ElevenLabs automatically. For editable audio-to-description, use [fo-fal-voice](../fo-fal-voice/) first.
 
-1. Enable **ElevenLabs voices** in Settings → Plugins.
-2. In Settings → Provider keys, save your key in the ElevenLabs plugin's box. FilmOpen verifies it and stores it encrypted on this device. The plugin slot is `fo-elevenlabs:elevenlabs`.
-3. In a character's **Edit → Voice** section, upload an optional WAV/MP3 reference and enter a **Voice prompt** describing the new voice.
-4. Choose **Generate voice**. Voice Design v3 returns audition previews. Listen, select a candidate, and choose **Use this voice** to save its persistent ElevenLabs voice ID.
-5. Enter **Spoken text for the WAV** and choose **Generate speech WAV**. FilmOpen calls Eleven v3 using that saved ID and imports the 24 kHz WAV into the project's normal media directory.
+## Generate speech and check the result
 
-Uploaded recordings remain local inspiration and have no invented voice ID. They are not automatically sent to ElevenLabs. A generated preview's temporary ID is distinct from the persistent ID created by **Use this voice**. Saving consumes an account voice slot; generating previews and speech consumes credits.
+1. After keeping a voice, use the add control under **Voice samples** and choose **Render**.
+2. Select the Eleven v3 speech model. Enter **Words to say**, then press **Render** once.
+3. Open and play the completed WAV. Confirm it speaks your words in the voice you kept.
+4. Reopen the character and verify its kept voice remains available for another speech request. Check Usage for both design and speech; preview generation, keeping a voice and speech are distinct operations.
 
-## Controls and limits
+The design description accepts 20–1000 characters, audition text 100–1000 when provided, and spoken text 1–5000. Design returns up to three MP3 previews; speech returns a 24 kHz PCM WAV. Stability accepts 0, 0.5 or 1. Voice cloning, streaming and deterministic seeds are not implemented.
 
-| Operation | Inputs | Output |
-|---|---|---|
-| Voice Design v3 | Voice description: 20–1000 characters; preview text: 100–1000, with a localized default | Up to three MP3 audition previews |
-| Save voice | Selected candidate and voice name | Persistent provider voice ID |
-| Eleven v3 speech | Saved voice ID; spoken text: 1–5000 characters | One 24 kHz WAV |
+## Media and provider voice identity
 
-The plugin also accepts v3 stability values 0, 0.5 or 1; the temporary UI uses 0.5. Uploaded audio follows the same project media importer as images. No voice cloning, streaming or deterministic seed is implemented in this package. For optional audio-to-description, use the separate [fal voice analyzer](../fo-fal-voice/); its structured result fills voice traits and the design prompt.
+A preview ID is not a persistent voice ID. FilmOpen retains each sample's `voice_binding`, containing `provider`, `generated_voice_id` for a preview and `voice_id` once kept. The character's `voice.provider_bindings` maps a provider to the persistent ID speech should use; `voice.active_reference` points to the associated sample. These are the canonical fields used by the current app, not the earlier lab's reference-metadata proposal.
 
-## Audio and identity
+An uploaded recording has no invented voice binding. Copying a WAV or project does not grant another account access to a custom provider voice. Removing a local sample does not delete the provider's voice or silently switch the voice used for speech.
 
-An image reference needs its media file. A designed voice also needs the provider's persistent voice ID for subsequent speech. The lab keeps ordinary `voice.refs` strings and proposes `voice.referenceMetadata[reference]` containing `provider` and `voiceId`, with a separate `activeReference`. Candidate IDs are named `generatedVoiceId` until saved. This is a host integration proposal, not a canonical format change.
-
-Voice IDs are provider/account scoped. Copying a project or WAV does not grant another account access to the custom voice. Removing a local recording must not imply deleting a voice from the provider account.
+If the provider kept the voice but the local write failed, **Retry write** saves the acknowledged choice without creating another voice. If the provider response was lost, inspect your provider voices before trying to keep it again.
 
 ## Usage and errors
 
-FilmOpen records characters, available provider credit counts and request receipts in its existing Usage ledger. **Unknown dollar cost is not zero cost.** ElevenLabs subscriptions and discounts mean a credit count is not an exact USD debit. The temporary app displays characters/credits and marks dollar cost unavailable; permanent accounting must also make unknown spend clear in totals.
+ElevenLabs credits and characters are not an exact USD invoice. Unknown dollar cost must remain unknown in Usage; it is not zero spend. Generating previews or speech may be chargeable even when a result cannot be used.
 
-Missing keys, grants or required host audio capability fail before a request. Quota, endpoint permission and malformed audio errors use localized messages and FilmOpen logging. Paid calls are never retried automatically. If a response is lost, check the ElevenLabs account before repeating it: a request may already have consumed credits or created a voice. A known saved ID is retained even if the optional local save cache fails.
+Resolve missing keys, permissions and host audio capability before submitting. No paid request is automatically repeated. A cancelled wait does not prove the provider cancelled processing.
 
-## Can audio become a descriptive voice prompt?
+The UI and plugin labels have English/Spanish translations; the language of spoken text is a separate choice. The package's sharing proposal enables no live relay and does not expose voice management or credentials.
 
-No documented ElevenLabs endpoint that turns a recording into a descriptive voice prompt was found in the checked API. Voice Design v3 can use reference audio directly, but that is a different workflow and is not used by this plugin. [Voice Design API](https://elevenlabs.io/docs/api-reference/text-to-voice/design).
-
-A future audio-understanding model could produce editable broad traits such as pitch, texture, accent and pacing, then pass the user's revised description to Voice Design. For example: “A warm, mature narrator with a low resonant register, gently textured timbre and unhurried delivery.” This does not require sending a named person's recording to the voice generator.
-
-## Languages and future sharing
-
-Plugin UI/error tokens live in `l10n/en.arb` and `l10n/es.arb`. Temporary character controls use the app's English/Spanish dictionaries. The speech content's language is separate from the interface language.
-
-The manifest proposes only speech generation for a future sharing relay. The proposal enables nothing. Voice management, keys and internal API functions remain private; account-owned voice resolution, access, pricing and output validation belong to the future host/relay implementation.
-
-Source: [plugin package](https://github.com/filmopen-ai/filmopen-plugins/tree/filmopen-plugins-milestone-1-1/fo-elevenlabs). Provider references checked 21 September 2026: [Voice Design](https://elevenlabs.io/docs/api-reference/text-to-voice/design), [save a voice](https://elevenlabs.io/docs/api-reference/text-to-voice/create), [speech with timestamps](https://elevenlabs.io/docs/api-reference/text-to-speech/convert-with-timestamps).
+[Voice Design API](https://elevenlabs.io/docs/api-reference/text-to-voice/design), [save a voice](https://elevenlabs.io/docs/api-reference/text-to-voice/create).

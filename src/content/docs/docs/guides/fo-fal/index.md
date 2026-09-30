@@ -9,24 +9,22 @@ sidebar:
 
 Plugin types: [Platform Connectors](../plugin-types/platform-connectors/).
 
+The fal connector owns the account key, queue transport, pricing and receipt-scoped billing. Model adapters own their model-specific options; they never receive the secret.
 
-Enable **fo-fal** and allow its permissions. Its declaration adds a **fal key** input in FilmOpen's existing Provider keys UI. Saving verifies the credential and stores it using the host's credential store. Model plugins never receive the secret.
+## Set up and check
 
-Enable a model adapter separately: [Z-Image Turbo](../fo-fal-zimage/) or [GPT Image 2.5](../fo-fal-gptimage25/).
+1. [Install and allow](../plugin-packages/#install-and-allow) **fo-fal** in **Settings → Plugins**.
+2. Open **Settings → Provider keys** and enter your key in the fal plugin's field. Save it and read the verification result. The [fal platform guide](/docs/platforms/fal/) explains obtaining a key.
+3. Return to the fal plugin page and press **Check** under **Can it work?**. A successful check verifies service access, not every model or your remaining balance.
+4. Install and allow a model adapter: [Z-Image Turbo](../fo-fal-zimage/), [GPT Image 2.5](../fo-fal-gptimage25/) or [voice analysis](../fo-fal-voice/).
+5. Follow that adapter's small test. After completion, check the media or analyzed fields and its Usage entry.
 
-| Function | Purpose |
-|---|---|
-| `availability` | Local stored/allowed-key check, without network traffic |
-| `status` | Read-only authenticated service check |
-| `request` | Relative request through the keyed fal connection |
-| `run` | Submit once, validate receipt URLs, poll and retrieve the result |
-| `pricing` | Read the selected endpoint's USD unit price |
-| `billing` | Find a final charge for one endpoint and request ID |
+If the key field is absent, confirm **fo-fal** is installed and on. The connector's key is distinct from OpenRouter and from the app's OpenAI key. A stored key and a permission to use a key are separate requirements.
 
-Queue receipt URLs are constrained to the expected HTTPS fal queue host and exact request ID. The default polling budget is five minutes, configurable up to eight minutes, subject to host call limits. Pending polls do not submit additional jobs. A lost submission response or exhausted wait remains uncertain; inspect the saved receipt before retrying manually. `lastJob` is diagnostic storage, not a durable scheduler.
+## Queue and cost behavior
 
-Billing lookup is separate from rendering. Some fal keys can render but cannot read administrative billing events. In that case a model adapter can record an estimated cost with its receipt; it must not report that as a confirmed debit. Zero is retained when the provider actually reports zero. Pricing endpoints describe rates, not necessarily a completed job's final charge.
+The connector submits once, checks receipt URLs against the expected fal queue host and request ID, and retrieves the result. A lost submission response or exhausted wait can leave the outcome uncertain. Check its receipt before explicitly trying again; no automatic paid retry or provider switch occurs.
 
-The platform has no proposed shareable operation. Future sharing exposes bounded model operations through the host/relay, never raw HTTP access or credentials.
+Billing lookup is separate from rendering. Some keys can render but cannot read administrative billing events. An adapter can retain an estimated cost and receipt in that case; it must not call that a confirmed debit. A reported zero is preserved as zero. A pricing endpoint describes a rate, not necessarily the final charge for a finished job.
 
-Provider documentation: [fal APIs](https://docs.fal.ai/), [FilmOpen fal platform guide](/docs/platforms/fal/).
+Raw HTTP requests and account keys are not proposed for sharing. Any future sharing exposes bounded model operations through the host, not this account connection. [fal APIs](https://docs.fal.ai/).

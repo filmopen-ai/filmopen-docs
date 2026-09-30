@@ -6,7 +6,7 @@ sidebar:
   order: 1
 ---
 
-Voice Design returns audition media. An explicit selection creates a persistent provider voice ID, which the host stores alongside reference metadata. This ID is needed later to synthesize new speech in that voice.
+Voice Design returns audition media. An explicit selection creates a persistent provider voice ID. The host keeps each sample's `voice_binding` and selects the voice for later speech through the character's `voice.provider_bindings`; an uploaded recording alone creates neither.
 
 This operation differs from [Speech Synthesis](../speech-synthesis/): a voice design establishes how a voice sounds; synthesis speaks supplied text. Both functions currently live in one ElevenLabs package. Voice cloning is not implemented.
 
@@ -20,4 +20,3 @@ This operation differs from [Speech Synthesis](../speech-synthesis/): a voice de
 - [fo-elevenlabs](../../fo-elevenlabs/)
 
 [All types of plugins](../)
-

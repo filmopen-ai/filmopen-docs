@@ -57,7 +57,7 @@
     ],
     "description": "Extract reusable visual treatment, independently of characters and locations.",
     "subtypes": [
-      "Image to style JSON — implemented in the temporary plugin lab"
+      "Image to style JSON — implemented"
     ]
   },
   {
@@ -133,4 +133,3 @@
     ]
   }
 ]
-

@@ -9,8 +9,16 @@ sidebar:
 
 Plugin types: [Image Generation](../plugin-types/image-generation/).
 
+Generate Z-Image Turbo images through fal's `fal-ai/z-image/turbo` endpoint. No local ComfyUI, stack download or safetensors are required.
 
-Enable **fo-fal** and **fo-fal-zimage**, allow both packages and save the fal key in Provider keys. This adapter uses `fal-ai/z-image/turbo`; it owns no key or local ComfyUI connection. No stacks or safetensors are needed.
+## Set up and render
+
+1. [Install and allow](../plugin-packages/#install-and-allow) **fo-fal** and **fo-fal-zimage**.
+2. Save and verify the fal plugin's key in **Settings → Provider keys**. Follow the [connector setup](../fo-fal/) if its field is missing.
+3. Open an editable character. In **Reference images**, use the add control and choose **Render**.
+4. Choose Z-Image Turbo under **Model**. If more than one destination is available, select fal under **Runs on**.
+5. For a small first test, select **512×512**, **Draft**, and leave **Expand the prompt** off. Enter a short **Prompt** and check the displayed estimated price.
+6. Press **Render** once. When the job completes, open the new image tile and confirm the character retained it. Inspect its Usage record and whether the cost is estimated or provider-reported.
 
 ## Options
 
@@ -20,16 +28,14 @@ Enable **fo-fal** and **fo-fal-zimage**, allow both packages and save the fal ke
 | Draft | 4 steps, high acceleration |
 | Standard (default) | 8 steps, regular acceleration |
 | Quality | 8 steps, no acceleration |
-| Prompt expansion | Off by default |
+| Expand the prompt | Off by default |
 | Format | PNG, JPEG, WebP |
 | Count | One image |
 
-Use resolution strings such as `512x512` and quality IDs `draft`, `standard`, `quality`. The host's unsigned 32-bit seed is passed to fal. Only text-to-image with empty `inputs` is supported. The safety checker remains enabled.
+This adapter supports text-to-image, not reference-image editing. The host seed is passed to fal and the safety checker remains enabled.
 
-The options action returns 48 size/quality/expansion price combinations. At the checked snapshot the estimate is $0.005 per megapixel, plus $0.0025 for prompt expansion. Quality changes steps and acceleration, not the published megapixel rate. For example, a 512-square draft without expansion estimates $0.00131072 before any provider rounding/account differences.
+The options action supplies approximate prices by resolution, quality and prompt expansion. At the checked September 2026 snapshot the rate was $0.005 per megapixel plus $0.0025 for prompt expansion; a 512-square draft without expansion estimated $0.00131072 before rounding or account differences. Use the current displayed quote, not this historical example, to decide whether to submit.
 
-The temporary popup shows these estimates and the app records usage in its existing ledger. After rendering, the adapter checks fal's billing API for the exact receipt. It records a provider-reported charge when available and otherwise an explicit estimate. See [fal billing limitations](../fo-fal/).
+After rendering the adapter asks fal's billing API for the exact receipt. If accessible it records the provider charge; otherwise it retains an explicit estimate and reason. Billing unavailability does not discard a completed image. See [billing limitations](../fo-fal/).
 
-Only supported images on the fal media CDN are returned for host ingestion. Failures reach the app logger. Billing unavailability does not discard an already completed image. No paid submission is automatically repeated.
-
-The render operation is proposed for future host-controlled sharing; the metadata itself grants no remote access. [Provider endpoint and pricing](https://fal.ai/models/fal-ai/z-image/turbo).
+Missing keys, disabled dependencies and unsupported options are handled before submission. A timeout can mean fal still has the job: check its receipt before a manual retry. The render operation's proposed sharing metadata enables no relay. [Endpoint and pricing](https://fal.ai/models/fal-ai/z-image/turbo).

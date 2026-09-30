@@ -6,7 +6,7 @@ sidebar:
   order: 1
 ---
 
-The adapter receives existing character JSON and user instructions, then returns validated changes without replacing identity, reference media or provider bindings. The temporary host can fork a new version and open Compare with the result on the left.
+The adapter receives existing character JSON and user instructions, then returns validated changes without replacing identity, reference media or provider bindings. The app can fork a new version and open Compare with the result on the left, or apply the changes to the current editable version.
 
 An adapter belongs to this type because of its document contract, not merely because it calls a text model. Location or script transformation will need distinct document contracts and type pages when implemented.
 
@@ -19,4 +19,3 @@ An adapter belongs to this type because of its document contract, not merely bec
 - [fo-openai-character](../../fo-openai-character/)
 
 [All types of plugins](../)
-

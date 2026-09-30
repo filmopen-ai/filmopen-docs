@@ -9,13 +9,18 @@ sidebar:
 
 Plugin types: [Image Generation](../plugin-types/image-generation/).
 
+GPT Image 2.5 has two transport adapters with shared options: **fo-openai-gptimage25** for your OpenAI API key and [fo-fal-gptimage25](../fo-fal-gptimage25/) for your fal key. The selected route controls where the request is sent and billed.
 
-Enable **fo-openai** and **fo-openai-gptimage25** for direct OpenAI rendering. Save/verify the app's existing OpenAI key and allow the platform plugin to use it. The direct adapter also checks for host inline-image support before it allows rendering. A host without that bridge can still use the [fal adapter](../fo-fal-gptimage25/).
+## Set up and render
 
+1. [Install and allow](../plugin-packages/#install-and-allow) **fo-openai** and **fo-openai-gptimage25**.
+2. Save and verify the existing app OpenAI key in **Settings → Provider keys**, then grant **fo-openai** access under its **Keys** section.
+3. Open an editable character. In **Reference images**, use the add control and choose **Render**.
+4. Choose GPT Image 2.5 under **Model**. Where both routes are available, choose OpenAI under **Runs on**. A sole available route is already selected; a route with missing setup explains why it cannot run.
+5. For a small first test, use **Flare**, **low** quality, **1024×1024**, opaque background and PNG. Enter a short **Prompt** and review the displayed approximate price.
+6. Press **Render** once. Open the completed image tile and check that it is retained on this character. Inspect the corresponding Usage record.
 
-GPT Image 2.5 is one model choice with two transport adapters: `fo-openai-gptimage25` and `fo-fal-gptimage25`. They carry byte-identical shared option/validation code. The temporary integration presents one model and a **Provider key** selector; it automatically selects the sole available route and disables the model when no route has a stored, permitted key and enabled dependencies. It rechecks availability before submitting. Keys themselves never enter model parameters.
-
-The normal application render UI is being integrated separately. The plugin-lab selector, inline-image bridge and extended usage accounting are currently experimental host features.
+For fal, use the [fal adapter setup](../fo-fal-gptimage25/). Keys never enter the model's parameters. A failed OpenAI job is not automatically sent to fal, or the reverse.
 
 ## Options
 
@@ -27,43 +32,22 @@ The normal application render UI is being integrated separately. The plugin-lab 
 | Background | `auto`, `opaque`, `transparent` |
 | Format | `png`, `jpeg`, `webp` |
 | Compression | Integer 0–100 for JPEG/WebP only |
-| Count | One image per request |
+| Count | One image |
 
-Transparency requires PNG or WebP. 4K is experimental upstream. These plugins currently implement text-to-image; reference-image editing is not yet implemented. Neither route supports a reproducible seed: results return `seedApplied: false`, and the temporary UI hides the seed input.
-
-```json
-{
-  "model": "t2i-gpt-image-25",
-  "prompt": "Portrait of a woman wearing a blue hat",
-  "inputs": {},
-  "params": {
-    "variant": "flare",
-    "resolution": "1024x1024",
-    "quality": "low",
-    "background": "auto",
-    "output_format": "png"
-  }
-}
-```
-
-The host supplies its ordinary render envelope. Select the transport explicitly in the application; there is no automatic provider switch if rendering fails.
+Transparency requires PNG or WebP. 4K is experimental upstream. These adapters implement text-to-image; reference-image editing is not implemented. Neither route promises a reproducible seed.
 
 ## Prices and usage
 
-`render-options` returns an approximate USD price for every offered size/quality combination. Variants share the published token rates. Estimates use output baselines plus a rough short-prompt allowance; a long prompt, automatic quality, actual token use, account pricing and provider rounding can change the charge. Landscape uses a portrait baseline approximation. `auto` shows an indicative high-quality estimate, not a ceiling.
+The displayed price is approximate. Size, quality, prompt length, actual token use, account pricing and provider rounding can change the charge. Automatic quality is not a spending ceiling. At rates checked on 21 September 2026, a 1024-square low-quality draft was estimated around $0.0064, while high quality was around $0.0532. These examples are not guaranteed current debits.
 
-At the checked rates (21 September 2026), a 1024-square low-quality draft is estimated around **$0.0064**; high quality around **$0.0532**. Do not treat these as guaranteed debit amounts.
+OpenAI's returned text/image token counts are priced at published rates with a **price** basis. Missing or inconsistent token details retain an **estimate**. That differs from a provider reporting an exact dollar charge.
 
-OpenAI's returned text/image token counts are priced at published rates and recorded with the **price** basis. Missing or inconsistent token details retain an **estimate**. An unsplit cached-token count cannot be precisely priced and also stays estimated. This is distinct from a provider reporting an exact dollar charge.
+fal returns an image URL and a receipt; the adapter looks up billing separately. It records a **provider** cost when accessible and an **estimate** when billing is pending or its administrative scope is unavailable. Administrative billing credentials are not required for rendering.
 
-fal's image response provides an image URL, not a final charge. The adapter checks billing separately for the exact request ID and endpoint. When accessible, it records a **provider** cost; when billing scope is unavailable or billing is pending, it records an **estimate** with the reason and receipt. It never silently treats an estimate as a final charge or zero spend. Administrative billing credentials are not required for rendering.
+## Troubleshooting
 
-The temporary app writes these records to its existing Usage ledger, including provider, selected model/variant, receipt when supplied, and available token counts. The production host must adopt the documented accounting hook to preserve these distinctions.
+If the model is unavailable, check both adapter and connector are on, their permissions, the selected route's key, and any capability warning. Direct OpenAI requires the app's inline-image support. A connection check cannot prove model access or credit.
 
-## Errors and sharing
+A lost response can leave the job accepted remotely. Inspect its receipt/Usage before manually repeating it. Prompts and returned image bytes do not belong in troubleshooting logs. Proposed sharing metadata does not publish an API or expose keys.
 
-Missing keys, missing grants and unsupported options fail before submission. Service refusals, uncertain submission and malformed media are logged through FilmOpen. There are no automatic paid retries. Check the receipt before manually repeating a job whose result was lost. Closing FilmOpen does not prove that a submitted remote job stopped.
-
-The manifest proposes only the named model render operation for future sharing. This is inert metadata, not authorization to publish an API or expose a key. Host and relay access, pricing, credit transfer and result validation are separate work.
-
-Provider references: [OpenAI image generation](https://developers.openai.com/api/docs/guides/image-generation), [fal GPT Image 2.5 overview and measured prices](https://fal.ai/gpt-image-2.5), [fal Flare API schema](https://fal.ai/models/openai/gpt-image-2.5/flare/text-to-image/api), [fal Sunburst API schema](https://fal.ai/models/openai/gpt-image-2.5/sunburst/text-to-image/api).
+Provider references: [OpenAI image generation](https://developers.openai.com/api/docs/guides/image-generation), [fal GPT Image 2.5](https://fal.ai/gpt-image-2.5).

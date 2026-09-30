@@ -9,34 +9,31 @@ sidebar:
 
 Plugin types: [Character Analysis](../plugin-types/character-analysis/).
 
+Analyze a reference photograph into editable character appearance and a reusable generation prompt. The package uses GPT-6 Astra structured Responses through [fo-openai](../fo-openai/); it does not generate the replacement image.
 
-**fo-openai-vision** analyzes a character reference. The character controls and media bridge described here are currently a **temporary plugin-lab integration**, not yet a feature of the permanent Flutter app.
+## Set up and analyze
 
-## Use
+1. [Install and allow](../plugin-packages/#install-and-allow) **fo-openai** and **fo-openai-vision**. Save the app's OpenAI key and allow the connector to use it.
+2. Create or open a character you can edit. In **Reference images**, use the add control and **Upload** a PNG or JPEG, at most 8 MiB.
+3. Under the references, find **Described by**. When several image analyzers are on, choose the one you want.
+4. Check **Picture to describe**. The most recent compatible upload is the default; choose another existing reference when needed. A generated take is not silently selected in place of the last upload.
+5. Press **Analyze** once. Review the filled appearance fields, notes and prompt. Unknown observations leave existing values intact.
+6. To test the full workflow, open **Render** from the reference-image add control. Choose an image generator, review the prompt and make a small image. Analysis and rendering are separate provider calls with separate costs.
 
-1. Enable fo-openai-vision and fo-openai. Save your OpenAI key in the existing app key box and allow fo-openai to use it.
-2. Create or open a character in Edit mode and upload a reference in its photo or Voice section.
-3. Under the reference, choose the available analysis model and press **Analyze**.
-4. Review the populated fields and prompt, then use **Render** for an image or **Generate voice** for ElevenLabs Voice Design.
+The photograph is sent only when you choose Analyze; uploading it alone does not send it to this provider. If the app cannot establish a latest compatible upload, select the picture explicitly.
 
-The adapter sends the photo with the supported character-field schema to GPT-6 Astra using Responses and strict structured output. It extracts visible face, hair, eyes, complexion, clothing, accessories and posture, plus prompt.positive. GPT Image 2.5 can then render the resulting prompt. The text analyzer and image generator are separate models.
+## What changes
 
-Only the most recent upload is analyzed. Generated images and voice previews do not replace that source. Older references without upload provenance need a fresh upload in the lab. The input limit is 8 MiB: PNG/JPEG for images, WAV/MP3 for audio. Choose a short, clear recording with one speaker. Clicking Analyze sends this reference to the selected provider; uploading alone does not.
+The requested schema describes visible face, hair, eyes, complexion, clothing, accessories and posture, plus a reusable prompt. The host validates permitted paths and values before saving; clothing observations remain descriptive prose rather than invented wardrobe IDs.
 
-## Fields and preservation
+The analyzer does not establish identity, ethnicity, biography, personality or exact physical measurements. Descriptions are approximate and editable. An invalid response changes nothing. A response that arrives after the reference or selected version is gone is not applied.
 
-The supplied schema covers the relevant character fields, not the entire private project. Unknown traits remain blank or keep existing values. The analyzer does not infer identity, ethnicity, biography, personality or exact physical measurements. Descriptions are approximate and editable. Invalid JSON is refused as a whole, and the host applies only known paths and voice enum values. Edits made during the request are preserved instead of being overwritten.
+Character identity, unrelated fields, references and existing provider voice bindings remain intact. An analysis cannot recreate every visual detail through a later text-only render.
 
-Existing references, voice IDs and unrelated character fields remain intact. A description does not create an engine voice ID: ElevenLabs Generate voice returns previews, and **Use this voice** separately saves the selected candidate and its reusable ID. See [ElevenLabs voices](../fo-elevenlabs/).
+## Language, usage and failures
 
-## Cost, language and integration
+New descriptions follow the chosen app language; JSON keys and enum tokens remain stable. Test Spanish by switching the interface language before analysis and reviewing the descriptive output.
 
-Each explicit analysis can incur a provider charge. GPT-6 usage records measured input/output tokens with an estimated dollar cost from published rates. fal receipt-scoped billing is used when available; otherwise the dollar amount is unknown, not free. Failed JSON can still incur charges. There are no automatic paid retries.
+Usage retains available input/output token counts and a price-based estimate. Rejected JSON can still incur a provider charge. There is no automatic paid retry, and logs must not contain reference-image bytes or generated descriptions.
 
-Labels and errors use English/Spanish ARB files. Descriptive text and prompts follow the app language; machine enum values remain stable. Logs contain operation/model/receipt/error metadata, not keys, media data or generated descriptions.
-
-The package offers `describeReference` and proposed `x.referenceAnalysis` metadata. Production integration needs authorized media inputs, model discovery, durable jobs and extended usage accounting. The existing commentary-oriented entity analyze hook is not silently changed. Source, portable tests and milestone 1-10 are in [filmopen-plugins](https://github.com/filmopen-ai/filmopen-plugins). No sharing relay is enabled.
-
-API references: [GPT-6 Astra model](https://developers.openai.com/api/docs/models/gpt-6-astra) and [structured outputs](https://developers.openai.com/api/docs/guides/structured-outputs). Verified 2026-09-21.
-
-The temporary render popup includes extracted negative constraints as visible, editable "Avoid" instructions within the prompt. This is natural-language guidance; it does not claim a separate negative-conditioning feature in GPT Image or Z-Image.
+This guide describes current app controls and package expectations; live model access and output quality must be checked on the account being used. [GPT-6 Astra](https://developers.openai.com/api/docs/models/gpt-6-astra), [structured outputs](https://developers.openai.com/api/docs/guides/structured-outputs).

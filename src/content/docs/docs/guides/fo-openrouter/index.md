@@ -9,11 +9,18 @@ sidebar:
 
 Plugin types: [Platform Connectors](../plugin-types/platform-connectors/).
 
+This package provides text completions through OpenRouter. It is separate from fal and from image-generation adapters.
 
-Enable **fo-openrouter** and allow its package. It declares its own OpenRouter key in the existing Provider keys UI; the host verifies/stores the key and inserts it into permitted HTTPS requests. It is separate from fal and its image adapters.
+## Set up and test
 
-The platform supports status, relative requests, one-request execution and text completion using FilmOpen catalogue access rows for `openrouter`. It maps supported completion options, preserves zero-valued parameters, returns provider usage/cost when present and exposes a catalogue-rate estimate when enough information is available.
+1. [Install and allow](../plugin-packages/#install-and-allow) **fo-openrouter**.
+2. In **Settings → Provider keys**, save and verify the OpenRouter plugin's key.
+3. Open the plugin page and press **Check** under **Can it work?**. A valid key does not guarantee access to every catalogue model or remaining credit.
+4. Install and allow [fo-assist](../fo-assist/) to exercise a text request through the normal app controls. Choose an available OpenRouter text model in the assistant's settings and enter a short prompt.
+5. Run **Ask**, verify a text answer appears, and inspect Usage for the model/provider and available token/cost details.
 
-Text completion accepts a supported message conversation and explicit model/variant. Unknown options, unsupported catalogue access and conflicting raw model IDs are refused. A transport failure after submission is uncertain; the plugin does not retry it automatically. The current text adapter does not make arbitrary image/video endpoints into render plugins.
+The adapter uses FilmOpen catalogue access rows for `openrouter`; a model must be supported there. It preserves zero-valued options and returns provider usage/cost when supplied, otherwise a catalogue-rate estimate when enough information is available.
 
-An assistant such as [fo-assist](../fo-assist/) can call through FilmOpen's AI routing without owning another key. Raw provider requests and keys are not shareable operations. [OpenRouter API documentation](https://openrouter.ai/docs/quickstart).
+Unknown options, unsupported model access and conflicting raw model IDs are refused. A transport failure after submission can be uncertain; no paid request is automatically retried. This text adapter does not make arbitrary image/video endpoints into render models.
+
+The host owns credentials and usage accounting. Raw provider requests and keys are not shareable operations. [OpenRouter API documentation](https://openrouter.ai/docs/quickstart).
