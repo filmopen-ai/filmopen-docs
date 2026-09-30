@@ -24,11 +24,11 @@ This site is a public repository, [filmopen-ai/filmopen-docs](https://github.com
 
 ### Which site the app opens
 
-FilmOpen opens its guides at `‹website›/docs/…`, for example *How to get a key* on a Provider keys card, and the website sends every `/docs/…` address here with the path kept:
-- **A released FilmOpen** opens `filmopen.ai/docs/…`, which leads to **docs.filmopen.ai**.
-- **A development build of FilmOpen** (a debug or profile build, the ones with development mode) opens `dev.filmopen.ai/docs/…`, which leads to **docs.dev.filmopen.ai**, the live `dev` branch.
+Current FilmOpen builds open the documentation host directly, for example from *How to get a key* on a Provider keys card or a plugin's *Docs* link:
+- **A released FilmOpen** opens **docs.filmopen.ai**.
+- **A development build of FilmOpen** with development mode available opens **docs.dev.filmopen.ai**, the live `dev` branch.
 
-On 18 September 2026 the development website already sent `/docs/…` here; filmopen.ai will do the same once its new website is live, and until then docs.filmopen.ai can be opened directly. So a page merged into `dev` is what every development build shows at once. A release shows it after the next merge into `main`. **An address that exists is never moved or removed:** builds of the app are in people's hands, and a link inside one can't be changed.
+A plugin declares a site-absolute documentation route such as `/docs/guides/fo-cui/`; the application chooses the documentation host for its build. A page merged into `dev` is available to development builds after deployment. Release builds see it after the next merge into `main`. A guide on an unmerged feature branch is not published merely because its plugin links to it. **An address that exists is never moved or removed:** builds of the app are in people's hands, and a link inside one cannot be changed.
 
 ## Two kinds of page
 

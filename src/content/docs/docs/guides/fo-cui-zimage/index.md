@@ -1,67 +1,46 @@
 ---
-title: "fo-cui-zimage: the Z-Image workflow adapter"
-description: "A planning draft of fo-cui-zimage, the proposed FilmOpen plug-in that presents Z-Image text-to-image through fo-cui: its inputs, workflow assets, dependencies, stacks and test results."
+title: "fo-cui-zimage: local Z-Image Turbo"
+description: "Choose a pinned 8 GB Fast, 8 GB Quality or 24 GB Z-Image stack."
 editUrl: https://github.com/filmopen-ai/filmopen-docs/edit/dev/src/content/docs/docs/guides/fo-cui-zimage/index.md
 sidebar:
-  label: fo-cui-zimage (planning draft)
+  label: fo-cui-zimage
   order: 1
 ---
 
-Status: phase-one planning and successful local experiments, 20 September 2026. This is not yet a packaged FilmOpen plugin.
+Plugin types: [Image Generation](../plugin-types/image-generation/).
 
-The proposed plugin presents a text-to-image operation, chooses a compatible Z-Image stack, validates input, prepares a versioned official workflow and calls `fo-cui`. Users supply a prompt and resolution; the stack selects model files and sampling defaults.
+Render a still image from a prompt through [ComfyUI](../fo-cui/). This model adapter owns the pinned workflow and stack settings; FilmOpen owns the render dialog, jobs and media insertion.
 
-## Input contract
+Use **fo-cui-zimage v2 or later** with an app supporting plugin interface revision **2**. This release supplies all three stacks to the permanent render dialog, including their resolution choices and reasons a stack cannot run.
 
-The experiment includes a JSON Schema 2020-12 file with these fields:
+## Set up and render
 
-| Field | Required | Experiment rules |
-|---|---|---|
-| `prompt` | Yes | Nonempty text |
-| `width` | Yes | Integer, 256–1024, multiple of 16 |
-| `height` | Yes | Integer, 256–1024, multiple of 16 |
-| `seed` | No | Nonnegative JavaScript-safe integer; default 42 |
-| `steps` | No | Integer 1–20; default 8 |
+1. [Install and allow](../plugin-packages/#install-and-allow) **fo-cui** and **fo-cui-zimage**. Configure the full ComfyUI URL and complete its **Check**.
+2. For automatic file verification/downloads, start and configure the separate [model verification service](../fo-cui/#enable-model-verification-and-downloads). A connection Check does not install any weights.
+3. Open the Z-Image plugin's **Actions**. Run **Download missing files: 8 GB Fast** for a small local test, or the matching Quality action. Wait for a successful result; follow any reported missing-service or file error. This action prepares files and **does not render an image**.
+4. Open an editable character. In **Reference images**, use its add control and choose **Render**.
+5. Select Z-Image Turbo under **Model**, the local ComfyUI destination under **Runs on** when there is a choice, and **8 GB Fast** under **Way of running it**.
+6. Choose **512×512**, enter a short **Prompt**, and press **Render**. Follow the job until it completes. Open the new image tile and confirm it was added to this character.
+7. Change **Way of running it** to **8 GB Quality**. Resolution now offers **512×512** and **1024×1024**, while Fast offers only **512×512**. Choose the desired size before another render. On an 8 GB GPU, **24 GB Quality** must be unavailable with a message explaining its 24 GB VRAM requirement.
 
-These are conservative experiment limits, not a declaration of every resolution the model can generate. Unknown fields are rejected. Final ranges and defaults belong to the selected stack and operation schema. Seed, prompt and workflow/model versions are recorded with results.
+## Stacks
 
-## Workflow assets
+| Stack | Diffusion file | Resolution | Default settings |
+|---|---|---|---|
+| 8 GB Fast | `z_image_turbo_int8_convrot.safetensors` | 512×512 | 8 steps, Euler, simple scheduler |
+| 8 GB Quality | `z_image_turbo_bf16.safetensors` | 512×512 or 1024×1024 | 9 steps, res_multistep, simple scheduler |
+| 24 GB Quality | `z_image_turbo_bf16.safetensors` | 1024×1024 | 9 steps, res_multistep, simple scheduler |
 
-The stock official Z-Image Turbo and INT8 workflows already expose native subgraph ports for prompt, width, height, seed and steps. Additional ports select diffusion, text-encoder and VAE files. The original templates did not select inputs/outputs for App Mode.
+The 8 GB stacks use `qwen_3_4b_fp8_mixed.safetensors`; the 24 GB stack uses `qwen_3_4b.safetensors`. All use `ae.safetensors`. These belong at the category roots `diffusion_models`, `text_encoders` and `vae`. Package assets pin the source URLs, byte sizes, hashes and graphs.
 
-The planning package retains both original templates, the executable API graph produced by ComfyUI's frontend, and an adapted INT8 workflow with native App Mode metadata. The adapted workflow displays the five user controls and SaveImage output without third-party nodes. A separate JSON Schema states which values FilmOpen requires from callers.
+Quality uses BF16 with CPU offloading on the tested 8 GB configuration. Its name is a preset label, not a measured quality ranking. System RAM, available GPU memory and other workloads can still prevent rendering. The selected stack controls its graph, requirements and supported sizes; unsupported combinations are refused.
 
-Bindings are generated from native boundary links and checked against the exported API graph. Render code sets semantic inputs through those mappings. Graph hashes and class/input checks reject unreviewed workflow changes. This avoids fixed widget-array positions and JSON string replacement; upstream changes still require compatibility review and regenerated bindings.
+## If preparation or rendering fails
 
-## INT8 dependencies
+- **Check succeeds, download does nothing:** confirm the separate model helper is running and **Model verification service** is set. An unset helper makes the Z-Image action fail with `model-service-unconfigured`; an unreachable helper returns `model-service-unavailable`. A UI that only says Done has not established that files were installed.
+- **Files missing or corrupt:** inspect the action result and helper process. Verification checks the pinned byte sizes and SHA-256 hashes; repair downloads missing files only. Run **Verify** again after repair, then return to **Render**. Existing corrupt files require operator review before removal and repair.
+- **No stack ready:** confirm the selected server, GPU, model categories and required nodes. Model files on another ComfyUI installation do not count.
+- **Salad selected:** choose a stack that its deployed recipe actually installed. The supplied Salad recipe installs BF16 Quality weights, not the local INT8 Fast stack.
+- **Render timed out:** inspect the outstanding job before retrying. Rechecking dependencies is read-only; it is not a second render.
 
-| Category | File | Bytes |
-|---|---|---:|
-| `diffusion_models` | `z_image_turbo_int8_convrot.safetensors` | 6,201,001,296 |
-| `text_encoders` | `qwen_3_4b_fp8_mixed.safetensors` | 5,631,994,051 |
-| `vae` | `ae.safetensors` | 335,304,388 |
-
-The experiment downloaded and SHA-256 verified these files from official revision `08d04455279082882deaabc8d0d09fc914c071e1`. The package's model manifest carries exact URLs and hashes. Weights are external dependencies, not bundled workflow assets. Workflow licensing and model licensing are separate.
-
-## Proposed stacks
-
-| Label | Workflow / default | Evidence |
-|---|---|---|
-| 8GB VRAM fast | INT8 Turbo, 512×512, 8 steps | JavaScript render passed on an RTX 4060 laptop |
-| 8GB VRAM quality | INT8 Turbo, 1024×1024, 8 steps | Native template render passed; larger-resolution preset, not a measured quality ranking |
-| 24GB VRAM fast | INT8 Turbo, 1024×1024, 8 steps | Candidate; 24 GB hardware not tested |
-| 24GB VRAM quality | Official BF16 Turbo workflow, 1024×1024 | Candidate; dependencies/export/benchmark still required |
-
-The stack array is a planning proposal. “8GB” does not specify a tested minimum RAM/VRAM envelope, and “quality” does not imply a proven superiority of one precision mode. Do not silently substitute a different stack after OOM.
-
-## Test results
-
-On ComfyUI 0.36.0 with frontend 1.53.6 and template package 0.11.62, the native 1024×1024 run succeeded. Two independent JavaScript requests succeeded at 512×512 and 768×512, taking approximately 24 and 30 seconds end to end. The second prompt contained quotes and a newline. Both downloaded PNGs matched the requested dimensions and were visually inspected. A native App Mode run also succeeded at 512×1024.
-
-The JavaScript tests exercised handshake, model preflight, submission, WebSocket progress, history reconciliation and HTTP output retrieval. Additional tests covered image/WAV transfer, nested image loading, invalid graph rejection and local input validation. These are smoke tests on one machine, not performance guarantees.
-
-## Next phase
-
-Compare required host hooks with the existing plugin specification, implement the final plugin ABI, and add recovery/cancellation and hardware-matrix tests. Qwen, LTX and MiniMax plugins should follow the same division of responsibilities with their own operation schemas, frame constraints, dependencies and evidence.
-
-Sources: [official templates](https://github.com/Comfy-Org/workflow_templates), [official App Mode](https://docs.comfy.org/interface/app-mode), [pinned Z-Image model files](https://huggingface.co/Comfy-Org/z_image_turbo/tree/08d04455279082882deaabc8d0d09fc914c071e1).
+The package logs dependency and backend failures without logging prompt text. The local estimate means no external image API charge; electricity and cloud GPU time are separate. This adapter currently takes a text prompt, not reference-image editing. Proposed sharing exposes only a bounded named render; it enables no relay.

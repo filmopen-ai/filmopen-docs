@@ -1,63 +1,56 @@
 ---
-title: "fo-cui: the ComfyUI communication service"
-description: "A planning draft of fo-cui, the proposed shared service FilmOpen model plug-ins use to reach a ComfyUI server: discovery, uploads, jobs, progress, errors and outputs."
+title: "fo-cui: ComfyUI platform"
+description: "Connect model adapters to a local or selected ComfyUI server."
 editUrl: https://github.com/filmopen-ai/filmopen-docs/edit/dev/src/content/docs/docs/guides/fo-cui/index.md
 sidebar:
-  label: fo-cui (planning draft)
+  label: fo-cui
   order: 1
 ---
 
-Status: phase-one planning and tested research adapter, 20 September 2026. Final FilmOpen plugin packaging and function signatures await the plugin architecture review.
+Plugin types: [Platform Connectors](../plugin-types/platform-connectors/).
 
-`fo-cui` is the proposed shared service used by model plugins such as `fo-cui-zimage`. It handles connection health, hardware and dependency discovery, media upload, job submission, progress, errors and output retrieval. Model plugins supply operation schemas, stack selection and executable workflow graphs.
+Connect FilmOpen to ComfyUI running on your own computer, or use a server managed by [Salad](../fo-salad/). This connector does not install or start ComfyUI. Rendering also needs a model adapter, such as [Z-Image Turbo](../fo-cui-zimage/) or [LTX video](../fo-cui-ltx/).
 
-## Connection and discovery
+## Set up
 
-For a configured local ComfyUI URL, query `/system_stats`, `/features`, `/models`, relevant `/models/{category}` lists, and `/object_info/{nodeClass}`. Validate response shapes and required node classes. Use device `vram_total` and `vram_free` as byte counts; allocator counters are separate. Available VRAM and host RAM influence stack selection, but do not alone guarantee that a job fits.
+1. Start ComfyUI separately. Confirm its own page opens at the address it reports.
+2. Follow the [package installation steps](../plugin-packages/#install-and-allow), then open **Settings → Plugins → ComfyUI** and allow it.
+3. Under **Settings on this computer**, set **ComfyUI server** to the full URL. The usual local value is `http://127.0.0.1:8188`; a bare `127.0.0.1` lacks the scheme and port.
+4. Press **Check** under **Can it work?**. This checks the server, not the contents of your model files. A CPU-only server and a missing GPU are different from a connection failure.
+5. Enable a model adapter and follow its guide. A successful Check alone does not generate an image.
 
-Model lists identify categories and relative filenames. Capability-test `/experiment/models` and `/experiment/models/{category}` if physical roots, file sizes and `pathIndex` are needed. They are experimental and may be unavailable. A category can span multiple roots; remote paths are not local host paths. Check hashes to distinguish different files with the same name.
+## Enable model verification and downloads
 
-The base service should delegate installation to a host download/filesystem service: select a configured root, verify free space and existing files, download a pinned revision to a temporary file, verify SHA-256, finalize atomically and refresh discovery. A direct HTTP connection does not imply permission or capability to write the ComfyUI machine's model folders.
+ComfyUI lists installed filenames, but that cannot prove that their bytes are correct. The optional **Model verification service** performs pinned size and SHA-256 checks and downloads missing Z-Image files. It is a separate Python process on the computer that owns the ComfyUI models.
 
-## Executing a workflow
+1. Obtain the matching [filmopen-plugins source](https://github.com/filmopen-ai/filmopen-plugins) and use Python 3.11 or later. Run the following from the repository root, replacing the model directory with your actual ComfyUI model directory.
 
-The direct server API expects executable API JSON, not the UI-save graph. Obtain it using ComfyUI's native exporter/submission path. Native subgraphs and App Mode provide authoring interfaces; model adapters bind a stable public input schema to a reviewed, versioned API graph.
+   Windows PowerShell:
 
-1. Validate typed inputs and required dependencies.
-2. Upload input media and assign the returned server-relative references.
-3. Open `/ws?clientId=<uuid>` and register listeners.
-4. POST `/prompt` with `{prompt: graph, client_id: uuid}`.
-5. Persist the returned `prompt_id` immediately.
-6. Follow job events and reconcile with `/history/{prompt_id}`.
-7. Read file references from successful history and download through `/view`.
-8. Return host-owned assets with MIME type, dimensions/duration and generation provenance.
+   ```powershell
+   python tools/model_service.py --models "C:/path/to/ComfyUI/models" --manifest fo-cui-zimage/assets/models.json --port 8189
+   ```
 
-Use a freshly parsed/copied graph and structured assignments followed by JSON serialization. Never replace raw text inside workflow JSON. Bindings should include a workflow hash and expected node class/input names, so incompatible changes fail before submission.
+   Linux:
 
-## Media and output handling
+   ```bash
+   python3 tools/model_service.py --models "/path/to/ComfyUI/models" --manifest fo-cui-zimage/assets/models.json --port 8189
+   ```
 
-`/upload/image` accepts multipart data with a binary `image` part and `type`, `subfolder`, `overwrite` fields. Always use the returned name and subfolder. PNG upload, deduplication, byte-exact download and loading a nested image path were tested. The tested server also accepted a WAV through this endpoint; video codecs, mask handling and audio execution require their own tests.
+2. Keep that process running. Set **Model verification service** on the ComfyUI plugin page to the URL it prints, normally `http://127.0.0.1:8189`.
+3. Check that this helper serves the **same model root** as the ComfyUI server configured above. A working helper pointed at another installation cannot prepare this server.
+4. On the Z-Image plugin page, run the selected stack's **Verify** or **Download missing files** action. Wait for its result, then open Render separately.
 
-Loader field names vary: `LoadImage.image`, `LoadAudio.audio` and `LoadVideo.file` are examples. Some dropdowns omit nested files even when loaders accept their paths. Subfolders help avoid collisions; they do not provide user isolation.
+The helper binds to loopback. Do not expose it publicly or point a local helper at a remote Salad server: it would operate on the wrong computer. Salad's recipe installs its own pinned files.
 
-Final file references normally contain `filename`, `subfolder` and `type`. Encode query parameters when calling `/view`. Keep node ID/output role and preserve multi-output jobs. Preview bytes are not final output assets. An output URL may expire with server retention; collect a durable host copy.
+With no helper URL, model preparation returns `unconfigured`. If a configured helper cannot be reached, the package reports `model-service-unavailable`. A connection Check can still pass in either case. Nothing has downloaded merely because an action ended or the server was reachable.
 
-## Status, errors and cancellation
+Repair installs **only missing files** into their approved categories. An existing corrupt file is reported and preserved for operator review; it is not silently overwritten. Closing FilmOpen does not stop a download already accepted by the helper. A timeout may leave it running: check that process before asking again.
 
-Expose preparation/upload, queued/running, download and terminal states. Sampling progress is node-level progress. `executed` is not whole-job success. Check history for a successful completed state and execution error/interruption messages. Keep structured server validation errors and node diagnostics.
+## Check the result
 
-A client timeout does not cancel a server job. A timeout during submission can leave acceptance uncertain; reconcile before resubmitting. History may be absent while a job is queued/running or after a restart/retention event. Use persisted job receipts and report an unknown state when necessary.
+Follow the Z-Image guide to generate one small image, open the resulting tile, and confirm that it belongs to the character and appears in its takes. File verification and a completed render are separate checks.
 
-Prefer capability-tested job-specific cancellation. Do not use a legacy global interrupt or queue clear as routine cancellation for one FilmOpen render.
+The connector submits executable ComfyUI API graphs, not UI-save workflow documents. It does not clear the whole queue or interrupt unrelated GPU work. After a timeout or lost submission response, check the job before explicitly retrying; no automatic paid or GPU resubmission is safe merely because FilmOpen stopped waiting.
 
-## Host integration needs
-
-The host must provide async service calls between plugins, events/progress, binary asset handles, package-relative asset reads, durable job storage, HTTP/WebSocket or equivalent transports, cancellation, and trusted large-file installation. The research adapter runs in Node 24; this does not establish availability of Node APIs in the Dart-hosted JavaScript engine.
-
-An optional transport can use the official TypeScript SDK and Comfy API v2 through a compatible deployment or local proxy. The directly tested ComfyUI server supports the raw endpoints above; its `/api/v2/jobs` route returned 404. Keep those transports distinct.
-
-## References
-
-- [ComfyUI server API](https://docs.comfy.org/development/comfyui-server/comms_routes)
-- [Official TypeScript SDK and self-hosted proxy requirements](https://github.com/Comfy-Org/comfy-typescript-sdk)
-- [Native subgraph developer guide](https://docs.comfy.org/custom-nodes/js/subgraphs)
+Raw server access, workflow submission and file installation are not shareable operations. Proposed sharing metadata enables no relay. [ComfyUI protocol](https://github.com/Comfy-Org/ComfyUI/blob/master/server.py).
