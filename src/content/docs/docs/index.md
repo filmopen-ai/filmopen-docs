@@ -8,7 +8,7 @@ sidebar:
 
 Three kinds of page live here.
 
-**[Guides](/docs/guides/account/)** are written for this site: how the FilmOpen account works, and how to write a plug-in for the app.
+**[Guides](/docs/guides/account/)** are written for this site: how the FilmOpen account works, how to write a plug-in for the app, and [how to write and publish pages here](/docs/guides/publishing/), a plug-in's own guides included.
 
 **[AI platforms and API keys](/docs/platforms/)** covers the platforms FilmOpen reaches models on — what they cost, and how to open an account and create a key for each. The app's *Settings → Provider keys* opens these pages.
 

@@ -26,7 +26,18 @@ export default defineConfig({
       sidebar: [
         { label: 'Guides', items: [{ autogenerate: { directory: 'docs/guides' } }] },
         { label: 'AI platforms', items: [{ autogenerate: { directory: 'docs/platforms' } }] },
-        { label: 'Specifications', items: [{ autogenerate: { directory: 'docs/specifications' } }] },
+        {
+          label: 'Specifications',
+          // Named one by one: the Software Specification is a folder of pages
+          // (src/snapshot/placement.ts) and would otherwise be a group called
+          // after its directory, sorted before the other two.
+          items: [
+            'docs/specifications',
+            'docs/specifications/project',
+            { label: 'Software Specification', items: [{ autogenerate: { directory: 'docs/specifications/software' } }] },
+            'docs/specifications/mcp',
+          ],
+        },
       ],
       // A snapshot has no history here, so a date comes only from a page that
       // says its own (`lastUpdated` in its frontmatter), as the platform guides do.

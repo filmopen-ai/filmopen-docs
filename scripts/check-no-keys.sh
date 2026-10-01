@@ -112,7 +112,7 @@ fi
 # `Ai_Cf_Aisingapore_Gemma_Sea_Lion_…` reads as a Resend key, which is how
 # this check first refused its own repository.
 readonly NOT_A_WORD='(^|[^A-Za-z0-9_-])'
-readonly KEYS="${NOT_A_WORD}(sk|rk)_(test|live)_[A-Za-z0-9]{20,}|${NOT_A_WORD}whsec_[A-Za-z0-9]{20,}|${NOT_A_WORD}re_[A-Za-z0-9_-]{20,}|${NOT_A_WORD}sb_(publishable|secret)_[A-Za-z0-9_-]{20,}|${NOT_A_WORD}eyJ[A-Za-z0-9_-]{10,}\.eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}|GOCSPX-[A-Za-z0-9_-]{20,}|ya29\.[A-Za-z0-9_-]{30,}|BEGIN (RSA |EC |OPENSSH |ENCRYPTED )?PRIVATE KEY|${NOT_A_WORD}AKIA[0-9A-Z]{16}|${NOT_A_WORD}gh[pousr]_[A-Za-z0-9]{36}|${NOT_A_WORD}github_pat_[A-Za-z0-9_]{60,}|${NOT_A_WORD}AIza[0-9A-Za-z_-]{35}|${NOT_A_WORD}xox[baprs]-[A-Za-z0-9-]{10,}|${NOT_A_WORD}xapp-[0-9]-[A-Za-z0-9-]{10,}|${NOT_A_WORD}sk-(proj-|ant-)?[A-Za-z0-9_-]{32,}"
+readonly KEYS="${NOT_A_WORD}(sk|rk)_(test|live)_[A-Za-z0-9]{20,}|${NOT_A_WORD}whsec_[A-Za-z0-9]{20,}|${NOT_A_WORD}re_[A-Za-z0-9_-]{20,}|${NOT_A_WORD}sb_(publishable|secret)_[A-Za-z0-9_-]{20,}|${NOT_A_WORD}eyJ[A-Za-z0-9_-]{10,}\.eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}|GOCSPX-[A-Za-z0-9_-]{20,}|ya29\.[A-Za-z0-9_-]{30,}|BEGIN (RSA |EC |OPENSSH |ENCRYPTED )?PRIVATE KEY|${NOT_A_WORD}AKIA[0-9A-Z]{16}|${NOT_A_WORD}gh[pousr]_[A-Za-z0-9]{36}|${NOT_A_WORD}github_pat_[A-Za-z0-9_]{60,}|${NOT_A_WORD}AIza[0-9A-Za-z_-]{35}|${NOT_A_WORD}xox[baprs]-[A-Za-z0-9-]{10,}|${NOT_A_WORD}xapp-[0-9]-[A-Za-z0-9-]{10,}|${NOT_A_WORD}sk-(proj-|ant-)?[A-Za-z0-9_-]{32,}|${NOT_A_WORD}xai-[A-Za-z0-9_-]{40,}"
 
 if [ "${1:-}" = "--all" ]; then
   # `--name-only`: the names, never the match itself; -I skips binaries.
