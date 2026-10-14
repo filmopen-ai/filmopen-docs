@@ -1,0 +1,146 @@
+---
+title: "Classic Cinema"
+description: "Film-inspired prompts from black and white and Technicolor to grainy independent cinema."
+editUrl: https://github.com/filmopen-ai/filmopen-docs/edit/dev/src/content/docs/docs/guides/styles/classic-cinema.md
+sidebar:
+  label: Classic Cinema
+  order: 2
+---
+
+**Base prompt**
+
+```text wrap
+Two people talking, leaning on their car, with a suburban house in the background, dog playing in the yard.
+```
+
+These recipes evoke photochemical film capture, printing and period lighting. Classic here describes the medium and visual treatment, not the age of the story: the same suburban scene can look like a film print without requiring period clothing or a vintage car.
+
+Append one **style prompt** below to the base prompt to generate the complete scene. Every example uses the same base sentence; clothing, dog breed and other unspecified details are left to the model, so each look can suggest a different interpretation. Use the pictures to compare the whole treatment, not just the color grade.
+
+To request the same layout, begin with `Create one square 1024x1024 image.`, then add the base and style prompts. These examples used the built-in image generator with default settings and were exported as 1024×1024 JPEGs. Results vary between runs.
+
+Browse the other categories: [Modern Cinema](../modern-cinema/), [Classic Cinema](../classic-cinema/), [Cell Phone](../cell-phone/), [Animated](../animated/) and [Experimental Cinema](../experimental-cinema/).
+
+## Black and White
+
+![Balanced grayscale tones and fine film grain: two people talking beside their car, a suburban house behind them and a dog in the yard.](./classic-cinema/black-and-white.jpg)
+
+**Style prompt**
+
+```text wrap
+Photograph this as a black-and-white 35mm cinema still. Use a full grayscale tonal range, natural daylight, fine organic film grain, smooth highlight roll-off and clear separation between faces and their surroundings. Preserve detail in both light and dark areas. The image should feel photographic, balanced and timeless, with no color tint.
+```
+
+Timeless drama and a clear baseline for monochrome films.
+
+## Film Noir
+
+![Hard directional light, deep blacks and oblique shadows: two people talking beside their car, a suburban house behind them and a dog in the yard.](./classic-cinema/film-noir.jpg)
+
+**Style prompt**
+
+```text wrap
+Photograph this as a classic black-and-white film noir still on 35mm film. Use hard directional light, deep blacks, bright isolated highlights, oblique shadows and dramatic separation between light and darkness. Let shadows shape the ordinary setting into a tense, ambiguous world. Preserve readable faces, crisp edges and a fine organic grain.
+```
+
+Crime stories, suspicion and moral ambiguity.
+
+## Technicolor
+
+![Rich reds, blues and greens with theatrical lighting: two people talking beside their car, a suburban house behind them and a dog in the yard.](./classic-cinema/technicolor.jpg)
+
+**Style prompt**
+
+```text wrap
+Photograph this as a classic three-strip Technicolor-inspired cinema still. Use luminous saturated reds, blues and greens, clean color separation, warm flattering faces and bright, carefully controlled studio-style lighting. Make the palette richly theatrical and optimistic, with dense colors and a polished film-print finish. Keep it live action rather than illustration.
+```
+
+Musicals, bright adventure and exuberant comedy.
+
+## Warm Eastmancolor
+
+![Warm amber daylight, creamy highlights and mellow greens: two people talking beside their car, a suburban house behind them and a dog in the yard.](./classic-cinema/warm-eastmancolor.jpg)
+
+**Style prompt**
+
+```text wrap
+Photograph this as a warm mid-century color-negative cinema still with an Eastmancolor-inspired film-print look. Use gentle amber daylight, creamy highlights, mellow greens, slightly softened color separation and fine organic grain. Preserve realistic skin and smooth tonal transitions. The mood is warmly domestic and nostalgic without obvious scratches or a distressed overlay.
+```
+
+Family drama and softer period color.
+
+## Seventies Earth Tones
+
+![Earthy brown, mustard and olive with dense shadows: two people talking beside their car, a suburban house behind them and a dog in the yard.](./classic-cinema/seventies-earth-tones.jpg)
+
+**Style prompt**
+
+```text wrap
+Photograph this as a 1970s 35mm cinema still. Use earthy browns, mustard, muted orange and subdued olive, available light, dense shadows and visible but natural film grain. Keep the image tactile and slightly rough, with restrained highlights and an unsentimental location-shot feeling. Let the atmosphere feel grounded and lived in.
+```
+
+Gritty character drama and grounded thrillers.
+
+## Bleach Bypass
+
+![Desaturated color, silvery highlights and heavy blacks: two people talking beside their car, a suburban house behind them and a dog in the yard.](./classic-cinema/bleach-bypass.jpg)
+
+**Style prompt**
+
+```text wrap
+Photograph this as a 35mm cinema still with a bleach-bypass-inspired finish. Combine strongly reduced color saturation with hard contrast, deep dense blacks, silvery highlights and pronounced organic grain. Keep faces legible while allowing the light to feel abrasive and the shadows heavy. Create a tense, severe photographic image rather than a smooth digital grade.
+```
+
+Harsh thrillers, conflict and a more abrasive film texture.
+
+## Grainy 16mm
+
+![Visible organic grain and subdued available-light color: two people talking beside their car, a suburban house behind them and a dog in the yard.](./classic-cinema/grainy-16mm.jpg)
+
+**Style prompt**
+
+```text wrap
+Photograph this as an independent movie still shot on 16mm color film. Use clearly visible organic grain, modest resolving detail, natural available light, slightly uneven exposure and subdued, earthy colors. Keep the framing candid and the surfaces tactile. The image should feel immediate, intimate and inexpensive, with grain integrated into the photograph.
+```
+
+Documentary realism and intimate independent films.
+
+## Super 8 Home Movie
+
+![Soft detail, coarse grain and warm faded colors: two people talking beside their car, a suburban house behind them and a dog in the yard.](./classic-cinema/super-8-home-movie.jpg)
+
+**Style prompt**
+
+```text wrap
+Photograph this as a frame from a Super 8 color home movie. Use coarse organic grain, warm faded colors, soft focus, mild exposure irregularity and a small amount of highlight halation. Keep the composition casual and the atmosphere affectionate and imperfect. Evoke a projected family memory without adding a film border or written date.
+```
+
+Family memories, nostalgia and found home footage.
+
+## Sepia Silent Era
+
+![Sepia monochrome, soft detail and a tableau composition: two people talking beside their car, a suburban house behind them and a dog in the yard.](./classic-cinema/sepia-silent-era.jpg)
+
+**Style prompt**
+
+```text wrap
+Photograph this as a sepia-tinted silent-era cinema still. Use monochrome brown tonalities, simple frontal daylight, gentle vignetting, soft lens detail and visible film grain. Let the people remain expressive within a clear tableau composition. Create the feeling of an early projected film image without adding intertitles, printed text or a decorative frame.
+```
+
+Early-cinema nostalgia and storybook tableaux.
+
+## Soft-focus Melodrama
+
+![Soft diffusion, luminous skin and glowing film highlights: two people talking beside their car, a suburban house behind them and a dog in the yard.](./classic-cinema/soft-focus-melodrama.jpg)
+
+**Style prompt**
+
+```text wrap
+Photograph this as a romantic 35mm studio melodrama still. Use soft lens diffusion, luminous skin, glowing highlights, rich but restrained film-print color and carefully sculpted flattering light. Let shadows remain gentle and edges soften without losing recognizable faces. The atmosphere should feel elegant, emotional and slightly larger than everyday life.
+```
+
+Romance and emotionally heightened classic drama.
+
+## References
+
+[George Eastman Museum describes the three-strip Technicolor camera](https://www.eastman.org/technicolor/technology/three-strip-camera). [Kodak explains bleach bypass](https://www.kodak.com/en/motion/page/processing-techniques/) as retaining silver to increase contrast and reduce saturation. These prompts suggest the visible effects; an AI-generated image is not a scan of those processes.
