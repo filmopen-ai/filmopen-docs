@@ -37,7 +37,9 @@ A plugin declares a site-absolute documentation route such as `/docs/guides/fo-c
 
 ### A plug-in's own pages
 
-Put them in a folder of their own under `src/content/docs/docs/guides/`, named after your plug-in in lowercase with hyphens, for example `src/content/docs/docs/guides/storyboard-sketcher/`. The folder becomes a group in the sidebar under *Guides*, labelled with the folder's name as you wrote it, and its pages live at `/docs/guides/storyboard-sketcher/…`. Choose the name once: like every address here, it is not moved afterwards. `account`, `plugins` and `publishing` are already taken.
+Put them in a folder of their own under `src/content/docs/docs/guides/`, named after your plug-in in lowercase with hyphens, for example `src/content/docs/docs/guides/storyboard-sketcher/index.md`. This page lives at `/docs/guides/storyboard-sketcher/`. Choose the name once: like every address here, it is not moved afterwards. `account`, `plugins`, `publishing`, `plugin-types` and `plugin-packages` are already taken.
+
+Registered FilmOpen packages appear as individual pages under **Guides → List of plugins**. Register a package's capabilities in `src/data/plugin-types.json`: that catalog supplies its sidebar link, and `test/plugin-types.spec.ts` holds the [Types of Plugins](/docs/guides/plugin-types/) pages and the package's own page to it. For another plug-in's guide, or a second page of a plug-in, add its slug to the *List of plugins* group in `astro.config.mjs` — `items: [...pluginGuides, 'docs/guides/storyboard-sketcher']`. The sidebar's groups and labels do not change page addresses.
 
 ## Set up once
 
@@ -88,9 +90,10 @@ Put them in a folder of their own under `src/content/docs/docs/guides/`, named a
    npm run dev          # http://localhost:4321
    ```
 
-2. **Start from a page that exists.** Copy the top of [`account.md`](https://github.com/filmopen-ai/filmopen-docs/blob/dev/src/content/docs/docs/guides/account.md): a `title`, a one-sentence `description`, an `editUrl` pointing at the file on `dev`, and a sidebar `label` and `order`.
+2. **Start from a page that exists.** Copy the top of [`account.md`](https://github.com/filmopen-ai/filmopen-docs/blob/dev/src/content/docs/docs/guides/account.md): a `title`, a one-sentence `description`, an `editUrl` pointing at the file on `dev`, and a sidebar `label` (with an `order` where the page sits in a generated group, such as *Types of Plugins*).
 3. **Write what a person does, in the order they do it,** with the words the app shows on screen: **Settings → Provider keys**, not "the keys page". A message the app shows is quoted letter for letter. Say what isn't built yet rather than leaving it out.
 4. **Pictures go in a folder named after the page,** beside it: `publishing.md` would use `publishing/step-1.png`, written in the page as `![What the picture shows](./publishing/step-1.png)`. The text in brackets describes the picture for someone who can't see it: say what is on it and what is outlined.
+5. **Check the sidebar.** Add a new general guide's slug to *Guides* in `astro.config.mjs`. Type pages are listed automatically in their named group; registered packages are listed from `src/data/plugin-types.json`. Keep one link per page and use labels people can read.
 
 ### Screenshots
 

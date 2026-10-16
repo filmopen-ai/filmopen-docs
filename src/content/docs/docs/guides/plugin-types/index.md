@@ -1,8 +1,9 @@
 ---
-title: "Types of plugins"
+title: "Types of Plugins"
 description: "Plugin capabilities, their subtypes, and the packages that implement them."
 editUrl: https://github.com/filmopen-ai/filmopen-docs/edit/dev/src/content/docs/docs/guides/plugin-types/index.md
 sidebar:
+  label: Overview
   order: 0
 ---
 

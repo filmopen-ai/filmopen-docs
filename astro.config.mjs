@@ -3,6 +3,13 @@ import process from 'node:process';
 import starlight from '@astrojs/starlight';
 import { defineConfig } from 'astro/config';
 
+import pluginTypes from './src/data/plugin-types.json' with { type: 'json' };
+
+/** List each registered plugin once without changing its documentation address. */
+const pluginGuides = [...new Set(pluginTypes.flatMap((type) => type.packages))]
+  .sort()
+  .map((name) => ({ slug: `docs/guides/${name}`, label: name }));
+
 // Which site this build is: it decides the canonical address of every page,
 // and a production page whose canonical address is the development site
 // tells a search engine to prefer the one that says `noindex`. Cloudflare's
@@ -22,9 +29,22 @@ export default defineConfig({
       social: [{ icon: 'github', label: 'The documentation on GitHub', href: 'https://github.com/filmopen-ai/filmopen-docs' }],
       // Every page lives under /docs/…, because the app opens ‹site›/docs/…
       // and the website sends those here with the path kept
-      // (src/snapshot/placement.ts). A folder is a group, in the pages' own order.
+      // (src/snapshot/placement.ts). Named groups describe the contents while
+      // plugin guides keep their existing addresses and appear as direct links.
+      // A page under docs/guides that no group names is left out of the sidebar:
+      // test/guides-navigation.spec.ts holds every guide page to one link.
       sidebar: [
-        { label: 'Guides', items: [{ autogenerate: { directory: 'docs/guides' } }] },
+        {
+          label: 'Guides',
+          items: [
+            'docs/guides/account',
+            'docs/guides/publishing',
+            'docs/guides/plugins',
+            { slug: 'docs/guides/plugin-packages', label: 'Installing plugins' },
+            { label: 'Types of Plugins', items: [{ autogenerate: { directory: 'docs/guides/plugin-types' } }] },
+            { label: 'List of plugins', items: pluginGuides },
+          ],
+        },
         { label: 'AI platforms', items: [{ autogenerate: { directory: 'docs/platforms' } }] },
         {
           label: 'Specifications',
