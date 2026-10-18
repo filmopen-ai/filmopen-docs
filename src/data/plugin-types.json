@@ -130,5 +130,30 @@
     "subtypes": [
       "Prompt-to-answer action — implemented"
     ]
+  },
+  {
+    "slug": "model-pickers",
+    "title": "Model Pickers",
+    "packages": [
+      "fo-model-picker"
+    ],
+    "description": "Choose default models and routes for each render kind and stage.",
+    "subtypes": [
+      "Render kind and stage to fixed model defaults — implemented"
+    ]
+  },
+  {
+    "slug": "prompt-writers",
+    "title": "Prompt Writers",
+    "packages": [
+      "fo-prompts",
+      "fo-gpt-expressions"
+    ],
+    "description": "Build editable default prompts from character appearance.",
+    "subtypes": [
+      "Character to reference-image prompt — implemented",
+      "Character to sheet prompt — implemented",
+      "GPT Image 2.5 sheet with facial expressions — implemented"
+    ]
   }
 ]

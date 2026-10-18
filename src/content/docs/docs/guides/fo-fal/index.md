@@ -22,11 +22,11 @@ Z-Image Turbo generates from a prompt. The editing models use one reference imag
 1. [Install and allow](../plugin-packages/#install-and-allow) **fo-fal** in **Settings → Plugins**. Save its fal key in FilmOpen and allow the plug-in to use it. The [fal platform guide](/docs/platforms/fal/) explains obtaining a key.
 2. Use **Check** under **Can it work?** on its plug-in page. This checks service access; it does not prove access to every model or a remaining balance.
 3. Open an editable character, use the add control for its reference images and choose **Render**.
-4. Check **Model**, **Runs on** and **Way of running it**. For a small generation test choose Z-Image Turbo on fal at 1024×1024. Enter **Your prompt**, or inspect the **Default prompt** supplied by a prompt writer, and review the price before continuing.
+4. Check **Model**, **Runs on** and **Way of running it**. For a small generation test choose Z-Image Turbo on fal at 1024×1024. Enter **Your prompt**, or inspect the **Default prompt** supplied by a [prompt writer](../fo-prompts/), and review the price before continuing.
 5. Press **Render** once. Open the completed image and check that it stays on this character. Inspect its Usage record and cost.
 6. To check a sheet, first keep a reference image on the character. Render a sheet with FLUX.2 klein 4B editing or GPT Image 2.5 editing, then inspect the sheet and its Usage record.
 
-The model picker supplies defaults for the character's render stage. You can inspect the chosen model and route before rendering. The [voice analysis package](../fo-fal-voice/) still uses fo-fal as its connector.
+The [model picker](../fo-model-picker/) supplies defaults for the character's render stage. You can inspect the chosen model and route before rendering. The [voice analysis package](../fo-fal-voice/) still uses fo-fal as its connector.
 
 ## Queue and cost behavior
 

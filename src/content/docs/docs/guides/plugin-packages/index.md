@@ -35,6 +35,9 @@ For generation, open a writable character in **Edit**, find the relevant media g
 | [fo-cui-zimage](../fo-cui-zimage/) | Local Z-Image stacks and verification |
 | [fo-cui-ltx](../fo-cui-ltx/) | Short local image-to-silent-video |
 | [fo-fal](../fo-fal/) | Catalogue-marked fal image rendering, queue and billing |
+| [fo-model-picker](../fo-model-picker/) | Fixed model and route defaults for render kinds and stages |
+| [fo-prompts](../fo-prompts/) | Default character portrait and sheet prompts |
+| [fo-gpt-expressions](../fo-gpt-expressions/) | GPT Image 2.5 sheet prompt with facial expressions |
 | [fo-openai](../fo-openai/) | OpenAI transport using the existing app key |
 | [fo-openai-gptimage25](../fo-openai-gptimage25/) | Direct GPT Image 2.5 generation through OpenAI |
 | [fo-openrouter](../fo-openrouter/) | Text completions |
