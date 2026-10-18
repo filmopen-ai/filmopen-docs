@@ -4,14 +4,13 @@
     "title": "Image Generation",
     "packages": [
       "fo-cui-zimage",
-      "fo-fal-zimage",
-      "fo-openai-gptimage25",
-      "fo-fal-gptimage25"
+      "fo-fal",
+      "fo-openai-gptimage25"
     ],
     "description": "Create still images from a generation request.",
     "subtypes": [
       "Text to image — implemented",
-      "Image to image / reference-guided editing — future adapters"
+      "Image to image / reference-guided editing — implemented by fo-fal"
     ]
   },
   {

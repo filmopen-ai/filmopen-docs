@@ -6,20 +6,19 @@ sidebar:
   order: 1
 ---
 
-Current packages implement text to image. Model adapters supply options, workflows and output receipts; the host imports finished images as ordinary project media. Choosing a different backend does not create a new plugin type.
+These packages generate still images from a prompt; fo-fal also edits from a reference image. Model adapters and the fal renderer supply options and output receipts; the host imports finished images as ordinary project media. Choosing a different backend does not create a new plugin type.
 
-Z-Image via ComfyUI has model stacks and GPU constraints. Cloud Z-Image and GPT Image expose provider options and estimated costs. See each guide for its actual supported settings; image-to-image editing is not implemented by these packages.
+Z-Image via ComfyUI has model stacks and GPU constraints. The fal renderer takes its models and options from the catalogue, including FLUX.2 klein 4B and GPT Image 2.5 editing for character sheets. The direct OpenAI adapter remains text to image. See each guide for supported settings and cost behavior.
 
 ## Subtypes
 
 - Text to image — implemented
-- Image to image / reference-guided editing — future adapters
+- Image to image / reference-guided editing — implemented by fo-fal
 
 ## Plugins
 
 - [fo-cui-zimage](../../fo-cui-zimage/)
-- [fo-fal-zimage](../../fo-fal-zimage/)
+- [fo-fal](../../fo-fal/)
 - [fo-openai-gptimage25](../../fo-openai-gptimage25/)
-- [fo-fal-gptimage25](../../fo-fal-gptimage25/)
 
 [All types of plugins](../)

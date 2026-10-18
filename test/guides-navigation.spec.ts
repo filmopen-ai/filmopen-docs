@@ -40,7 +40,7 @@ describe('guide navigation', () => {
     // Only the registered packages' own pages: another plug-in's guide may follow them (publishing.md).
     const links = [...plugins.matchAll(/<a\b[^>]*href="([^"]+)"/g)]
       .map((match) => match[1])
-      .filter((href) => /^\/docs\/guides\/fo-[^/]+\/$/.test(href));
+      .filter((href) => href !== undefined && /^\/docs\/guides\/fo-[^/]+\/$/.test(href));
     expect(links).toEqual(expected);
   });
 

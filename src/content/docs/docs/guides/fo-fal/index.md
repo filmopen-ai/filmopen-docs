@@ -1,30 +1,37 @@
 ---
-title: "fo-fal: fal platform"
-description: "A separate fal key, queue transport, pricing and receipt-scoped billing."
+title: "fo-fal: fal rendering"
+description: "Render catalogue-marked fal models and check their results and costs."
 editUrl: https://github.com/filmopen-ai/filmopen-docs/edit/dev/src/content/docs/docs/guides/fo-fal/index.md
 sidebar:
   label: fo-fal
   order: 1
 ---
 
-Plugin types: [Platform Connectors](../plugin-types/platform-connectors/).
+Plugin types: [Image Generation](../plugin-types/image-generation/), [Platform Connectors](../plugin-types/platform-connectors/).
 
-The fal connector owns the account key, queue transport, pricing and receipt-scoped billing. Model adapters own their model-specific options; they never receive the secret.
+**fo-fal v8** renders models marked for fal rendering in FilmOpen's catalogue. It also supplies queue transport and receipt-scoped billing. Install **fo-fal** itself for these images; no separate fal image adapter is needed. It requires API 1, revision 10.
 
-## Set up and check
+## Models
 
-1. [Install and allow](../plugin-packages/#install-and-allow) **fo-fal** in **Settings → Plugins**.
-2. Open **Settings → Provider keys** and enter your key in the fal plugin's field. Save it and read the verification result. The [fal platform guide](/docs/platforms/fal/) explains obtaining a key.
-3. Return to the fal plugin page and press **Check** under **Can it work?**. A successful check verifies service access, not every model or your remaining balance.
-4. Install and allow a model adapter: [Z-Image Turbo](../fo-fal-zimage/), [GPT Image 2.5](../fo-fal-gptimage25/) or [voice analysis](../fo-fal-voice/).
-5. Follow that adapter's small test. After completion, check the media or analyzed fields and its Usage entry.
+The marked models are Z-Image Turbo, GPT Image 2.5 generation, FLUX.2 klein 4B editing and GPT Image 2.5 editing. Options and variants come from the catalogue. FilmOpen prices from the catalogue; the plug-in does not provide a render estimate of its own.
 
-If the key field is absent, confirm **fo-fal** is installed and on. The connector's key is distinct from OpenRouter and from the app's OpenAI key. A stored key and a permission to use a key are separate requirements.
+Z-Image Turbo generates from a prompt. The editing models use one reference image for a character sheet. GPT Image does not apply a seed, so a saved seed does not promise the same image again.
+
+## Set up and check a render
+
+1. [Install and allow](../plugin-packages/#install-and-allow) **fo-fal** in **Settings → Plugins**. Save its fal key in FilmOpen and allow the plug-in to use it. The [fal platform guide](/docs/platforms/fal/) explains obtaining a key.
+2. Use **Check** under **Can it work?** on its plug-in page. This checks service access; it does not prove access to every model or a remaining balance.
+3. Open an editable character, use the add control for its reference images and choose **Render**.
+4. Check **Model**, **Runs on** and **Way of running it**. For a small generation test choose Z-Image Turbo on fal at 1024×1024. Enter **Your prompt**, or inspect the **Default prompt** supplied by a prompt writer, and review the price before continuing.
+5. Press **Render** once. Open the completed image and check that it stays on this character. Inspect its Usage record and cost.
+6. To check a sheet, first keep a reference image on the character. Render a sheet with FLUX.2 klein 4B editing or GPT Image 2.5 editing, then inspect the sheet and its Usage record.
+
+The model picker supplies defaults for the character's render stage. You can inspect the chosen model and route before rendering. The [voice analysis package](../fo-fal-voice/) still uses fo-fal as its connector.
 
 ## Queue and cost behavior
 
-The connector submits once, checks receipt URLs against the expected fal queue host and request ID, and retrieves the result. A lost submission response or exhausted wait can leave the outcome uncertain. Check its receipt before explicitly trying again; no automatic paid retry or provider switch occurs.
+Submission is fenced against a second charge for the same job. Collection checks the original request; it never uploads the reference again or submits another render. A lost acknowledgement leaves the outcome uncertain. Inspect the provider's job and Usage before manually starting another render.
 
-Billing lookup is separate from rendering. Some keys can render but cannot read administrative billing events. An adapter can retain an estimated cost and receipt in that case; it must not call that a confirmed debit. A reported zero is preserved as zero. A pricing endpoint describes a rate, not necessarily the final charge for a finished job.
+Billing lookup is separate from rendering. A denied billing lookup or invalid billing events leave the cost unknown; a provider-confirmed zero remains zero. A catalogue price is not proof of the final debit. Cancelling a request does not by itself confirm that it stopped.
 
-Raw HTTP requests and account keys are not proposed for sharing. Any future sharing exposes bounded model operations through the host, not this account connection. [fal APIs](https://docs.fal.ai/).
+Troubleshooting logs record stages, mapping fields, state changes and safe codes. Keep prompts, reference images, credentials, request bodies and output URLs out of shared logs.

@@ -11,7 +11,7 @@ A **type** describes what a plugin does. A **subtype** describes its input/outpu
 
 | Type | Current packages |
 |---|---|
-| [Image Generation](./image-generation/) | [fo-cui-zimage](../fo-cui-zimage/), [fo-fal-zimage](../fo-fal-zimage/), [fo-openai-gptimage25](../fo-openai-gptimage25/), [fo-fal-gptimage25](../fo-fal-gptimage25/) |
+| [Image Generation](./image-generation/) | [fo-cui-zimage](../fo-cui-zimage/), [fo-fal](../fo-fal/), [fo-openai-gptimage25](../fo-openai-gptimage25/) |
 | [Video Generation](./video-generation/) | [fo-cui-ltx](../fo-cui-ltx/) |
 | [Character Analysis](./character-analysis/) | [fo-openai-vision](../fo-openai-vision/) |
 | [Voice Analysis](./voice-analysis/) | [fo-fal-voice](../fo-fal-voice/) |
