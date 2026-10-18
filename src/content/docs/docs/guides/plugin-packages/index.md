@@ -11,7 +11,7 @@ Browse **[Types of plugins](../plugin-types/)** for capabilities and subtypes.
 
 Platform packages own connections and credentials. Model adapters own workflows or API mappings. FilmOpen owns consent, credential storage, render jobs, media insertion and the Usage ledger. A package's `minRevision` says which interface revision its release requires; use a compatible desktop build.
 
-The current ComfyUI model adapters require revision **2**: **fo-cui-zimage v2** and **fo-cui-ltx v3** supply their stack and resolution options through that interface. The other packages still rely on the milestone 6-9 host's compatibility support where needed; a lower `minRevision` alone does not promise the same controls in an older app.
+The ComfyUI platform **fo-cui v8** renders Z-Image Turbo itself and supplies its stack and resolution options; it requires revision **10**, as do **fo-openai v7**, **fo-fal v15**, **fo-model-picker v4**, **fo-prompts v3** and **fo-gpt-expressions v3**. A lower `minRevision` alone does not promise the same controls in an older app.
 
 These instructions describe the permanent controls added for application milestone 6-9. An older app may not have them. The procedures are setup and acceptance steps, not a claim that every provider has passed a new live test on your machine. Model availability, balances, downloaded files and provider permissions still need checking.
 
@@ -30,16 +30,14 @@ For generation, open a writable character in **Edit**, find the relevant media g
 
 | Package | Purpose |
 |---|---|
-| [fo-cui](../fo-cui/) | ComfyUI transport and discovery |
+| [fo-cui](../fo-cui/) | ComfyUI transport and discovery, and Z-Image Turbo rendering with stack verification |
 | [fo-salad](../fo-salad/) | On-demand ComfyUI GPU servers and shutdown leases (experimental) |
-| [fo-cui-zimage](../fo-cui-zimage/) | Local Z-Image stacks and verification |
-| [fo-cui-ltx](../fo-cui-ltx/) | Short local image-to-silent-video |
 | [fo-fal](../fo-fal/) | Catalogue-marked fal image rendering, queue and billing |
 | [fo-model-picker](../fo-model-picker/) | Fixed model and route defaults for render kinds and stages |
 | [fo-prompts](../fo-prompts/) | Default character portrait and sheet prompts |
 | [fo-gpt-expressions](../fo-gpt-expressions/) | GPT Image 2.5 sheet prompt with facial expressions |
-| [fo-openai](../fo-openai/) | OpenAI transport using the existing app key |
-| [fo-openai-gptimage25](../fo-openai-gptimage25/) | Direct GPT Image 2.5 generation through OpenAI |
+| [fo-styles](../fo-styles/) | 50 visual treatment styles to add to a render's prompt |
+| [fo-openai](../fo-openai/) | OpenAI transport and GPT Image 2.5 text to image, with its own OpenAI key |
 | [fo-openrouter](../fo-openrouter/) | Text completions |
 | [fo-elevenlabs](../fo-elevenlabs/) | Voice Design v3, persistent voice IDs and speech WAV |
 | [fo-openai-vision](../fo-openai-vision/) | GPT-6 Astra photo attributes and generation prompt |
