@@ -30,6 +30,13 @@ describe('guide navigation', () => {
     expect(nav).not.toMatch(/<summary\b[^>]*>[\s\S]*?>plugin-types</);
   });
 
+  it('keeps model and prompt types in their type group', () => {
+    const types = group(navigation(), 'Types of Plugins');
+    for (const slug of ['model-pickers', 'prompt-writers']) {
+      expect(types).toContain(`href="/docs/guides/plugin-types/${slug}/"`);
+    }
+  });
+
   it('lists every plugin as one direct page link with its existing address', () => {
     const plugins = group(navigation(), 'List of plugins');
     expect(plugins).not.toContain('<summary');
