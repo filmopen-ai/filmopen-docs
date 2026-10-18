@@ -12,13 +12,13 @@ A **type** describes what a plugin does. A **subtype** describes its input/outpu
 | Type | Current packages |
 |---|---|
 | [Image Generation](./image-generation/) | [fo-cui](../fo-cui/), [fo-fal](../fo-fal/), [fo-openai](../fo-openai/) |
-| [Video Generation](./video-generation/) | None yet |
+| [Video Generation](./video-generation/) | [fo-fal](../fo-fal/) |
 | [Character Analysis](./character-analysis/) | [fo-openai-vision](../fo-openai-vision/) |
 | [Voice Analysis](./voice-analysis/) | [fo-fal-voice](../fo-fal-voice/) |
 | [Style Analysis](./style-analysis/) | [fo-openai-style](../fo-openai-style/) |
 | [Character Transformation](./character-transformation/) | [fo-openai-character](../fo-openai-character/) |
 | [Voice Generation](./voice-generation/) | [fo-elevenlabs](../fo-elevenlabs/) |
-| [Speech Synthesis](./speech-synthesis/) | [fo-elevenlabs](../fo-elevenlabs/) |
+| [Speech Synthesis](./speech-synthesis/) | [fo-elevenlabs](../fo-elevenlabs/), [fo-fal](../fo-fal/) |
 | [Platform Connectors](./platform-connectors/) | [fo-cui](../fo-cui/), [fo-fal](../fo-fal/), [fo-openai](../fo-openai/), [fo-openrouter](../fo-openrouter/) |
 | [Server Providers](./server-providers/) | [fo-salad](../fo-salad/) |
 | [Assistants](./assistants/) | [fo-assist](../fo-assist/) |

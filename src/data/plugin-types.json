@@ -16,11 +16,13 @@
   {
     "slug": "video-generation",
     "title": "Video Generation",
-    "packages": [],
+    "packages": [
+      "fo-fal"
+    ],
     "description": "Create moving images from text or reference media.",
     "subtypes": [
-      "Text to video — future adapters",
-      "Image to video — future adapters",
+      "Text to video — implemented by fo-fal (MiniMax H3 Max, Seedance 2.5)",
+      "Image to video — implemented by fo-fal, from a first frame",
       "Reference to video / video to video — future adapters"
     ]
   },
@@ -84,11 +86,13 @@
     "slug": "speech-synthesis",
     "title": "Speech Synthesis",
     "packages": [
-      "fo-elevenlabs"
+      "fo-elevenlabs",
+      "fo-fal"
     ],
-    "description": "Generate spoken audio from text and a saved voice ID.",
+    "description": "Generate spoken audio from text.",
     "subtypes": [
-      "Text + provider voice ID to WAV — implemented"
+      "Text + provider voice ID to WAV — implemented",
+      "Text to speech on fal (Eleven v3) — implemented by fo-fal"
     ]
   },
   {
