@@ -24,6 +24,7 @@ A **type** describes what a plugin does. A **subtype** describes its input/outpu
 | [Assistants](./assistants/) | [fo-assist](../fo-assist/) |
 | [Model Pickers](./model-pickers/) | [fo-model-picker](../fo-model-picker/) |
 | [Prompt Writers](./prompt-writers/) | [fo-prompts](../fo-prompts/), [fo-gpt-expressions](../fo-gpt-expressions/) |
+| [Prompt Builders](./prompt-builders/) | [fo-styles](../fo-styles/) |
 
 Each type page lists implemented and planned subtypes separately. The [package index](../plugin-packages/) gives installation steps; individual guides explain the permanent milestone 6-9 controls, requirements and remaining limitations. Older app builds may not have these controls. Installing a package does not supply a missing application feature.
 

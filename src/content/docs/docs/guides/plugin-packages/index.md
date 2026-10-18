@@ -36,6 +36,7 @@ For generation, open a writable character in **Edit**, find the relevant media g
 | [fo-model-picker](../fo-model-picker/) | Fixed model and route defaults for render kinds and stages |
 | [fo-prompts](../fo-prompts/) | Default character portrait and sheet prompts |
 | [fo-gpt-expressions](../fo-gpt-expressions/) | GPT Image 2.5 sheet prompt with facial expressions |
+| [fo-styles](../fo-styles/) | 50 visual treatment styles to add to a render's prompt |
 | [fo-openai](../fo-openai/) | OpenAI transport and GPT Image 2.5 text to image, with its own OpenAI key |
 | [fo-openrouter](../fo-openrouter/) | Text completions |
 | [fo-elevenlabs](../fo-elevenlabs/) | Voice Design v3, persistent voice IDs and speech WAV |

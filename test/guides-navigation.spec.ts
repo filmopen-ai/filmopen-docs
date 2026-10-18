@@ -26,8 +26,10 @@ describe('guide navigation', () => {
     expect((nav.match(/>Types of Plugins</g) ?? []).length).toBe(1);
     const types = group(nav, 'Types of Plugins');
     expect(types).toMatch(/href="\/docs\/guides\/plugin-types\/"[^>]*><span[^>]*>Overview<\/span>/);
-    expect(types).not.toContain('<summary');
+    const summaries = [...types.matchAll(/<summary\b[^>]*>[\s\S]*?<\/summary>/g)].map((match) => match[0].replace(/<[^>]+>/g, '').trim());
+    expect(summaries).toEqual(['Style Guides']);
     expect(nav).not.toMatch(/<summary\b[^>]*>[\s\S]*?>plugin-types</);
+    expect(nav).not.toMatch(/<summary\b[^>]*>[\s\S]*?>style-guides</);
   });
 
   it('keeps model and prompt types in their type group', () => {
@@ -35,6 +37,17 @@ describe('guide navigation', () => {
     for (const slug of ['model-pickers', 'prompt-writers']) {
       expect(types).toContain(`href="/docs/guides/plugin-types/${slug}/"`);
     }
+  });
+
+  it('lists the Style Guides in the types group, the overview first, then the five categories', () => {
+    const nav = navigation();
+    expect((nav.match(/>Style Guides</g) ?? []).length).toBe(1);
+    const guides = group(nav, 'Style Guides');
+    const links = [...guides.matchAll(/<a\b[^>]*href="([^"]+)"/g)].map((match) => match[1]);
+    const categories = ['modern-cinema', 'classic-cinema', 'cell-phone', 'animated', 'experimental-cinema'];
+    expect(links).toEqual(['/docs/guides/style-guides/', ...categories.map((slug) => `/docs/guides/style-guides/${slug}/`)]);
+    expect(guides).toMatch(/href="\/docs\/guides\/style-guides\/"[^>]*><span[^>]*>Overview<\/span>/);
+    expect(readdirSync('src/content/docs/docs/guides/style-guides').sort()).toEqual(['index.md', ...categories.map((slug) => `${slug}.md`)].sort());
   });
 
   it('lists every plugin as one direct page link with its existing address', () => {

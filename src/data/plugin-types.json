@@ -157,5 +157,16 @@
       "Character to sheet prompt — implemented",
       "GPT Image 2.5 sheet with facial expressions — implemented"
     ]
+  },
+  {
+    "slug": "prompt-builders",
+    "title": "Prompt Builders",
+    "packages": [
+      "fo-styles"
+    ],
+    "description": "Offer ready-made prompt words to add to a render, such as a visual style.",
+    "subtypes": [
+      "Visual style catalogue to render prompt — implemented"
+    ]
   }
 ]
