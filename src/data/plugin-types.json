@@ -3,9 +3,9 @@
     "slug": "image-generation",
     "title": "Image Generation",
     "packages": [
-      "fo-cui-zimage",
+      "fo-cui",
       "fo-fal",
-      "fo-openai-gptimage25"
+      "fo-openai"
     ],
     "description": "Create still images from a generation request.",
     "subtypes": [
@@ -16,13 +16,11 @@
   {
     "slug": "video-generation",
     "title": "Video Generation",
-    "packages": [
-      "fo-cui-ltx"
-    ],
+    "packages": [],
     "description": "Create moving images from text or reference media.",
     "subtypes": [
-      "Image to video — implemented, short silent LTX clips",
       "Text to video — future adapters",
+      "Image to video — future adapters",
       "Reference to video / video to video — future adapters"
     ]
   },

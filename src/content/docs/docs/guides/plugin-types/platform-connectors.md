@@ -6,7 +6,7 @@ sidebar:
   order: 1
 ---
 
-These packages expose reusable operations to model or document adapters. ComfyUI owns connection and workflow execution; fal owns queued requests and billing lookup; OpenAI wraps the existing permitted app key; OpenRouter exposes text completions.
+These packages expose reusable operations to model or document adapters. ComfyUI owns connection and workflow execution; fal owns queued requests and billing lookup; OpenAI uses its own key, entered as [its guide](../../fo-openai/#set-up-and-check) says; OpenRouter exposes text completions.
 
 The app owns credential storage, consent, network permissions and usage persistence. A separate platform layer is useful when several adapters share it. A single-platform package such as ElevenLabs can keep private API helpers with its functions without needing another installable connector.
 

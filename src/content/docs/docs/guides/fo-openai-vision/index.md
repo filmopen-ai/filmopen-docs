@@ -13,7 +13,7 @@ Analyze a reference photograph into editable character appearance and a reusable
 
 ## Set up and analyze
 
-1. [Install and allow](../plugin-packages/#install-and-allow) **fo-openai** and **fo-openai-vision**. Save the app's OpenAI key and allow the connector to use it.
+1. [Install and allow](../plugin-packages/#install-and-allow) **fo-openai** and **fo-openai-vision**. Enter the OpenAI key on fo-openai's card, as [its guide](../fo-openai/#set-up-and-check) says; this package needs no key of its own.
 2. Create or open a character you can edit. In **Reference images**, use the add control and **Upload** a PNG or JPEG, at most 8 MiB.
 3. Under the references, find **Described by**. When several image analyzers are on, choose the one you want.
 4. Check **Picture to describe**. The most recent compatible upload is the default; choose another existing reference when needed. A generated take is not silently selected in place of the last upload.

@@ -13,7 +13,7 @@ Describe changes to an existing fictional character and save a coherent revised 
 
 ## Set up and modify
 
-1. [Install and allow](../plugin-packages/#install-and-allow) **fo-openai** and **fo-openai-character**. Save the app's OpenAI key and grant the connector access.
+1. [Install and allow](../plugin-packages/#install-and-allow) **fo-openai** and **fo-openai-character**. Enter the OpenAI key on fo-openai's card, as [its guide](../fo-openai/#set-up-and-check) says; this package needs no key of its own.
 2. Open your character in **Edit**, then choose **Describe changes**.
 3. Choose the transformation plugin. Keep **Fork to a new version and compare** checked to preserve the original version; uncheck it to modify the current editable version.
 4. Type or dictate a request, such as “Make her twenty years older, with gray hair, wrinkles and a more mature voice.”
