@@ -127,7 +127,8 @@ describe('a document that carries a credential', () => {
     const stripe = ['sk', 'live', 'A'.repeat(24)].join('_');
     const resend = `re_${'b'.repeat(24)}`;
     const github = `ghp_${'c'.repeat(36)}`;
-    for (const value of [stripe, resend, github]) {
+    const xai = ['xai', 'd'.repeat(48)].join('-');
+    for (const value of [stripe, resend, github, xai]) {
       expect(carriesCredential(`the key is "${value}" for now`), value.slice(0, 6)).toBe(true);
     }
     expect(carriesCredential(`-----${['BEGIN', 'PRIVATE', 'KEY'].join(' ')}-----`)).toBe(true);
@@ -144,6 +145,7 @@ describe('a document that carries a credential', () => {
     for (const text of [
       'Create an API key and add it under Settings → Provider keys.',
       'Keys start with sk- and are shown once.',
+      'The key starts with `xai-`, and the list shows it as xai-…oYZ4.',
       'the pre-commit check (scripts/check-no-keys.sh) refuses a value',
       'Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27b_It_Input is a generated type',
     ]) {

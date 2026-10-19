@@ -29,7 +29,7 @@ This repository is the documentation at [docs.filmopen.ai](https://docs.filmopen
 
 ## What happens next
 
-A merge into `dev` is built and live at [docs.dev.filmopen.ai](https://docs.dev.filmopen.ai) within a few minutes. `dev` is merged into `main` — which is [docs.filmopen.ai](https://docs.filmopen.ai) — by the maintainers, with a release of the application or when the guides have changed enough to be worth it.
+A merge into `dev` is built and live at [docs.dev.filmopen.ai](https://docs.dev.filmopen.ai) within about a minute. `dev` is merged into `main` — which is [docs.filmopen.ai](https://docs.filmopen.ai) — by the maintainers, with a release of the application or when the guides have changed enough to be worth it.
 
 ## Licence
 

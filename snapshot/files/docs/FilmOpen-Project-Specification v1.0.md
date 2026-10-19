@@ -4,8 +4,8 @@
 
 | | |
 |---|---|
-| **Version** | 1.11 — Draft |
-| **Date** | 17 September 2026 |
+| **Version** | 1.17 — Draft |
+| **Date** | 22 September 2026 |
 | **Format version** | `"filmopen": 1` |
 | **Status** | Public draft. Open for comment. |
 | **Licence** | This specification: CC-BY-4.0. The JSON Schemas derived from it: CC0. |
@@ -27,6 +27,78 @@ It serves two directions equally. **Forward:** write a film in text and generate
 translated or regenerated.
 
 ---
+
+## Changes in 1.17
+
+- **What a front insert does to a file with no `preview`, said** (§9.0). 1.16 let a writer add at the front; a reader of a file with no `preview` "may use the first sheet or image", and that one is now no longer the one it was. The rule did not change — this says the consequence, and says what a writer does about it: set `preview` to the shown picture before adding in front of it. Raised as an open question by the application's milestone 5-2d and answered by the owner.
+
+## Changes in 1.16
+
+- **A writer may be told where to put a reference, and may put it first** (§9.0). Until now the place was derived from the media's **kind** alone — a picture to the plain array, a clip to `motion`, a sound to `sound` or to a character's `voice.refs` — so of the twelve group names §9.0 recommends, and of any others a file uses, most could not be written to at all. A writer may now be given the place: a named group, `voice.refs`, or a path of the file's own. And it may add at the **front** as well as at the end, several references added together keeping the order they were given, so that a selection of three arrives as those three in that order. The rules that were already there are unchanged: such a write adds only, repeats none already present, and moves none — which is what lets a write that was interrupted be run again without changing what the first run left.
+
+## Changes in 1.15
+
+- **A take's item records its inputs by name** (§12.2): **`inputsByName`**, the render's inputs under the input names of §14.8 — `first_frame`, `reference_images`, `audio`, … — each the descriptor the plugin received — `reference_images` an array of them, as §14.4 gives them — with what the import measured of it (§12.2, §12.3). `inputs[]` stays as it is, the flat list of media references every reader of 1.14 and before already reads. A flat list cannot say which reference was the first frame and which were references, so a take recorded with more than one input could not be made again without guessing.
+
+## Changes in 1.14
+
+Written ahead of FilmOpen's own code, on the owner's word of 20 September 2026, so that plugins and the application are written towards one text; FilmOpen's milestone 5-2b built it, and where a part is not built yet — a render that outlives a call, `ctx.upload`, the interfaces no feature runs — this text says so.
+
+- **A plugin implements interfaces** (§14.4). An interface is a named set of functions; a manifest declares the ones it implements in **`implements`**, which takes the place of `hooks` and `provides`, and may declare several. The two tables of hooks become one table of interfaces. `platform` is new: the functions `run` and `request`, which other plugins call.
+- **The shapes are defined once, as data** (§14.4): what every function receives and answers, and everything an application hands a plugin, are in the **interface definition** that accompanies this specification, `filmopen-plugin-api.json` — JSON Schema, one file per `api`, with a `revision` that grows when something is added. It is normative for those shapes; this section names the interfaces and states their rules, and restates no shape.
+- **`status`** (§14.4): every plugin has it. It answers whether the plugin can do its work now — `ready`, `unconfigured`, `unavailable` or `degraded` — and starts, spends and installs nothing.
+- **Who may call a function** (§14.4): an application, a person, or other plugins, said per function in the definition. `minRevision` in a manifest says the least the plugin needs.
+- **An application chooses the plugin by the model asked for** (§14.4), prepares a render's request once, keeps a seed its caller gave, and records the request in the batch (§12.2) — from the plugin's answer only `stack` and `seedApplied: false`.
+- **Where a key may go** (§14.4, §14.9): a platform file's **`paths`** limits, per host, the paths a request carrying the platform's credentials may reach, because a platform's hosts can serve more than models — fal's `api.fal.ai` creates keys for a key of its ADMIN scope — and a plugin allowed to use a key holds that key's authority. And an application says, in its own words, that a plugin which uses a key, or calls one that may use a key — its own, one granted to it, or one of a plugin it calls in turn — can spend on that account.
+- **A render answers by `state`** (§14.4): `succeeded`, `pending` with a job the application is to ask about again — planned: an application that cannot wait for one yet says so — or `failed` with the problem as data. An output may say its `role`.
+- **`ctx.log`** (§14.4) takes a line of a plugin author's own words, not only an event name; where an application keeps it is its own, and its own log of events is not the place.
+- **Two fields an application reads for what they are** (§14.4): `x`, an object it reads nothing of, kept as written; and `capabilities.upload`, of which a user is told before the code first runs.
+
+## Changes in 1.13
+
+- **What a `render` receives** (§14.4): `inputs` by the input names of §14.8, each a descriptor of a piece of the film's media and never the media itself; a `seed` the application makes; and the entity the render is for. `kind` and `provides.models` say what sort of plugin it is and which catalogue entries it speaks for.
+- **A plugin may call a function another plugin offers** (§14.4): `offers` names what may be called and `calls` what this plugin calls, `ctx.call("<tag>:<name>", args)` is the door, and the function runs as its owner.
+- **A request that names a server, and an output on one** (§14.4): `ctx.http({ server, path })` goes to the address the user gave, with no credential and following no redirect off it, and a `render`'s output may be `{ server, path, mime }` for the application to download.
+- **A `server` setting** (§14.4): the address of a server the user runs or chooses — a renderer on their own machine or on their network. It is always kept on one computer, whatever `scope` says, is not allowed under `entitySettings`, and its `default` may only name the computer itself, since any other address is one the user never typed.
+- **A plugin's code may be several files** (§14.1, §14.4). `entry` is a file name, as it was, or an
+  ordered list of them: each a `.js` file of the plugin's own folder named by a relative path, loaded
+  in that order into one scope, the plugin being the last file's value. Nothing changes for a plugin
+  written as one file.
+- **What a user consents to is every file of the plugin's folder** (§14.4), not the manifest and the
+  code alone: a workflow or a prompt in `assets/`, a platform file, a locale file. A change to any of
+  them asks again.
+
+## Changes in 1.12
+
+- **Folders replace the three story levels** (§3, §5.3, §10.1). The script is folders and scenes. A
+  **folder**, `fo_<tag>_<author>_v<n>.json`, holds a name, an optional `kind`, a synopsis, notes and the
+  ordered list of what it contains; folders nest freely, to any depth, and a scene is the leaf. The types
+  `se`, `ep` and `sq` leave the format, and with them the four list keys `seasons`, `episodes`,
+  `sequences` and `scenes`: a reader gives the keys no meaning, and a file of one of those types is a
+  file the grammar does not describe, reported like any other (§4.2). Nothing converts a 1.11 project.
+- **`children`** (§8.5, §10.1) is the one list of the script, in the project file and in a folder. Because
+  folders and scenes mix, every entry carries its type: a short stem `<type>_<tag>` (`sc_1`, `fo_f4`), or
+  a full reference, which pins that version. The types an entry may name are `fo` and `sc`. A bare tag,
+  an entry of another type, a second listing and a cycle are each reported, never guessed.
+- **A folder's `kind`** (§10.1) is a word and not a rule: `season`, `installment`, `episode`, `act`,
+  `arc`, `sequence`, `part`, `chapter`, or any other token. Nothing is enforced by it, and it is never
+  part of a filename.
+- **Nothing is inherited** (§6.1, §10.1, §10.2). A folder says nothing about what its scenes hold — no
+  `epoch`, `cast`, `locations` or `styles` — and a scene says everything itself: one location, one epoch,
+  its cast. §6.1's step 1 loses its fallback through what 1.11 called the enclosing unit.
+- **`type` says what file this is, and `kind` what sort of thing it describes** (§7). The two keys that
+  broke the rule are renamed: the manifest's locator is `"data": { "kind": "local", … }` (§4.4), and a
+  placement's transition `"transitionIn": { "kind": "dissolve", … }` (§11.3). The 1.11 spellings are not
+  read.
+- **A project's `kind` is optional** (§8.1) and names no levels: a word for people, for the OMC mapping
+  and for a website.
+- **A cue that spans scenes hangs under a folder** (§5.3, §11.2, A.6): its tag is `<folder>.<n>`, and it
+  names the folder's version in `folder`, where 1.11 wrote `unit`; the appendix's table of a cue's keys
+  says the same. A cue that carries both `folder` and `scene` hangs under the folder, `scene` saying
+  whose block ids it cites.
+- **A tag says nothing a person may change** (§17). A filename is permanent, so an application numbers
+  the scenes (`1`, `2`, …) and the folders (`f1`, `f2`, …) it creates, and asks a person for the name
+  alone.
 
 ## Changes in 1.11
 
@@ -335,7 +407,7 @@ history or pull requests; **history belongs to Git**, and the format does not du
 | **entity** | Anything described by one JSON file: character, location, scene, shot, model, … |
 | **library entity** | A reusable thing with an **epoch** axis: character, outfit, location, prop, style, misc, document. |
 | **epoch** | How a library entity appears at a point in the story: `30yo`, `pre-war`, `1990s`, `wrecked`. Declared in the project file, at least one; the first is the default epoch. Each epoch of an entity is a separate, complete file that shares the entity's tag. |
-| **story unit** | A level of the script: season or installment, episode or act, sequence, scene. |
+| **folder** | What groups the script, as a folder groups files: a spec entity with a name, an optional kind — season, episode, act, sequence, … — a synopsis, and the ordered list of the folders and scenes it holds (§10.1). Folders nest to any depth, and a scene is the leaf. A folder is a file, not a directory on disk. |
 | **block** | One unit of script inside a scene: a line of dialogue, an action, a title. |
 | **shot** | A visual generation spec covering one or more blocks. |
 | **cue** | An audio generation spec: dialogue, narration, music, sound effect, ambience. |
@@ -433,7 +505,7 @@ filmopen-project.json
 {
   "filmopen": 1,
   "tag": "cartographer",
-  "data": { "type": "local", "path": "../the-cartographer-data" }
+  "data": { "kind": "local", "path": "../the-cartographer-data" }
 }
 ```
 
@@ -451,9 +523,9 @@ project is created or its media is moved. It **MUST NOT** hold credentials, API 
 specific to one machine (§4.3); a locator names *where*, never *how to log in*.
 
 **Locators.** `data` is an object, not a path string, because the media may live somewhere that is not
-a folder on this machine:
+a folder on this machine. Its `kind` says what sort of place that is (§7), and `path` where in it:
 
-| `type` | `path` means | Reader support in this version |
+| `kind` | `path` means | Reader support in this version |
 |---|---|---|
 | `local` | a folder path with `/` separators, relative to the project folder (`../the-cartographer-data`, `media`) or absolute | **MUST** support. Relative paths are portable and are what a writer **SHOULD** write; an absolute path is machine-specific and is reported. |
 | `dropbox` | a path inside the user's Dropbox | MAY support; otherwise report the media root as unavailable. |
@@ -462,10 +534,12 @@ a folder on this machine:
 | `icloud` | a path inside iCloud Drive | as above |
 | `url` | a base URL; media references are appended to it | MAY support |
 
-A reader that does not support a locator type **MUST** still open the project: the JSON is complete
+A reader that does not support a locator's kind **MUST** still open the project: the JSON is complete
 without the media, and unavailable media is shown as unavailable (§4.3), never as an error that hides
 the film. An application MAY remember a per-machine substitute for a locator it cannot reach; that
-memory is an application preference, not part of the project.
+memory is an application preference, not part of the project. A `data` that is not an object with a
+`kind` and a `path` — one that spells the key `type`, as 1.11 did, among them — is reported, and the
+project opens as if it named no media root.
 
 **A project without a manifest** is still a project (readers **SHOULD** warn, and continue, treating
 the folder as its own media root), so that a folder hand-assembled from files, or one written by a 1.3
@@ -518,12 +592,10 @@ versions of one entity deliberately share its tag.
 | `mo` | model — a generative or analysis model | spec | — |
 | `pl` | platform — where models run | spec | — |
 | `pg` | plugin manifest | spec | — |
-| `se` | season / installment | spec | — |
-| `ep` | episode / act / arc | spec | — |
-| `sq` | sequence | spec | — |
+| `fo` | folder — groups scenes and other folders (§10.1) | spec | — |
 | `sc` | scene — contains the blocks | spec | — |
 | `sh` | shot; tag `<scene>.<n>` | spec | — |
-| `cu` | cue; tag `<unit>.<n>` where unit is a scene, sequence or episode | spec | — |
+| `cu` | cue; tag `<scene>.<n>`, or `<folder>.<n>` when it spans scenes | spec | — |
 | `cm` | commentary | `cm_<type>_<tag>_<author>.json` | — |
 | `rd` | render batch | `rd_<id>_<author>.json` | — |
 
@@ -598,14 +670,14 @@ dc_bible_default_john123_v3.json           the series bible
 mo_seedance25_paul_v3.json                 a model, from the shared library
 pl_fal_paul_v1.json                        a platform
 pg_locale_paul_v2.json                     a plugin manifest; its code is pg_locale_paul_v2.js beside it
-se_s1_john123_v1.json                      season 1
-ep_e2_john123_v1.json                      episode 2
-sq_e2.arrival_john123_v1.json              a sequence within episode 2
+fo_s1_john123_v1.json                      a folder: season 1
+fo_e2_john123_v1.json                      a folder: episode 2, which season 1 lists
+fo_f1_john123_v1.json                      the first folder an application numbered (§17): a sequence in episode 2
 sc_5_john123_v1.json                       scene 5 and its blocks
 sc_5_john123.locale-th_v1.json             scene 5 as produced by a localisation plugin John ran
 sh_5.1_john123_v1.json                     shot 1 of scene 5
 cu_5.1_john123_v1.json                     cue 1 of scene 5
-cu_e2.1_maria_v1.json                      a cue spanning episode 2 — score
+cu_e2.1_maria_v1.json                      a cue spanning the folder e2 — score
 cm_ch_main-hero_maria.json                 Maria's commentary on main-hero
 rd_8af0_maria.json                         Maria's render batch 8af0
 
@@ -628,11 +700,12 @@ entities; media references name files.
 
 A tag: `"location": "cafe"`. The field determines the type. Resolved by the reader in three steps.
 
-**Step 1 — Epoch.** Use the explicit epoch on the referencing entry if present; else the enclosing
-scene's epoch; else the enclosing unit's; else `default`. An outfit takes its character's resolved epoch
-unless one is given. If the epoch was chosen **implicitly** and the entity has no file for it, fall back to
-`default` and show that fallback. If the epoch was requested **explicitly** and does not exist, the
-reference is unresolved: report it; never substitute a different age or state silently.
+**Step 1 — Epoch.** Use the explicit epoch on the referencing entry if present; else the scene's epoch;
+else the project's default epoch (§8.2). Nothing above a scene supplies one: a folder names no epoch
+(§10.1). An outfit takes its character's resolved epoch unless one is given. If the epoch was chosen
+**implicitly** and the entity has no file for it, fall back to the default epoch and show that fallback.
+If the epoch was requested **explicitly** and does not exist, the reference is unresolved: report it;
+never substitute a different age or state silently.
 
 **Step 2 — Author.** Depends on the *referencing* file's status:
 
@@ -709,12 +782,15 @@ a reader that finds none shows a placeholder — a missing thumbnail is never an
 
 ### 6.4 Where each is used
 
-- Project story roots and story-unit child lists accept tags or full references; the list key
-  determines the type (`seasons` → `se`, `episodes` → `ep`, `sequences` → `sq`, `scenes` → `sc`).
-- Story units, scenes, shots and cues use **short references** to library entities. A scene's `props`
-  may be tags or `{ "prop": "car", "epoch": "wrecked" }`; a scene may set `locationEpoch`.
+- `children`, on the project file and on a folder, lists folders and scenes together, so no field
+  determines the type and every entry carries its own: a **short stem** `<type>_<tag>` (`sc_1`, `fo_f4`)
+  — the form a commentary file's `target` has (§13.4) — resolved as a short reference of that type, or a
+  **full reference** (§8.5).
+- Scenes, shots and cues use **short references** to library entities; a folder names none (§10.1). A
+  scene's `props` may be tags or `{ "prop": "car", "epoch": "wrecked" }`; a scene may set `locationEpoch`.
 - A shot or cue **MAY** carry a full reference to the scene version its block ids belong to. Absent, it
-  means the resolved scene of that tag.
+  means the resolved scene of that tag. A cue that spans scenes names its folder in `folder` instead
+  (§11.2).
 - `forkedFrom`, `pick` and `on` use **full references** or, for `on`, media references.
 - `picks`, `refs`, `preview`, `lut`, `file` and deliverable inputs use **media references**.
 
@@ -757,6 +833,15 @@ batches use the headers shown in their own sections.
 | `x` | no | an object for application-specific data. Readers preserve it; the format ignores it |
 | `plugins` | no | the values plug-ins keep in this version, keyed by plug-in tag: in a project file, a plug-in's project settings; in an entity's file, its `entitySettings` (§14.4). Part of the version — forked, compared and copied like any attribute — and written by an application on a person's behalf, never by a plug-in's code. The format does not interpret what a tag's object holds |
 
+**`type` and `kind`.** The format keeps two words apart. ***`type` says what file this is*** — the two
+letters of its name (§5.3), repeated in its header — ***and `kind` says what sort of thing it
+describes***: a character's `principal`, a location's `interior`, a folder's `episode`, a cue's `music`, a
+block's `dialogue`, a track's `av`, a batch's `import`, a project's `series`, a model's `video`, a
+platform's `remote`, a media locator's `local` (§4.4), a transition's `dissolve` (§11.3). A `type` never
+names a sort of thing, in a file or in an object inside one. The one other `type` the format writes is a
+plug-in setting's (§14.4), which names the data type of a value — a string, a number — and not a sort of
+thing.
+
 ---
 
 ## 8. The project file
@@ -798,7 +883,7 @@ batches use the headers shown in their own sections.
     { "id": "amb",  "kind": "audio", "name": "Ambience" },
     { "id": "mx",   "kind": "audio", "name": "Music" }
   ],
-  "seasons": ["s1"],
+  "children": ["fo_s1"],
   "license": "CC-BY-SA-4.0",
   "hooks": { "validate": "(ctx) => ctx.entity.type !== 'sc' || ctx.entity.blocks.length > 0 || 'empty scene'" }
 }
@@ -807,10 +892,11 @@ batches use the headers shown in their own sections.
 ### 8.1 Kind
 
 `kind` ∈ `short-film` · `film` · `mini-series` · `series` (Short film, Feature film, Mini-series,
-Series (ongoing)). It sets the labels of the story levels (§10.1) — a mini-series and a series have
-seasons and episodes, a short and a feature have installments and acts — and the story-root list an
-application starts a blank project with (`scenes`, `sequences`, `episodes`, `seasons` respectively).
-Nothing else depends on it. Readers treat 1.4's `franchise` as `series` and preserve an unknown kind.
+Series (ongoing)). It is **optional**: a word for people, for the OMC mapping (Appendix C) and for a
+website, which says what the film is and decides nothing. It names no levels and chooses no structure —
+a short film may keep its scenes in folders and a series may have none (§10.1) — so a film that starts
+as one scene can become a mini-series without its files changing. Nothing depends on it. Readers treat
+1.4's `franchise` as `series` and preserve an unknown kind.
 
 ### 8.2 Epochs
 
@@ -857,10 +943,34 @@ nowhere in a project.
 and `color` are strings; a project **MAY** add `width`, `height`, `pixelAspect`, colour primaries and
 transfer, audio `sampleRate` and `channels`.
 
-The project lists its **story roots** in order with exactly one of `seasons`, `episodes`, `sequences` or
-`scenes`, whichever fits its structure. A short film can start with `"scenes": ["1", "2"]` and needs no
-season or episode scaffolding. Entries are tags or full references of the indicated type. An empty list is valid while starting from
-scratch. Order comes from these lists, not from sorting filenames.
+The project lists its script — its **story roots** — in order in `children`: the folders and scenes at
+the top of the script, in any mix. A short film can be `"children": ["sc_1", "sc_2"]` and needs no folder
+at all; a series can list one folder for each season. A folder lists what it holds in a `children` of
+its own, in the same grammar (§10.1).
+
+**An entry carries its type**, because folders and scenes mix and no list key says which one it is:
+
+| Entry | Example | Means |
+|---|---|---|
+| short stem, `<type>_<tag>` | `sc_1`, `fo_f4` | the folder or scene of that tag, resolved as a short reference of that type (§6.1) |
+| full reference | `sc_5_maria_v1` | that version and no other: the entry **pins** it (§6.2) |
+
+The types an entry may name are `fo` and `sc`, and no other: a shot or a cue is never listed, since it
+hangs by its dotted tag (§5.3). A reader reports, and never guesses at:
+
+- an entry that is a **bare tag** (`"5"`), which does not say whether it is a folder or a scene;
+- an entry that names **another type** (`ch_kira`);
+- a folder or scene the script, as the reader resolves it (§6.1), lists a **second time**, in the same
+  list or in another: every listing is shown, and the second and later ones are reported;
+- a folder that lists itself through any path, a **cycle**, which is not followed.
+
+An entry that resolves to nothing is an unresolved reference like any other (§6.1).
+
+Order comes from the list and from nothing else, never from sorting filenames. An absent or empty
+`children` is valid: the script, or the folder, is empty. A folder or scene that no `children` reaches is
+still a file of the project — it is not in the script, and a reader says so rather than hiding it.
+Nothing else lists the script: 1.11's keys `seasons`, `episodes`, `sequences` and `scenes` have no
+meaning, on a project file or anywhere.
 
 ### 8.6 Project alternatives and remakes
 
@@ -915,10 +1025,18 @@ the group its kind names: a picture in the plain array when `refs` is one, else 
 reference belongs. A plain array becomes `{ "images": [ … ] }` the first time a reference of another
 kind arrives. Such a write adds only: it removes no reference and repeats none already present.
 
+**A writer MAY instead be told the place** — a named group, `voice.refs`, or a path of the file's own —
+rather than deriving it from the kind, which is how a reference reaches any of the groups above and any
+group a file has of its own. **A writer MAY add at the front as well as at the end, and several
+references added together keep the order they were given**; one already present is neither repeated nor
+moved, so running the same write again leaves the file exactly as the first run left it.
+
 `preview` names the media shown for this entity in a library view. Absent, a reader may use the first
 sheet or image, then an image pick, then a placeholder. A preview is not automatically a model input. A
 writer **MAY** set `preview` to the first image it adds when the file has none, and **MUST NOT** change a
-`preview` the author has set.
+`preview` the author has set. **Where `preview` is absent, adding at the front therefore changes what a
+reader shows**, since the first sheet or image is no longer the one it was: a writer that adds at the
+front and means to leave the shown picture alone sets `preview` to it first.
 
 `picks` selects generated takes by deliverable; a value is one media reference or an array when several
 frames are chosen. A reference used in several files reuses the bytes and nothing else.
@@ -1081,43 +1199,54 @@ present alone.
 
 ## 10. Story structure and script
 
-### 10.1 Story units `se` `ep` `sq` `sc`
+### 10.1 Folders `fo`
 
-| Level | Series | Film / franchise | File |
-|---|---|---|---|
-| 1 | season | installment | `se_` |
-| 2 | episode | act / arc | `ep_` |
-| 3 | sequence *(optional)* | sequence *(optional)* | `sq_` |
-| 4 | scene | scene | `sc_` |
-
-Levels 1–3 are optional groupings. Each declares epoch, cast, locations and styles as **defaults for its
-children**, and an ordered list of those children. A scene narrows or overrides what it inherits from
-its unit; nothing is inherited between library files.
+The script is **folders and scenes**. A scene (§10.2) is the file that holds the blocks; a folder groups
+scenes and other folders, as a folder groups files. Folders nest freely and to any depth, and nothing
+requires one: a short film of four scenes lists its four scenes in the project file (§8.5), and a
+mini-series may want nothing but episodes. A folder is a **file, not a directory on disk** — where files
+sit in the project folder carries no meaning (§2, principle 3).
 
 ```json
 {
-  "filmopen": 1, "type": "ep", "tag": "e2", "author": "john123", "v": 1,
-  "name": "Episode 2 — Low Tide",
-  "synopsis": "Kira finds the first altered chart.",
-  "epoch": "mid-war",
-  "cast": [
-    { "character": "main-hero", "epoch": "30yo", "outfit": "main-hero.suit" },
-    { "character": "spouse", "epoch": "28yo" }
-  ],
-  "locations": ["cafe", "archive"],
-  "styles": ["war-grade"],
-  "scenes": ["3", "4", "5", "archive-exit"],
-  "notes": "Cold open, no score until the reveal."
+  "filmopen": 1, "type": "fo", "tag": "f3", "author": "john123", "v": 1,
+  "name": "Act I — The harbour",
+  "kind": "act",
+  "synopsis": "Kira arrives and finds the first altered chart.",
+  "notes": "Cold open, no score until the reveal.",
+  "children": ["sc_1", "fo_f4", "sc_5_maria_v1"],
+  "created": "2026-09-18T09:00:00Z", "updated": "2026-09-18T09:00:00Z"
 }
 ```
 
-`scenes` (or `sequences`, or `episodes` on a season) fixes the order of children. If absent, a reader
-**MAY** propose natural (numeric-aware) tag order and **MUST** say so; a reproducible timeline export
-needs an explicit list. Cyclic or duplicate containment is reported.
+A folder is a spec entity like any other: versioned, forked, named official by `fo_<tag>_official.json`,
+picked and compared (§13). `name` is required, as for every entity (§7); everything else is optional.
+
+**`children`** is the ordered list of what the folder holds, in the grammar of §8.5: short stems or full
+references, of type `fo` or `sc`. Order comes from the list and from nothing else, and a folder without
+`children` is empty. What a reader reports — a bare tag, another type, a second listing, a cycle — is
+§8.5's. A reproducible timeline export follows these lists (§15.2).
+
+**`kind`** says what the folder means to people, to plug-ins and to an export. Recommended tokens:
+`season` · `installment` · `episode` · `act` · `arc` · `sequence` · `part` · `chapter`. A file may name
+another token, which a reader keeps and shows as written, and a folder may have none. **The kind is a
+word, not a rule**: nothing is enforced by it — a season may hold seasons, a chapter may sit beside a
+scene — and it is never part of a filename, since it is a person's to change (§17).
+
+**A folder says nothing about what its scenes hold.** It carries no `epoch`, `cast`, `locations` or
+`styles`, and no scene inherits anything from the folders above it: everything about a scene is said on
+the scene (§10.2). A reader that meets such a key on a folder keeps it, as it keeps any key it does not
+know (§18.2), and gives it no meaning. A folder holds no blocks. What the scenes beneath a folder use —
+their characters, locations and epochs — a reader can derive; it is never stored.
+
+A cue that spans scenes hangs under a folder (§11.2).
 
 ### 10.2 Scene `sc`
 
-A scene is one time and one place. Its file holds the **blocks** — the script — in order.
+A scene is one time and one place. Its file holds the **blocks** — the script — in order. Everything
+about what a scene holds is said **on the scene**: it names **one** `location` and **one** `epoch`, and
+lists its `cast`. Nothing is inherited from the folders above it (§10.1), so a scene moved to another
+folder means exactly what it meant before.
 
 ```json
 {
@@ -1150,8 +1279,11 @@ A scene is one time and one place. Its file holds the **blocks** — the script 
 
 `storyDay` is the script supervisor's continuity day. `purpose` states what the scene does for the
 story, which is the single most useful field for an AI reading the project. `shots` and `cues` fix the
-order of the scene's shots and cues; absent, natural tag order applies. `locationEpoch` overrides the
-scene epoch for the location alone.
+order of the scene's shots and cues; absent, natural tag order applies. A scene's `epoch` is the time it
+is set in, and the epoch its references resolve at (§6.1); what may differ from it is said beside it, on
+the scene: a cast entry's own `epoch` — the character's age in a scene set at another time — and its
+`outfit`, a prop's epoch (§6.4), and `locationEpoch`, which overrides the scene epoch for the location
+alone.
 
 ### 10.3 Blocks
 
@@ -1187,7 +1319,7 @@ assuming.
 | Centered text | block `title` |
 | Lyrics `~` | block `lyric` |
 | Note `[[ ]]` | block `note` |
-| Section `#` | story units |
+| Section `#` | folders, nested as the sections are |
 | Synopsis `=` | `synopsis` |
 
 The screenplay *content* round-trips. Title-page fields, emphasis, forced elements, scene numbers, page
@@ -1236,7 +1368,7 @@ used. A still image placed as a shot takes its hold duration from `durationSec`.
 
 ### 11.2 Cue `cu`
 
-An audio generation spec. A cue attaches to a scene, or to a sequence or episode when it spans scenes.
+An audio generation spec. A cue attaches to a scene, or to a folder when it spans scenes.
 
 ```json
 {
@@ -1259,7 +1391,7 @@ An audio generation spec. A cue attaches to a scene, or to a sequence or episode
   "filmopen": 1, "type": "cu", "tag": "e2.1", "author": "maria", "v": 1,
   "name": "Low Tide — main theme",
   "kind": "music",
-  "unit": "ep_e2_john123_v1",
+  "folder": "fo_e2_john123_v1",
   "music": { "tempoBpm": 72, "key": "D minor", "instrumentation": ["cello", "prepared piano", "tape hiss"],
              "mood": "unease held under restraint", "structure": "sparse intro, swell at the reveal, cut on the flash" },
   "sync": [{ "with": "sh_5.2", "offsetMs": 0, "event": "cut on the flash" }],
@@ -1275,7 +1407,12 @@ An audio generation spec. A cue attaches to a scene, or to a sequence or episode
   it** — for pauses, pronunciation, numbers spelled out, a translated line. Readers surface "spoken
   differs from script" as an intentional state, and warn when the block has changed since.
 - `ssml` (W3C SSML) is an alternative to `spoken` for models that accept it; use one or the other.
-- A cue attached to a unit that needs specific blocks from specific scenes uses `anchors`, since block
+- **What a cue belongs to** is what its `scene` or its `folder` key names. A cue that spans scenes hangs
+  under a folder: its tag is `<folder's tag>.<n>` (§5.3) and `folder` names the folder's version, where
+  1.11 wrote `unit`. Where a cue carries both, `folder` says where it hangs and `scene` whose block ids
+  its `blocks` are (§6.4). A cue that carries neither key belongs to the scene of its own short name —
+  `cu_5.1` to scene `5`.
+- A cue attached to a folder that needs specific blocks from specific scenes uses `anchors`, since block
   ids are local to a scene.
 
 ### 11.3 Placement
@@ -1293,7 +1430,7 @@ placement at all is a straight sequential cut on the first `av` track, in the sc
 | `audio` | `false` to place picture only from an `av` clip | `true` |
 | `gainDb` `pan` | mix | `0`, `0` |
 | `fadeInMs` `fadeOutMs` | audio fades | `0` |
-| `transitionIn` | `{ "type": "cut" \| "dissolve" \| "fade", "ms": n }` | cut |
+| `transitionIn` | `{ "kind": "cut" \| "dissolve" \| "fade", "ms": n }` — `kind`, as everywhere (§7); 1.11's `type` is not read | cut |
 
 Rules:
 
@@ -1315,7 +1452,7 @@ An observation at 12:04.625 in an imported film belongs in the batch's source ti
 A placement anchored to `scene` uses an offset from that scene's start, not the source film's start.
 The first shot defaults to the scene start when `prev` has no predecessor. Scenes begin sequentially
 in the selected story order; a scene's length is the latest end of its placed shots and scene cues.
-Unit-level cues do not lengthen individual scenes. Cross-scene anchor cycles are reported.
+A folder's cues do not lengthen individual scenes. Cross-scene anchor cycles are reported.
 
 ---
 
@@ -1343,7 +1480,15 @@ a character page show every sheet anyone has rendered for it.
       "model": "seedance25", "platform": "fal",
       "prompt": "…the fully resolved prompt as sent…",
       "params": { "seed": 41221, "steps": 30, "durationSec": 5, "fps": 24 },
-      "inputs": ["ff_sh_5.2_john123_v1_r8af0_maria_1", "vo_cu_5.3_john123_v1_r8af0_maria_1"],
+      "inputs": ["ff_sh_5.2_john123_v1_r8af0_maria_1", "vo_cu_5.3_john123_v1_r8af0_maria_1",
+                 "cs_ch_kira_30yo_maria_v1_r41c2_maria_1"],
+      "inputsByName": {
+        "first_frame": { "media": "ff_sh_5.2_john123_v1_r8af0_maria_1", "mime": "image/png",
+                         "bytes": 1048576, "width": 1920, "height": 1080 },
+        "audio": { "media": "vo_cu_5.3_john123_v1_r8af0_maria_1", "mime": "audio/wav",
+                   "bytes": 441000, "durationMs": 5000 },
+        "reference_images": [ { "media": "cs_ch_kira_30yo_maria_v1_r41c2_maria_1", "mime": "image/png",
+                                "bytes": 524288, "width": 1024, "height": 1024 } ] },
       "output": "s1/e2/sc5/cl_sh_5.2_john123_v1_r8af0_maria_1.mp4",
       "sha256": "9d02…", "durationMs": 5000, "elapsedMs": 61400, "costUsd": 0.42,
       "thumbnail": "thumbnails/tn_cl_sh_5.2_john123_v1_r8af0_maria_1.jpg",
@@ -1358,6 +1503,7 @@ a character page show every sheet anyone has rendered for it.
 | `kind` | `render` · `import` · `plugin` · `manual` |
 | `tier` | `preview` · `final` — cheap fast previews versus locked finals |
 | `output` | media reference — usually a project-relative path |
+| `inputs` `inputsByName` | what the render was given. `inputs[]` is the flat list of media references, written whatever the render was given and empty where it was given none. `inputsByName` is the same media under the input names of §14.8 (`first_frame`, `reference_images`, `audio`, …), **each a descriptor — `media`, `mime`, and the `bytes`, `width`, `height` and `durationMs` measured on ingest where they were measured (§12.2, §12.3) — except `reference_images`, which is an array of them**, as §14.4 gives them to a plugin. It is written only where at least one name holds media: a name given an empty array is no input. A reader that knows only `inputs[]` reads it as before; one that would make the take again reads `inputsByName`, since a flat list cannot say which reference was which input |
 | `take` | take number in a generated filename when it is not `1` |
 | `sha256` | recorded on ingest. Names carry meaning; hashes carry identity; together they survive renames, moves and duplicates |
 | `durationMs` / `elapsedMs` | length of the output media / time the job took |
@@ -1366,6 +1512,7 @@ a character page show every sheet anyone has rendered for it.
 | `status` `jobId` `attempts` `error` | job notes for a pending, failed or partial batch; a batch may be updated in place |
 | `thumbnail` `poster` `proxy` `waveform` | display derivatives; never model inputs by themselves. A thumbnail is the one §6.3 names, in the project folder's `thumbnails/`, and its path is relative to that folder, not to the media root; the field records it and does not choose a second place for it |
 | `mimeType` `bytes` `width` `height` `fps` `frameCount` `sampleRate` `channels` | measured media properties; measured on ingest if absent, never invented |
+| `stack` `seedApplied` | from a plugin's answer (§14.4): how it ran the model — a workflow, its weights, its precision — and `false` where the service took no seed, the item's `params` then holding none |
 
 ### 12.3 Import batches — describing a film that exists
 
@@ -1551,7 +1698,7 @@ pick is made per epoch — an object of stems keyed by epoch:
 
 A single stem applies at the epoch it names and nowhere else, so older files read unchanged; a writer
 folds it into the object the first time it writes a pick for an entity with epochs. An entity without
-epochs (a project file, a story unit, a shot, a cue, a model) uses the plain stem. In the object, each
+epochs (a project file, a folder, a scene, a shot, a cue, a model) uses the plain stem. In the object, each
 key is the epoch of the stem under it; an entry filed under another epoch is reported and ignored. The value
 `<versions key>_official` — the stem of the pointer file — means "the official version, whichever it
 is", so a pick can follow the star rather than pin a version; an application need not write it, since
@@ -1584,8 +1731,12 @@ can equally happen in pull requests or conversation; commentary is not required.
 
 ### 14.1 Language
 
-Hooks and plugins are **JavaScript, ECMAScript 2020, single file, no `import`/`require`.** Functions
-may be `async`. Code receives one argument, `ctx`, and returns a value; it never mutates project state.
+Hooks and plugins are **JavaScript, ECMAScript 2020, with no `import`/`require`**: a hook is one
+expression in a file of the format, and a plugin's code is one file or several, which an application
+loads in the order the manifest gives them, as plain scripts of one scope — what an earlier file
+declares at its top is there for a later one — the plugin being the value of the last file's last
+expression. Functions may be `async`. Code receives one argument, `ctx`, and returns a value; it
+never mutates project state.
 Hooks and plugins are data until an application chooses to run them; plain readers never execute code.
 
 ### 14.2 Sandbox
@@ -1601,7 +1752,7 @@ does not grant execution permission. Trust decisions belong to the application, 
 ### 14.3 Hooks
 
 Short functions inside `mo`, `pl`, `st` and `pj` files, keyed by name. They are one way to extend a
-model or a platform; an application may instead call the **platform hooks** of plug-ins (§14.4), which
+model or a platform; an application may instead call the **`render` and `text` interfaces** of plug-ins (§14.4), which
 live in a plug-in's code rather than in the film's files, and FilmOpen does: it runs no inline hook.
 
 | Hook | Runs | Receives | Returns |
@@ -1660,7 +1811,7 @@ the manifest, a code file named after it, and its strings:
 | File | Required | What |
 |---|---|---|
 | `pg_<tag>_<author>_v<n>.json` | yes | the manifest: a versioned spec entity, forked, picked and made official like any other |
-| `pg_<tag>_<author>_v<n>.js` | yes | the code (§14.1), named in `entry` |
+| `pg_<tag>_<author>_v<n>.js` | yes | the code (§14.1): the file, or the files in order, named in `entry` |
 | `l10n/<locale>.arb` | `en` at least | the plugin's strings, below |
 | `README.md` | for a shared plugin | what it does, what it needs, how to change it |
 | `platforms/<id>.json` | when it brings a platform | a platform file (§14.9) for an id the catalogue does not define |
@@ -1676,7 +1827,7 @@ any fork: official, then the viewer's pick (§6.1).
   "description": "Translates dialogue and relocates settings to a target culture.",
   "entry": "pg_locale_paul_v2.js",
   "applies": ["sc", "cu", "lo"],
-  "hooks": ["transform"],
+  "implements": { "transform": {} },
   "capabilities": { "ai": true },
   "settings": { "target": { "type": "string", "default": "th-TH" }, "relocate": { "type": "boolean", "default": true } }
 }
@@ -1684,18 +1835,23 @@ any fork: official, then the viewer's pick (§6.1).
 
 | Field | Required | Meaning |
 |---|---|---|
-| `api` | yes | the host interface version the plugin was written against; a host refuses one it does not support, naming both |
-| `entry` | no | the code file beside the manifest; `<stem>.js` when absent |
+| `api` | yes | the version of the interface the plugin was written against (the interface definition's `api`); a host refuses one it does not support, naming both |
+| `minRevision` | no | the least `revision` of that interface the plugin needs; a host that has less says so, and does not run it |
+| `implements` | no | the interfaces the plugin implements, below: `{ "<interface>": { … } }`, the value holding what that interface has a manifest add — `platform`, a platform's id (§14.9), for `render`, `text` and `key-check`, and optionally `models`, the catalogue entries (§14.7) the plugin speaks for; nothing for the others. One platform to an interface |
+| `entry` | no | a file name, or a list of them in the order they are loaded, each a `.js` file of the plugin's own folder named by a relative path; `<stem>.js` when absent |
 | `description` | no | one sentence; a string key when the plugin's strings have it |
 | `l10n` | no | the folder of locale files; `l10n` when absent |
-| `applies`, `hooks` | no | the entity types the plugin works on, and the entity hooks below it implements |
-| `capabilities` | no | `ai`: the plugin uses `ctx.ai.complete`; `network`: host names it may reach **without** credentials |
+| `applies` | no | the entity types the plugin works on: those its `transform`, `analyze` and `export` are offered on, and those its `entitySettings` name |
+| `capabilities` | no | `ai`: the plugin uses `ctx.ai.complete`; `network`: host names it may reach **without** credentials; `upload`: it sends media of the film to its platform or its server through `ctx.upload`, which the user is told before the code first runs |
 | `keys` | no | the keys the plugin **owns**, `{ "<slot>": { "platform": "<id>", "label"?, "help"? } }`. A key's id is `<tag>:<slot>`; `platform` names the platform file that says how the key is entered, checked and sent (§14.9) |
 | `uses` | no | ids of keys the plugin asks to use: another plugin's (`locale:openrouter`) or the application's own, whose owner an application names (FilmOpen: `app`) |
-| `provides` | no | `{ "platforms": { "<id>": ["complete", …] } }`: the platform hooks below, per platform |
-| `settings` | no | the plugin's options, `{ "<key>": { "type", "default"?, "label"?, "help"?, "scope"? } }`; `type` is `string`, `text`, `number` (`min`, `max`), `boolean`, `enum` (`values`) or `model` (a catalogue entry of `category`, optionally on one `platform`, §14.6). A setting whose `scope` is `project` (the default) is kept in the project file under `plugins.<tag>` (§7); `machine` keeps it on one computer, outside the project |
+| `offers` | no | functions of its own that other plugins may call, beyond any interface: `{ "<name>": { "label", "help?", "args?", "returns?", "example?" } }`, the label being what the caller's consent shows, `args` and `returns` schemas as the interface definition's are, and `example` a value of the arguments it takes; an action may carry an `example` likewise. A function of an interface is never listed here, and an action's function may not be offered |
+| `calls` | no | the functions of other plugins this one calls, `"<tag>:<name>"`: an offer, or a function of an interface that plugins may call |
+| `kind` | no | `platform`, `model` or `tool`: a word for lists, which decides nothing — what a plugin can do is what it implements; another token is kept |
+| `settings` | no | the plugin's options, `{ "<key>": { "type", "default"?, "label"?, "help"?, "scope"? } }`; `type` is `string`, `text`, `number` (`min`, `max`), `boolean`, `enum` (`values`), `model` (a catalogue entry of `category`, optionally on one `platform`, §14.6) or `server` (the address of a server the user runs or chooses: `http` or `https`, a host, and a port and a base path where it has them). A setting whose `scope` is `project` (the default) is kept in the project file under `plugins.<tag>` (§7); `machine` keeps it on one computer, outside the project. A `server` setting is always kept on one computer, whatever `scope` says, and is not allowed under `entitySettings`; its `default` may only name the computer itself |
 | `entitySettings` | no | per entity type named in `applies`, fields of the same vocabulary kept in that entity's own file under `plugins.<tag>` — a character's version can carry other notes for a plugin than its sibling |
 | `actions` | no | `{ "<id>": { "label", "call" } }`: commands an application offers on the plugin's own page; `call` names a function of the code |
+| `x` | no | an object an application reads nothing of: another tool's data, a proposal. Kept as written, never reported as unknown, and never a promise to the user |
 
 `label` and `help` values, and `name` and `description` where the strings define them, are keys of the
 plugin's locale files, which an application renders in its reader's language: `l10n/<locale>.arb`, JSON
@@ -1703,32 +1859,76 @@ objects of strings in the ARB shape, `@@locale` naming the file's locale, `{name
 does not contain `:`, which marks a namespace — an application's own strings are reached as
 `<namespace>:<key>` (FilmOpen: `app:`), and a lookup falls back to `en`, then to the key itself.
 
-**Entity hooks** — called on the entities the user selected:
+**A plugin implements interfaces.** An interface is a named set of functions, each receiving `ctx` and
+one object of named arguments and answering JSON. A manifest declares the interfaces it implements, and
+may declare several — a renderer and a writer at once; an application calls a function of an interface
+because the manifest declared it, and for no other reason. **What each function receives and answers,
+and everything `ctx` carries, is defined as data in the interface definition that accompanies this
+specification** — `filmopen-plugin-api.json`, JSON Schema, one file per `api`, its `revision` growing
+by one whenever something is added. It is normative for those shapes, and an application's reference
+and types are generated from it; this section names the interfaces and states their rules.
 
-| Hook | Purpose | Receives | Returns |
+| Interface | Functions (**required**) | The manifest adds | Called by |
 |---|---|---|---|
-| `transform` | rewrite entities — polish, translate, restyle, relocate | `{ entities, project, settings, ai? }` | the modified entities |
-| `analyze` | comment without changing — continuity, pacing, consistency | same | commentary entries |
-| `import` | turn a foreign file into FilmOpen entities | `{ file, project, settings, ai? }` | entities and an optional batch |
-| `export` | turn entities into a foreign format | `{ entities, project, settings }` | `{ filename, content }` |
+| *every plugin* | **`status`** — can the plugin do its work now: `{ state, message?, details? }`, `state` being `ready`, `unconfigured`, `unavailable` or `degraded` | — | the application, and a plugin that declares the call |
+| `transform` | **`transform`** — rewrite the entities the user selected: polish, translate, restyle, relocate | — | the user |
+| `analyze` | **`analyze`** — comment without changing: continuity, pacing, consistency | — | the user |
+| `import` | **`import`** — turn a foreign file into entities, and optionally a batch | — | the user |
+| `export` | **`export`** — turn entities into a foreign format: `{ filename, content }` | — | the user |
+| `text` | **`complete`** — an answer to a list of messages; `estimateCost` | `platform`, `models?` | the application's text features, and `ctx.ai.complete` |
+| `render` | **`render`** — pictures, video or sound from a model; `estimateCost`; and, for work that outlives a call, `collect` and `cancel` | `platform`, `models?` | the application's features that make media |
+| `key-check` | **`verifyKey`** — for a platform whose key check its file cannot declare in `verify` (§14.9) | `platform` | the application, with a candidate key's id usable for that one call |
+| `platform` | **`run`** — run this model, or this workflow, with this input, the service's own protocol being the plugin's business; **`request`** — one request to the service | — | other plugins |
 
-**Platform hooks** — what a plugin provides for a platform, called by an application's own features
-(text, images, video, sound) through the plugin the user prefers for that platform. `model` is a catalogue
-entry's `id` (§14.7):
+`analyze`, `import` and `export` are defined, their shapes settled, and not yet run by any feature of an
+application; two more are named in the definition and not yet built by any application: `rewrite` (a
+text rewritten on an instruction) and `prompt` (`buildPrompt`: an entity of the film turned into the
+instructions for one render with one model).
 
-| Hook | Receives | Returns |
-|---|---|---|
-| `complete` | `{ model, messages, params }` | `{ text, usage?, cost? }` |
-| `render` | `{ model, prompt, inputs, params }`, `inputs` as addresses the platform can fetch | `{ outputs: [{ url, mime, durationMs? }], usage?, cost? }`; the application downloads the outputs as takes (§12.4) |
-| `estimateCost` | `{ model, params }` | a number, USD, or `null` |
-| `verifyKey` | `{ key }`, a candidate key's id usable for that one call | `{ accepted, message? }`, for a platform whose key check its file cannot declare in `verify` |
+**What a render receives and answers.** `{ model, entry, prompt, inputs, params, seed, source? }` —
+`model` a catalogue entry's `id` (§14.7) and `entry` that entry's file; `inputs` an object keyed by the
+input names the entry's `capabilities.inputs` lists (§14.8), each a descriptor of a piece of the film's
+media — `{ media, mime, bytes?, width?, height?, durationMs? }`, `media` a media reference (§6.3), what
+was not measured absent, **`reference_images` an array of such descriptors** and every other name one —
+and **never the media itself**; `seed` an integer of the application's, from 0 to 4 294 967 295, which
+is the one its caller gave, to make a render again — a value that is no such integer is refused, never
+replaced — else a new one for every render, and never the plugin's to choose; `source` the entity the render is for. It answers by **`state`**: `succeeded` with
+`outputs`, each an `https` address or `{ server, path, mime }` on a server a `server` setting names, and
+optionally its `role` (`image`, `video`, `audio`, `preview`, `other`) — the application downloads them as takes
+(§12.4), a preview never and one whose bytes are not of the type its `mime` names not at all — and
+with `seedApplied: false` where the service took no seed, which the
+batch then records; `pending` with a `job` of the plugin's own, which an application is to hand back
+to `collect` on its own timer, each a call of its own, and to `cancel` — planned: an application that
+cannot wait for a job yet says so, and keeps nothing; or `failed` with the problem as data: a `code`, a
+`message`, whether it is `retryable`. A `platform` plugin's `run` answers the same way.
 
-A hook, a setting type or a field a host does not know is ignored and reported, and the plugin's other
-hooks still run; a hook's shape only gains optional fields, and `api` changes when one changes
-incompatibly.
+An interface, a function, a setting type or a field a host does not know is ignored and reported, and
+the plugin's others still run; within one `api`, interfaces, functions and optional arguments are only
+added, each with the `revision` it arrived in, and `api` changes when something changes incompatibly.
 
 Rules:
 - A plugin has read access to the whole project and operates on the entities the user selected.
+- **`status` is required, and its absence refuses nothing.** Answering it starts no render, spends
+  nothing and installs nothing, and says nothing of work under way. A plugin with nothing to check
+  answers `ready`. A plugin whose code has none is told so where the user sees it, and its other
+  functions run: no application can know a function is missing before it has run the code.
+- **An application chooses the plugin by the model asked for**: among the enabled plugins that
+  implement the interface on a platform the entry's access rows name (§14.7), one that names the model
+  in `models` before one that names none; where the request names no platform, one on the user's own
+  computer (a platform of `kind` `local`) before any that bills — before the user's preference too, which
+  is one per kind of work and not per model; and among several still, the user's preference, without
+  which the user is asked, never one taken for them; the same choice
+  serves `estimateCost` — which is told the `operation` it prices, since a plugin that implements both
+  `render` and `text` has one function of that name — and the call itself. A request may name its
+  platform, and then no other is looked at. Where nothing serves the model, that is said, and no other
+  plugin is asked instead; **a render that failed is never sent again elsewhere**, and never from the
+  user's own computer to a service that bills them, unasked.
+- **A render's request is prepared once and recorded.** The inputs are held to the entry's own
+  `capabilities.inputs`: a name the model does not take, and a required one that is missing, are
+  refused before the plugin runs. What was sent — the model, the platform, the prompt, the parameters
+  with the seed, the inputs — is what the batch records (§12.2), so that a take can be made again: it
+  is the application's own record, which nothing a plugin answers can change. From the answer it records
+  only `stack`, the plugin's word for how it ran the model, and `seedApplied: false`, and then no seed.
 - A plugin **never writes files.** It returns entities; the application writes them as **new versions
   under the running user's derived handle** — `john123.locale-th` — all starting at `v1`, and records a
   `kind: "plugin"` batch. A second run is `v2`. If the source files changed while the run was in
@@ -1739,12 +1939,40 @@ Rules:
   to that key's platform — over `https`, to the platform file's `hosts`, following no redirect elsewhere —
   and adds the credential where the platform file says (§14.9). A plugin uses the keys it owns; another's,
   only when the user has granted it. Hosts in `capabilities.network` are reached without any credential.
+  An answer that echoes the credential has it replaced before the plugin reads it. **What a plugin
+  allowed to use a key holds is the key's authority, never the key**: so a request with a key goes
+  only to the `paths` its platform file allows (§14.9), and an application tells the user, in its own
+  words and before the code first runs, that such a plugin — or one that calls a plugin which may use a key:
+  its own, one granted to it, or one of a plugin it calls in turn — can spend on that account.
+- **A plugin may call a function of another plugin** — `ctx.call("<tag>:<name>", args)` — where its
+  manifest declares the call, both are enabled, and the function is one the other offers or one of an
+  interface that plugins may call, which the other implements. No other function is ever reached this
+  way: not `verifyKey`, not `transform`, not `render` or `complete`, which go through the application so
+  that they are chosen, recorded and paid for as the user's. The function
+  runs as its owner, with its owner's settings, servers, keys and storage; JSON crosses in each
+  direction and nothing else; an application bounds how deep calls go and refuses a function that is
+  already on the chain.
+- **A plugin may write a line of its own** — `ctx.log(message, data?)` — which an application shows to
+  whoever is running it and may keep in a file of its own; it is the plugin author's own words, so an
+  application's own log, which records events, is not where it belongs; never a key, and never a
+  user's text.
+- **A server the user names.** A request may name one of the plugin's own `server` settings in place
+  of a key — `ctx.http({ server: "<setting>", path })` — and the application sends it to the address
+  the user gave for that setting on that computer, over `http` or `https`, with no credential,
+  following no redirect off that address. The plugin's code never supplies the address, and should
+  not read anything into the setting's value: an application may reach the same server by another
+  route.
+- **What a user consents to is every file of the plugin's folder**, the manifest, the code and what
+  the code reads — a workflow in `assets/` runs on the user's own computer as surely as the code does —
+  so that a change to any of them asks again.
 - **A plugin may bring a platform file** for an id the catalogue does not define; one for an id the
   catalogue defines is ignored, since a platform's definition is shared by every entry that names it.
-- `capabilities.ai` grants `await ctx.ai.complete(messages, options)` → `{ text, usage?, cost? }`, routed
-  through the user's preferred text platform and key; where the host supports vision, also
-  `ctx.ai.describe(media, prompt, options)`. The application owns paid-call consent, cancellation and
-  retries within the user's configured limits.
+- `capabilities.ai` grants `await ctx.ai.complete(messages, options?)` → `{ text, usage?, cost? }`,
+  through the `text` plugin chosen for the model `options.model` names, as a render's plugin is chosen;
+  where it names none, by the same rules among every enabled `text` plugin, the model then being the
+  one that plugin is set to use. A choice that finds none is refused with its cause, and inside
+  `status` the call is refused, since answering `status` spends nothing. The application owns
+  paid-call consent, cancellation and retries within the user's configured limits.
 - Trust remains the application's (§14.2): a manifest declares what the plugin asks for, so that an
   application can show it before the code first runs and again when the code changes.
 
@@ -2121,9 +2349,10 @@ A video entry **MUST** mark as required the inputs its tag names: `prompt` in `t
 Each platform is one file, `platforms/<id>.json`, that says where requests go and how a key is created,
 sent and checked; `platforms` in the index lists the files. Access rows name a platform by its id; an id
 is lower case, it is the file's name, and a new platform takes a new one. FilmOpen's catalogue uses
-`openai`, `anthropic`, `google` (the Gemini API), `vertex`, `elevenlabs`, `deepgram`, `kling`,
+`openai`, `xai`, `anthropic`, `google` (the Gemini API), `vertex`, `elevenlabs`, `deepgram`, `kling`,
 `byteplus`, `minimax`, `ltx`, `openrouter`, `fal`, `replicate`, `comfyui` and `huggingface`. FilmOpen's
-first version supports `openrouter`, `fal` and `openai`, and the index marks the others pending (§14.6).
+first version supports `openrouter`, `fal`, `openai` and `xai`, and the index marks the others pending
+(§14.6).
 
 ```json
 {
@@ -2164,10 +2393,11 @@ first version supports `openrouter`, `fal` and `openai`, and the index marks the
 | `kind` | string | yes | `remote` (a service), `local` (software on the user's machine) or `weights` (where weights are downloaded). |
 | `base_url` | string | yes | Where requests go. |
 | `hosts` | array | unless `auth.kind` is `none` | Every host a request carrying the platform's credentials may go to: at least the hosts of `base_url`, of `verify.url`, and of each `endpoint` in the access rows that name the platform. |
+| `paths` | object | | Where, on a host, a request carrying the platform's credentials may go: `{ "<host>": ["<prefix>", …] }`. A request to a host named here must match one of its prefixes by whole segments — `/v1/key` is not `/v1/keys` — after its path is made plain, and a path that cannot be made plain is refused before anything is matched: a `.` or `..` segment, however it is escaped and whatever `;` parameter follows it; a slash or a backslash that is escaped, and a backslash of any kind; an empty segment, a trailing `/` included; a control character; and a `%` that is not two hexadecimal digits standing for a printable ASCII character other than `%` itself, which a server that decodes twice would read as an escape again. The path judged is the one the request was written with, before any reader resolved it. A host of `hosts` that is not named here takes any path, which is right for a host that serves nothing but models. Each host named here is one of `hosts`, named once whatever its case, and each prefix is itself a plain path; a file that breaks any of these, or whose `paths` names no host at all, is not used — an empty `paths` is not an absent one. It exists because a platform's hosts can serve more than models — an endpoint that creates keys, or reads an account — and **a plugin allowed to use a key has that key's whole authority on every path it may reach**: `verify.url` and each `endpoint` of the access rows must pass it. |
 | `auth` | object | yes | `kind`, one of `apiKey`, `oauth`, `token` or `none`; `header`, the header with a placeholder that names a `credentials` id, such as `Authorization: Key <key>`; `env`, the environment variable the vendor's own SDKs read, where one is documented; `keychain`, the name an application keeps the platform's credentials under, as a `pl` file's `auth.keychain` (§14.3). |
 | `headers` | object | | Other headers every request needs, such as `anthropic-version`. |
 | `credentials` | array | when `auth.kind` is `apiKey` or `token` | What a user copies from the platform, one object per field: `id`, the field's name in the stored value and in `auth.header`'s placeholder; `label`, the platform's word for it; `secret`, whether it is hidden while it is typed; `prefix`, how the platform's values start, where it says. |
-| `verify` | object | | A documented authenticated request at a fixed URL that runs no model, to check a key: `method` and `url`. It carries `auth.header` and `headers` like any other request. |
+| `verify` | object | | A documented authenticated request at a fixed URL that runs no model, to check a key: `method` and `url`. It carries `auth.header` and `headers` like any other request. A `2xx` answer means the key is good. `rejected`, where the file has it, is the whole list of the HTTP statuses, each from `400` to `599`, with which the platform refuses a key; left out, it is `401` and `403`. xAI lists `[400, 401, 403]`: it answers a wrong key with `400`, and keeps `401` for a request with no credentials. Any other answer says nothing about the key: the check could not be made. A reader decides by the status alone, and need not read a refusal's body, which may repeat what it was sent. |
 | `signup_url` | string | | Where an account is created. |
 | `billing_url` | string | | Where money is added and a limit is set. |
 | `keys_url` | string | | Where a key is created. |
@@ -2198,7 +2428,8 @@ and every platform file's `id` is its filename; that `tag` and `kind` agree; tha
 `name` and `kind`, that a `status` is `pending` and comes with at least one obstacle, and that every
 `access[].variant` is an `id` in `variants`; that a platform whose
 `auth.kind` is `apiKey` or `token` lists its `credentials`, and that `hosts` holds the hosts of its
-`base_url`, its `verify.url` and every `endpoint` of the access rows naming it; that every `per` is a
+`base_url`, its `verify.url` and every `endpoint` of the access rows naming it; that a `verify.rejected`
+is a list of statuses from `400` to `599` with at least one in it; that every `per` is a
 unit of §14.7; that `max_length_s` is the largest of `supported_durations_s`; that a video entry marks
 its tag's inputs as required; and that every listed file exists.
 
@@ -2222,9 +2453,11 @@ whether that is A3 or A4 in a given project.
 
 ### 15.2 Timing, checks and report
 
-One flat timeline per episode or film. Tracks span the whole timeline; scenes appear in unit order
-(§10.1) with a marker at each scene start carrying the scene stem, and a marker on each clip carrying
-its shot or cue stem. **No nested compositions** — importers handle them badly.
+One flat timeline per export: the film, or one folder of it, such as an episode. Tracks span the whole
+timeline; scenes appear in **script order** — the project's `children` walked depth-first, each folder's
+`children` in its own order (§8.5, §10.1) — with a marker at each scene start carrying the scene stem,
+and a marker on each clip carrying its shot or cue stem. A folder adds nothing to the timeline but the
+order of its scenes and its own cues. **No nested compositions** — importers handle them badly.
 
 Timings are computed from `place` by walking `after` chains, in milliseconds, then converted once to the
 project rate using the exact rate ratio for fractional rates given as `num`/`den`.
@@ -2357,10 +2590,19 @@ The format is meant to be edited without any FilmOpen application. For a person 
     (§13.1, §6.1). Without a pick you are on official. To use someone else's version in your work, set
     `pick` in your `cm_` file for the entity; to go back to official, remove it (§13.4). An application
     does this for you when you fork, pick or abandon.
+12. **Choose a tag that says nothing a person may change.** A filename is permanent (rule 1), so a tag
+    holds no name, no kind and no position: a scene that is renamed, or moved to another folder, keeps
+    its tag. An application numbers what it creates — scenes `1`, `2`, …, folders `f1`, `f2`, …, the next
+    number after the highest in use — and asks a person for the name alone. The `f` keeps a folder's cues
+    apart from a scene's: `cu_f1.1` and `cu_1.1` are two files, where two plain numbers would make them
+    one. A tag chosen by hand (`cold-open`) is as valid. A project's own tag stays a person's choice,
+    since it names the folder on disk.
 
-A machine generating a project from a film should produce: `pj_`; one `ch_` per identified speaker with
-`aliases`; `lo_` per setting; `sc_` files with timed blocks; `sh_` per detected cut with `place`; `cu_`
-per dialogue line; an import batch; extracted takes — and nothing else.
+A machine generating a project from a film should produce: `pj_`, listing the script in order in
+`children`; one `ch_` per identified speaker with `aliases`; `lo_` per setting; `sc_` files with timed
+blocks, numbered; `fo_` folders only where the source has parts worth keeping — acts, episodes — each
+listing its scenes; `sh_` per detected cut with `place`; `cu_` per dialogue line; an import batch;
+extracted takes — and nothing else.
 
 ---
 
@@ -2412,7 +2654,8 @@ A conforming writer:
 
 JSON Schemas for every file type are intended to be published at `https://filmopen.ai/schema/1/<type>.json`, CC0, and
 usable offline. Until released and tested, the URLs are publication targets. Schemas mark the header
-and category-specific required fields (including one project story-root list) as required, and enumerate the
+and category-specific required fields as required — `children` is not one of them, an absent list being
+an empty script (§8.5) — hold each entry of a `children` to §8.5's grammar, and enumerate the
 vocabularies in Appendix A without restricting free-form objects to them. Cross-file resolution and
 timeline arithmetic are reader and exporter work beyond schema validation.
 
@@ -2587,12 +2830,14 @@ vocabulary, not a constraint. "media ref" means a media reference as defined in 
 | `picks` | object | one media ref, or several frames, per deliverable |
 | `coverage` | string | notes on what else was shot for this beat |
 
-### A.5 Scene `sc` and story units
+### A.5 Scene `sc` and folder `fo`
+
+**Scene**
 
 | Key | Type | Values |
 |---|---|---|
-| `location` | tag | `locationEpoch` overrides the scene epoch for the location |
-| `epoch` | epoch | |
+| `location` | tag | one; `locationEpoch` overrides the scene epoch for the location |
+| `epoch` | epoch | one: the time the scene is set in |
 | `storyDay` | number | continuity day |
 | `time` | enum | `dawn` `morning` `midday` `afternoon` `golden-hour` `dusk` `blue-hour` `night` `late-night` |
 | `weather` | string | `clear` `overcast` `rain` `storm` `fog` `snow` `wind` `heat-haze` … free |
@@ -2610,17 +2855,24 @@ vocabulary, not a constraint. "media ref" means a media reference as defined in 
 | `shots` `cues` | tag[] | order of the scene's shots and cues |
 | `blocks` | array | §10.3 |
 
-Units add `scenes` / `sequences` / `episodes` for order, and cascade `epoch`, `cast`, `locations`,
-`styles`.
+**Folder**
+
+| Key | Type | Values |
+|---|---|---|
+| `kind` | token | `season` `installment` `episode` `act` `arc` `sequence` `part` `chapter`; another token is kept and shown as written; a folder may have none (§10.1) |
+| `synopsis` | string | |
+| `children` | entry[] | what the folder holds, in order: `<type>_<tag>` or a full reference, of type `fo` or `sc` (§8.5) |
+
+A folder cascades nothing: it carries no `epoch`, `cast`, `locations` or `styles` (§10.1).
 
 ### A.6 Cue `cu`
 
 | Key | Type | Values |
 |---|---|---|
 | `kind` | enum | `dialogue` `narration` `music` `sfx` `ambience` |
-| `scene` or `unit` | full ref | what the blocks belong to |
+| `scene` or `folder` | full ref | what the blocks belong to: a scene's version, or, for a cue that spans scenes, a folder's (§11.2) |
 | `blocks` | id[] | span, within `scene` |
-| `anchors[]` | object | `{ scene, blocks }` when a unit-level cue cites specific scenes' blocks |
+| `anchors[]` | object | `{ scene, blocks }` when a folder's cue cites specific scenes' blocks |
 | `character` | tag | dialogue and narration |
 | `spoken` | string | replaces block text |
 | `ssml` | string | alternative to `spoken` |
@@ -2678,11 +2930,11 @@ All kinds: `id`; optional `startMs`, `endMs`.
 
 ### A.9 Project `pj`
 
-`author` `v` `forkedFrom?` `versionLabel?` `name` `kind` (`short-film` `film` `mini-series` `series`) `genre[]` `year`
+`author` `v` `forkedFrom?` `versionLabel?` `name` `kind?` (`short-film` `film` `mini-series` `series`) `genre[]` `year`
 `logline` `synopsis` `lang` `rating` `format{aspect,fps,resolution,color,…}` `runtimeMin`
 `credits[{role,name,handle}]` `epochs{<token>: {label?, order?, year?}}` (at least one; the first is the
-default) `contributors` `tracks` `license` `hooks`, and exactly one story root list: `seasons`,
-`episodes`, `sequences` or `scenes`.
+default) `contributors` `tracks` `license` `hooks`, and `children[]`, the script: its folders and scenes
+in order, each entry `<type>_<tag>` or a full reference (§8.5).
 
 Recommended `genre` tokens: `action` `adventure` `animation` `biography` `comedy` `crime` `documentary`
 `drama` `family` `fantasy` `historical` `horror` `musical` `mystery` `noir` `romance` `science-fiction`
@@ -2690,16 +2942,18 @@ Recommended `genre` tokens: `action` `adventure` `animation` `biography` `comedy
 
 ### A.10 Render batch item
 
-`n` `source` `deliverable` `take` `model` `platform` `prompt` `negative` `params` `inputs[]` `output`
+`n` `source` `deliverable` `take` `model` `platform` `prompt` `negative` `params` `inputs[]` `inputsByName{}` `output`
 `sha256` `costUsd` `durationMs` `elapsedMs` `at{ms|startMs,endMs}` `human{selectedFrom,promptEditedBy,manualEdits[]}`
 `status` `jobId` `attempts` `error` `thumbnail` `poster` `proxy` `waveform` `mimeType` `bytes` `width`
-`height` `fps` `frameCount` `sampleRate` `channels` `workflow`.
+`height` `fps` `frameCount` `sampleRate` `channels` `workflow` `stack` `seedApplied`.
 
 ---
 
 ## Appendix B — Worked example
 
-One scene of *The Cartographer* as a story and conform example. The story and selected media are
+One scene of *The Cartographer* as a story and conform example: the path from the project file down to
+scene 5, and not the whole of the sample an application bundles, which holds more — a second episode,
+a sequence inside it, another scene, a cue on an episode. The story and selected media are
 listed below; provider/model definitions for regeneration are intentionally omitted. Model/platform
 labels in the historical batch are illustrative. The supplied media has the durations recorded in the
 batches. Shortened hashes are illustrative; real files use complete hashes. B.10 follows the placements.
@@ -2727,9 +2981,9 @@ the-cartographer/
     st_war-grade_default_maria_v1.json
     st_war-grade_default_official.json
   s1/
-    se_s1_john123_v1.json
+    fo_s1_john123_v1.json
     e2/
-      ep_e2_john123_v1.json
+      fo_e2_john123_v1.json
       sc5/
         sc_5_john123_v1.json
         sh_5.1_john123_v1.json
@@ -2757,8 +3011,10 @@ its own media root:
 ```
 
 Had the renders been kept in a synced folder next to the project, the manifest would say
-`"data": { "type": "local", "path": "../the-cartographer-data" }` and every `.png`, `.mp4` and `.wav`
-above would live there instead, under the same names (§4.4).
+`"data": { "kind": "local", "path": "../the-cartographer-data" }` and every `.png`, `.mp4` and `.wav`
+above would live there instead, under the same names (§4.4). The directories `s1/`, `e2/` and `sc5/` are
+the author's own tidiness and carry no meaning (§2, principle 3): the script's structure is in the files
+of B.5.
 
 ### B.2 Project
 
@@ -2777,7 +3033,7 @@ above would live there instead, under the same names (§4.4).
     { "id": "amb", "kind": "audio", "name": "Ambience" },
     { "id": "mx", "kind": "audio", "name": "Music" }
   ],
-  "seasons": ["s1"],
+  "children": ["fo_s1"],
   "license": "CC-BY-SA-4.0",
   "created": "2026-09-05T18:00:00Z", "updated": "2026-09-06T16:00:00Z"
 }
@@ -2874,25 +3130,26 @@ above would live there instead, under the same names (§4.4).
   "official": "st_war-grade_default_maria_v1", "setBy": "john123" }
 ```
 
-### B.5 Story units
+### B.5 Folders
 
 ```json
-{ "filmopen": 1, "type": "se", "tag": "s1", "author": "john123", "v": 1,
-  "name": "Season 1", "episodes": ["e2"],
+{ "filmopen": 1, "type": "fo", "tag": "s1", "author": "john123", "v": 1,
+  "name": "Season 1", "kind": "season", "children": ["fo_e2"],
   "created": "2026-09-05T18:00:00Z", "updated": "2026-09-05T18:00:00Z" }
 ```
 
 ```json
 {
-  "filmopen": 1, "type": "ep", "tag": "e2", "author": "john123", "v": 1,
-  "name": "Episode 2 — Low Tide", "synopsis": "Kira finds the first altered chart.",
-  "epoch": "mid-war",
-  "cast": [{ "character": "main-hero", "epoch": "30yo" }],
-  "locations": ["archive"], "styles": ["war-grade"],
-  "scenes": ["5"],
+  "filmopen": 1, "type": "fo", "tag": "e2", "author": "john123", "v": 1,
+  "name": "Episode 2 — Low Tide", "kind": "episode",
+  "synopsis": "Kira finds the first altered chart.",
+  "children": ["sc_5"],
   "created": "2026-09-05T18:00:00Z", "updated": "2026-09-06T12:00:00Z"
 }
 ```
+
+The folders say nothing about what their scenes hold: the epoch, the cast, the location and the style of
+scene 5 are the scene's own (B.6).
 
 ### B.6 Scene
 
@@ -2956,7 +3213,7 @@ above would live there instead, under the same names (§4.4).
     "firstFrame": { "model": "nanobanana", "prompt": "low angle, Kira in medium shot at the archive table, the window behind her blown white", "refs": ["cs_ch_main-hero_30yo_maria_v1_r8af0_maria_1"] },
     "clip": { "model": "seedance25", "prompt": "the window flashes white, glass falls, she does not turn", "from": "firstFrame" }
   },
-  "place": { "track": "pic", "after": "sh_5.1", "offsetMs": 0, "transitionIn": { "type": "cut" } },
+  "place": { "track": "pic", "after": "sh_5.1", "offsetMs": 0, "transitionIn": { "kind": "cut" } },
   "picks": { "firstFrame": "ff_sh_5.2_john123_v1_r8af0_maria_1", "clip": "cl_sh_5.2_john123_v1_r8af0_maria_1" },
   "created": "2026-09-06T12:12:00Z", "updated": "2026-09-06T16:00:00Z"
 }
@@ -3088,7 +3345,7 @@ written.
 | `lo` | Narrative Location | `areas` → contained Locations |
 | `pr` | Narrative Prop | `hero` → notable |
 | `st` | — | no OMC equivalent; export as Asset with CDL sidecar |
-| `se` `ep` `sq` | Creative Work structure / Sequence | nested by `scenes`, `sequences`, `episodes` |
+| `fo` | Creative Work structure / Sequence, by `kind` | a `season`, `installment` or `episode` → a Creative Work within the series; an `act`, `arc`, `sequence`, `part` or `chapter` → Sequence; a folder with no kind, or with a token outside the vocabulary, → a grouping the exporter names and reports; nested by `children` |
 | `sc` | Narrative Scene | blocks → scene description and dialogue; `storyDay` → Context |
 | `sh` | Shot | `place` → editorial timing; with Slate where an import batch supplies one |
 | take | Asset | media file with identifiers; `sha256` → identifier |
@@ -3099,4 +3356,4 @@ written.
 
 ---
 
-*FilmOpen Project Specification 1.3 Draft · filmopen.ai · CC-BY-4.0*
+*FilmOpen Project Specification · filmopen.ai · CC-BY-4.0*

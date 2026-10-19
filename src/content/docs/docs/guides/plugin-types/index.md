@@ -1,0 +1,35 @@
+---
+title: "Types of Plugins"
+description: "Plugin capabilities, their subtypes, and the packages that implement them."
+editUrl: https://github.com/filmopen-ai/filmopen-docs/edit/dev/src/content/docs/docs/guides/plugin-types/index.md
+sidebar:
+  label: Overview
+  order: 0
+---
+
+A **type** describes what a plugin does. A **subtype** describes its input/output mode. A package can implement more than one type, and one type can have adapters for several models or backends.
+
+| Type | Current packages |
+|---|---|
+| [Image Generation](./image-generation/) | [fo-cui](../fo-cui/), [fo-fal](../fo-fal/), [fo-openai](../fo-openai/) |
+| [Video Generation](./video-generation/) | [fo-fal](../fo-fal/) |
+| [Character Analysis](./character-analysis/) | [fo-openai-vision](../fo-openai-vision/) |
+| [Voice Analysis](./voice-analysis/) | [fo-fal-voice](../fo-fal-voice/) |
+| [Style Analysis](./style-analysis/) | [fo-openai-style](../fo-openai-style/) |
+| [Character Transformation](./character-transformation/) | [fo-openai-character](../fo-openai-character/) |
+| [Voice Generation](./voice-generation/) | [fo-elevenlabs](../fo-elevenlabs/) |
+| [Speech Synthesis](./speech-synthesis/) | [fo-elevenlabs](../fo-elevenlabs/), [fo-fal](../fo-fal/) |
+| [Platform Connectors](./platform-connectors/) | [fo-cui](../fo-cui/), [fo-fal](../fo-fal/), [fo-openai](../fo-openai/), [fo-openrouter](../fo-openrouter/) |
+| [Server Providers](./server-providers/) | [fo-salad](../fo-salad/) |
+| [Assistants](./assistants/) | [fo-assist](../fo-assist/) |
+| [Model Pickers](./model-pickers/) | [fo-model-picker](../fo-model-picker/) |
+| [Prompt Writers](./prompt-writers/) | [fo-prompts](../fo-prompts/), [fo-gpt-expressions](../fo-gpt-expressions/) |
+| [Prompt Builders](./prompt-builders/) | [fo-styles](../fo-styles/) |
+
+Each type page lists implemented and planned subtypes separately. The [package index](../plugin-packages/) gives installation steps; individual guides explain the permanent milestone 6-9 controls, requirements and remaining limitations. Older app builds may not have these controls. Installing a package does not supply a missing application feature.
+
+## Keep the catalog complete
+
+For every new package, create its guide, register all of its types in `src/data/plugin-types.json`, link this index to any new type page, and add links in both directions between the type page and package guide. A new JSON document contract gets a distinct type when implemented; a second model for an existing contract usually does not.
+
+The `plugin-types` documentation test checks every `fo-*` guide, each registered type and all package/type links. Plugin authors must also compare the shipping inventory in filmopen-plugins with this catalog when adding a package. Generated specification snapshots are not edited for this workflow.
