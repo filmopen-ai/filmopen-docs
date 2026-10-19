@@ -11,13 +11,12 @@ Salad lets you rent a GPU computer to render images without using your own GPU. 
 
 You need a Salad account, an organization and project in that account, and a Salad API key. Starting a server uses your Salad balance; entering your settings and checking your key does not start a server.
 
-## 1. Enable the three plugins
+## 1. Enable the two plugins
 
 In FilmOpen, [install and allow](../plugin-packages/#install-and-allow):
 
 - **SaladCloud servers** (`fo-salad`): starts and stops the rented computer.
-- **ComfyUI** (`fo-cui`): connects to the renderer on that computer.
-- **Z-Image Turbo** (`fo-cui-zimage`): generates the image.
+- **ComfyUI** (`fo-cui`): connects to the renderer on that computer and renders the Z-Image Turbo image.
 
 Open **Settings → Plugins → SaladCloud servers → Open**.
 
@@ -76,7 +75,7 @@ The key is kept in your device's credential store. A successful key check confir
 
 For a small first test, choose the lowest resolution that the Quality option offers. The resulting image should appear in the character's reference images.
 
-The supplied Salad setup includes the Z-Image **8 GB Quality** and **24 GB Quality** model files. The latter requires a suitable 24 GB GPU. It does **not** include the **8 GB Fast** or LTX video model files. Choosing a larger GPU does not install extra models.
+The supplied Salad setup includes the Z-Image **8 GB Quality** and **24 GB Quality** model files. The latter requires a suitable 24 GB GPU. It does **not** include the **8 GB Fast** model files. Choosing a larger GPU does not install extra models.
 
 ## 5. Stop when you finish
 

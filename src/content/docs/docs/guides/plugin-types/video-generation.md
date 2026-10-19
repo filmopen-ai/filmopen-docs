@@ -6,18 +6,18 @@ sidebar:
   order: 1
 ---
 
-The current LTX package accepts an initial image and a motion prompt and produces a short silent clip through ComfyUI. It is a separate type from Image Generation even when both share a server and model-storage infrastructure.
+fo-fal renders the catalogue's video rows marked for fal: MiniMax H3 Max and Seedance 2.5, from a prompt alone or from an image used as the first frame. The finished clip is ordinary project media, added at **Motion clips**. Video Generation is a separate type from Image Generation even when both share a server or a platform.
 
-The tested package targets the documented 8 GB stack. Other text, reference and video input modes are taxonomy entries for future work, not claims about the current adapter.
+Each model's resolutions and durations come from the catalogue. Reference-to-video and video-to-video modes are taxonomy entries for future work, not claims about the current renderer.
 
 ## Subtypes
 
-- Image to video — implemented, short silent LTX clips
-- Text to video — future adapters
+- Text to video — implemented by fo-fal (MiniMax H3 Max, Seedance 2.5)
+- Image to video — implemented by fo-fal, from a first frame
 - Reference to video / video to video — future adapters
 
 ## Plugins
 
-- [fo-cui-ltx](../../fo-cui-ltx/)
+- [fo-fal](../../fo-fal/)
 
 [All types of plugins](../)

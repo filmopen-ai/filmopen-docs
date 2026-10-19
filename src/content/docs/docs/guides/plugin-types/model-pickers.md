@@ -6,7 +6,7 @@ sidebar:
   order: 1
 ---
 
-Model pickers supply defaults for a render kind and stage; FilmOpen validates availability and the route. They do not render or configure the provider. The current picker uses a fixed list for still images, with no defaults for other render kinds.
+Model pickers supply defaults for a render kind and stage; FilmOpen validates availability and the route. They do not render or configure the provider. The current picker uses a fixed list of text, still-image, video and speech defaults; for the other render kinds it answers none, with a reason.
 
 ## Subtypes
 

@@ -12,7 +12,7 @@ Describe a photograph's visual treatment independently of its subjects. This ada
 
 ## Set up and analyze
 
-1. [Install and allow](../plugin-packages/#install-and-allow) **fo-openai** and **fo-openai-style**. Save the app's OpenAI key and grant the connector access.
+1. [Install and allow](../plugin-packages/#install-and-allow) **fo-openai** and **fo-openai-style**. Enter the OpenAI key on fo-openai's card, as [its guide](../fo-openai/#set-up-and-check) says; this package needs no key of its own.
 2. Open a project or script folder you can edit. In **Reference images**, use the add control and **Upload** a PNG or JPEG.
 3. Under the references, choose the style analyzer where several are available. Check **Picture to describe**: the most recent compatible upload is the default, and you can select another.
 4. Press **Analyze** once. Review the **Visual treatment** fields and **What one picture cannot tell** limitations.

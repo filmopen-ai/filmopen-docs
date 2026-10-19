@@ -6,9 +6,9 @@ sidebar:
   order: 1
 ---
 
-These packages generate still images from a prompt; fo-fal also edits from a reference image. Model adapters and the fal renderer supply options and output receipts; the host imports finished images as ordinary project media. Choosing a different backend does not create a new plugin type.
+These packages generate still images from a prompt; fo-fal also edits from a reference image. Each renders the catalogue entries marked for its platform and supplies their options and output receipts; the host imports finished images as ordinary project media. Choosing a different backend does not create a new plugin type.
 
-Z-Image via ComfyUI has model stacks and GPU constraints. The fal renderer takes its models and options from the catalogue, including FLUX.2 klein 4B and GPT Image 2.5 editing for character sheets. The direct OpenAI adapter remains text to image. See each guide for supported settings and cost behavior.
+fo-cui renders Z-Image Turbo on ComfyUI, with model stacks and GPU constraints. fo-fal takes its models and options from the catalogue, including FLUX.2 klein 4B and GPT Image 2.5 editing for character sheets. fo-openai renders GPT Image 2.5 from text only. See each guide for supported settings and cost behavior.
 
 ## Subtypes
 
@@ -17,8 +17,8 @@ Z-Image via ComfyUI has model stacks and GPU constraints. The fal renderer takes
 
 ## Plugins
 
-- [fo-cui-zimage](../../fo-cui-zimage/)
+- [fo-cui](../../fo-cui/)
 - [fo-fal](../../fo-fal/)
-- [fo-openai-gptimage25](../../fo-openai-gptimage25/)
+- [fo-openai](../../fo-openai/)
 
 [All types of plugins](../)

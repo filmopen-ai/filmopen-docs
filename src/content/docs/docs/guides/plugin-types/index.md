@@ -11,19 +11,20 @@ A **type** describes what a plugin does. A **subtype** describes its input/outpu
 
 | Type | Current packages |
 |---|---|
-| [Image Generation](./image-generation/) | [fo-cui-zimage](../fo-cui-zimage/), [fo-fal](../fo-fal/), [fo-openai-gptimage25](../fo-openai-gptimage25/) |
-| [Video Generation](./video-generation/) | [fo-cui-ltx](../fo-cui-ltx/) |
+| [Image Generation](./image-generation/) | [fo-cui](../fo-cui/), [fo-fal](../fo-fal/), [fo-openai](../fo-openai/) |
+| [Video Generation](./video-generation/) | [fo-fal](../fo-fal/) |
 | [Character Analysis](./character-analysis/) | [fo-openai-vision](../fo-openai-vision/) |
 | [Voice Analysis](./voice-analysis/) | [fo-fal-voice](../fo-fal-voice/) |
 | [Style Analysis](./style-analysis/) | [fo-openai-style](../fo-openai-style/) |
 | [Character Transformation](./character-transformation/) | [fo-openai-character](../fo-openai-character/) |
 | [Voice Generation](./voice-generation/) | [fo-elevenlabs](../fo-elevenlabs/) |
-| [Speech Synthesis](./speech-synthesis/) | [fo-elevenlabs](../fo-elevenlabs/) |
+| [Speech Synthesis](./speech-synthesis/) | [fo-elevenlabs](../fo-elevenlabs/), [fo-fal](../fo-fal/) |
 | [Platform Connectors](./platform-connectors/) | [fo-cui](../fo-cui/), [fo-fal](../fo-fal/), [fo-openai](../fo-openai/), [fo-openrouter](../fo-openrouter/) |
 | [Server Providers](./server-providers/) | [fo-salad](../fo-salad/) |
 | [Assistants](./assistants/) | [fo-assist](../fo-assist/) |
 | [Model Pickers](./model-pickers/) | [fo-model-picker](../fo-model-picker/) |
 | [Prompt Writers](./prompt-writers/) | [fo-prompts](../fo-prompts/), [fo-gpt-expressions](../fo-gpt-expressions/) |
+| [Prompt Builders](./prompt-builders/) | [fo-styles](../fo-styles/) |
 
 Each type page lists implemented and planned subtypes separately. The [package index](../plugin-packages/) gives installation steps; individual guides explain the permanent milestone 6-9 controls, requirements and remaining limitations. Older app builds may not have these controls. Installing a package does not supply a missing application feature.
 

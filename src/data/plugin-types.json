@@ -3,9 +3,9 @@
     "slug": "image-generation",
     "title": "Image Generation",
     "packages": [
-      "fo-cui-zimage",
+      "fo-cui",
       "fo-fal",
-      "fo-openai-gptimage25"
+      "fo-openai"
     ],
     "description": "Create still images from a generation request.",
     "subtypes": [
@@ -17,12 +17,12 @@
     "slug": "video-generation",
     "title": "Video Generation",
     "packages": [
-      "fo-cui-ltx"
+      "fo-fal"
     ],
     "description": "Create moving images from text or reference media.",
     "subtypes": [
-      "Image to video — implemented, short silent LTX clips",
-      "Text to video — future adapters",
+      "Text to video — implemented by fo-fal (MiniMax H3 Max, Seedance 2.5)",
+      "Image to video — implemented by fo-fal, from a first frame",
       "Reference to video / video to video — future adapters"
     ]
   },
@@ -86,11 +86,13 @@
     "slug": "speech-synthesis",
     "title": "Speech Synthesis",
     "packages": [
-      "fo-elevenlabs"
+      "fo-elevenlabs",
+      "fo-fal"
     ],
-    "description": "Generate spoken audio from text and a saved voice ID.",
+    "description": "Generate spoken audio from text.",
     "subtypes": [
-      "Text + provider voice ID to WAV — implemented"
+      "Text + provider voice ID to WAV — implemented",
+      "Text to speech on fal (Eleven v3) — implemented by fo-fal"
     ]
   },
   {
@@ -154,6 +156,17 @@
       "Character to reference-image prompt — implemented",
       "Character to sheet prompt — implemented",
       "GPT Image 2.5 sheet with facial expressions — implemented"
+    ]
+  },
+  {
+    "slug": "prompt-builders",
+    "title": "Prompt Builders",
+    "packages": [
+      "fo-styles"
+    ],
+    "description": "Offer ready-made prompt words to add to a render, such as a visual style.",
+    "subtypes": [
+      "Visual style catalogue to render prompt — implemented"
     ]
   }
 ]
