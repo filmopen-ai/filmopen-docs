@@ -8,7 +8,7 @@ sidebar:
 
 The photo analyzer returns structured appearance fields and a generation prompt. It does not establish identity, biography or hidden facts from a photograph. The host validates the JSON and applies it to the selected editable character while preserving its identity and other data.
 
-For visual treatment without subject content, use [Style Analysis](../style-analysis/). For editing an existing character from written instructions, use [Character Transformation](../character-transformation/).
+For visual treatment without subject content, use [Style Analysis](../style-analysis/).
 
 ## Subtypes
 
@@ -16,6 +16,6 @@ For visual treatment without subject content, use [Style Analysis](../style-anal
 
 ## Plugins
 
-- [fo-openai-vision](../../fo-openai-vision/)
+- [fo-openai](/docs/platforms/openai/)
 
 [All types of plugins](../)

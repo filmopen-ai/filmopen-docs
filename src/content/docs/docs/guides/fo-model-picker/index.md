@@ -9,7 +9,7 @@ sidebar:
 
 Plugin types: [Model Pickers](../plugin-types/model-pickers/).
 
-**fo-model-picker v4** supplies a fixed list of default models and routes for each render kind and stage: text, still images, video and speech. It needs API 1, revision 10. It works locally without a key or network setup; it does not render. FilmOpen checks whether the selected model and route are available.
+**fo-model-picker v1** supplies a fixed list of default models and routes for each render kind and stage: text, still images, video and speech. It needs API 1, revision 1. It works locally without a key or network setup; it does not render. FilmOpen checks whether the selected model and route are available.
 
 ## Choose a stage
 
@@ -32,7 +32,7 @@ For still images, Draft and Final use the same model and settings; Draft is not 
 
 ## Text, video and speech
 
-- **Text** (`llm`): Claude Sonnet 5 through [fo-openrouter](../fo-openrouter/) at every stage.
+- **Text** (`llm`): Claude Sonnet 5 through [OpenRouter](/docs/platforms/openrouter/) at every stage.
 - **Video**, from text (`t2v`) or from an image (`i2v`), on fal, each 5 seconds:
 
   | Prototype | Draft | Final |
@@ -44,4 +44,4 @@ For still images, Draft and Final use the same model and settings; Draft is not 
 
 The other kinds have no default, each with a reason: `flf2v` has no last-frame control, `ia2v` has no lip-sync route, and `flfa2v`, `ttv` and `ttm` have no fal model.
 
-The image, video and speech routes use [fo-fal](../fo-fal/), which must be enabled with a usable fal key. A character sheet needs a reference image first. The [prompt writer](../fo-prompts/) can supply the words; you can inspect the model, prompt and price before rendering.
+The image, video and speech routes use [fal](/docs/platforms/fal/), which must be enabled with a usable fal key. A character sheet needs a reference image first. The [prompt writer](../fo-prompts/) can supply the words; you can inspect the model, prompt and price before rendering.

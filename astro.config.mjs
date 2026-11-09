@@ -1,3 +1,4 @@
+import { existsSync } from 'node:fs';
 import process from 'node:process';
 
 import starlight from '@astrojs/starlight';
@@ -5,8 +6,12 @@ import { defineConfig } from 'astro/config';
 
 import pluginTypes from './src/data/plugin-types.json' with { type: 'json' };
 
-/** List each registered plugin once without changing its documentation address. */
+/**
+ * List each registered plugin that has a guide of its own; a plugin that owns a
+ * platform is documented on its platform's page, in the Platforms folder.
+ */
 const pluginGuides = [...new Set(pluginTypes.flatMap((type) => type.packages))]
+  .filter((name) => existsSync(new URL(`./src/content/docs/docs/guides/${name}/index.md`, import.meta.url)))
   .sort()
   .map((name) => ({ slug: `docs/guides/${name}`, label: name }));
 
@@ -50,10 +55,12 @@ export default defineConfig({
                 { label: 'Style Guides', items: [{ autogenerate: { directory: 'docs/guides/style-guides' } }] },
               ],
             },
-            { label: 'List of plugins', items: pluginGuides },
+            {
+              label: 'List of plugins',
+              items: [{ label: 'Platforms', items: [{ autogenerate: { directory: 'docs/platforms' } }] }, ...pluginGuides],
+            },
           ],
         },
-        { label: 'AI platforms', items: [{ autogenerate: { directory: 'docs/platforms' } }] },
         {
           label: 'Specifications',
           // Named one by one: the Software Specification is a folder of pages

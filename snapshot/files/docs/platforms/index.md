@@ -1,40 +1,40 @@
 ---
 title: AI platforms and API keys
-description: The AI platforms FilmOpen works with, what their models cost, and what each asks for before you can use your own key.
+description: The AI platforms FilmOpen works with, what their models cost, and how to use FilmOpen credit or your own key.
 slug: docs/platforms
 sidebar:
   label: Overview
   order: 0
-lastUpdated: 2026-09-18
+lastUpdated: 2026-11-09
 ---
 
-FilmOpen reaches AI models on several platforms. With your own key, you open an account with a platform, add money there, create an API key, and add the key in FilmOpen under **Settings → Provider keys**. FilmOpen then sends your requests to that platform, and the platform bills you directly, at its own prices.
+FilmOpen reaches AI models through plugins, one for each platform. You pay for a model in one of three ways:
 
-FilmOpen works with four platforms: [OpenRouter](/docs/platforms/openrouter/) for writing and structured text, [fal](/docs/platforms/fal/) for images, video and voices, and [OpenAI](/docs/platforms/openai/) and [xAI](/docs/platforms/xai/) for live transcription. The others are listed here as pending, with what stands in their way.
+- **FilmOpen credit.** Top up your account on filmopen.ai and use the platforms below without a key of your own. FilmOpen passes on the provider's actual rate and charges 8% plus the payment processor's fees when you top up.
+- **Your own key.** Open an account with a platform, add money there, create an API key, and save it on the plugin's page under **Settings → Plugins**. FilmOpen then sends your requests to that platform, and the platform bills you directly, at its own prices.
+- **Your own machine.** ComfyUI and WanGP run on your own computer or a server you name, with no key and no charge per use from FilmOpen.
 
 :::note[Prices change]
-Every price and minimum on these pages was checked between 14 and 18 September 2026. Platforms change them often, so each platform's own page links to its current pricing. Where a table says **Not published**, the platform's own pages don't say.
+Every page dates its prices. Platforms change them often, so each page links to the platform's current pricing. Where a table says **Not published**, the platform's own pages don't say.
 :::
 
-## Supported now, and pending
+## The platforms
 
-**Supported now:**
-- **OpenRouter:** every language model, for writing and structured text.
-- **fal:** images and video, and ElevenLabs' voices for now.
-- **OpenAI:** live transcription, as you dictate.
-- **xAI:** live transcription with Grok, a second engine beside OpenAI's at about a fifth of the price. You choose the engine in Settings.
+| Platform | What FilmOpen uses it for | Plugin | FilmOpen credit |
+|---|---|---|---|
+| [OpenRouter](/docs/platforms/openrouter/) | Writing and structured text, from many makers | `fo-openrouter` | Yes |
+| [fal](/docs/platforms/fal/) | Images, video and voices, from many makers | `fo-fal` | Yes, but not its MiniMax or Qwen voices |
+| [OpenAI](/docs/platforms/openai/) | Images, writing, analysis and dictation | `fo-openai` | Yes |
+| [xAI (Grok)](/docs/platforms/xai/) | Writing with Grok, and dictation | `fo-xai` | Yes for writing; dictation takes your own key |
+| [Anthropic (Claude)](/docs/platforms/anthropic/) | Writing, on your key or your Claude Code | `fo-anthropic` | Not yet |
+| [Google AI Studio](/docs/platforms/google/) | Gemini text and Nano Banana pictures | `fo-google` | Not yet |
+| [ElevenLabs](/docs/platforms/elevenlabs/) | Voice design and speech | `fo-elevenlabs` | Yes |
+| [Atlas Cloud](/docs/platforms/atlascloud/) | Images and video, from many makers | `fo-atlascloud` | Yes |
+| [Salad](/docs/platforms/salad/) | A rented GPU server for ComfyUI | `fo-salad` | Yes, as server compute |
+| [ComfyUI](/docs/platforms/comfyui/) | Images and video on your own machine or a server | `fo-cui` | Runs on your machine |
+| [WanGP](/docs/platforms/wan2gp/) | Frames, clips and writing on your own machine or a server | `fo-wan2gp` | Runs on your machine |
 
-**Pending.** These platforms are described below, but FilmOpen doesn't take their keys yet:
-- **Anthropic, and Google's Gemini API:** their text models are reached through OpenRouter. Google's Veo and Nano Banana models are reached through fal.
-- **Google Cloud Vertex AI:** its credential is a Google Cloud project, not a key you paste.
-- **ElevenLabs:** its voices are reached through fal. Eleven Music waits for this platform, since nothing else reaches it.
-- **Deepgram:** another lower-cost live transcription, to add later.
-- **Kling:** its API is sold in packages from $700; fal charges about the same per second, with no package.
-- **BytePlus:** Seedance 2.5 needs USD 30 of credits that can't be withdrawn, and BytePlus isn't offered in the United States.
-- **MiniMax:** its video model is reached through fal.
-- **LTX:** its video model is reached through fal. Clips between two frames timed to your own audio wait for this platform, which alone makes them.
-- **Replicate:** fal was chosen for images and video; Replicate deletes results after an hour and signs in only with GitHub.
-- **ComfyUI and Hugging Face:** they run or download models on your own computer, which FilmOpen doesn't do yet.
+The sections below compare platforms' prices and what they ask of you. They were checked between 14 and 18 September 2026, and some name platforms FilmOpen doesn't use yet.
 
 ## Directly from the maker, or through a marketplace
 
@@ -43,14 +43,14 @@ Every price and minimum on these pages was checked between 14 and 18 September 2
   - **Price:** a marketplace often charges the maker's price, but not always; the tables below show where they differ.
   - **Delay:** a marketplace adds one more service between FilmOpen and the model.
 
-## The platforms at a glance
+## The platforms compared
 
 | Platform | What FilmOpen uses it for | How you pay | To start |
 |---|---|---|---|
 | OpenRouter | Every language model: writing (Claude Opus 5, GPT-5.6 Sol, Gemini 3.1 Pro) and structured text (Claude Sonnet 5, GPT-5.6 Terra, Gemini 3.8 Flash) | Prepaid credits, plus 5.5% (at least $0.80) when you buy them by card | $5 |
 | fal | Images and video from many makers, and ElevenLabs voices | Prepaid credits | Not published |
-| OpenAI | Live transcription (GPT-Live-Transcribe); also writing, structured text and images, not used in the first version | Prepaid credits | $5 |
-| xAI | Live transcription (grok-voice-transcribe-2.0); also writing, images and video, not used by FilmOpen | Prepaid credits, bought once; auto top-up is on at the first purchase unless you turn it off | $5 |
+| OpenAI | Images, writing, structured text and live transcription (GPT-Live-Transcribe) | Prepaid credits | $5 |
+| xAI | Writing (Grok 4.7) and live transcription (grok-voice-transcribe-2.0) | Prepaid credits, bought once; auto top-up is on at the first purchase unless you turn it off | $5 |
 | Anthropic | Writing (Claude Opus 5), structured text (Claude Sonnet 5) | Prepaid credits | Not published |
 | Google (Gemini API) | Writing (Gemini 3.1 Pro), structured text (Gemini 3.8 Flash), images (Nano Banana Pro, Nano Banana 2), video (Veo 3.1) | Prepaid by default, or billed monthly | $5 |
 | Replicate | Video (Kling 3.0, Seedance 2.5, MiniMax H3, Veo 3.1, LTX-2.5 Fast) and Z-Image-Turbo images | Prepaid credit | Not published |
@@ -170,7 +170,7 @@ Per second of video. Each row compares the same tier on every platform.
 
 | Model | From its maker | fal |
 |---|---|---|
-| Eleven v3 | ElevenLabs: $0.10 per 1,000 characters, once a plan's monthly allowance is used | $0.10 per 1,000 characters |
+| Eleven v3 | ElevenLabs: $0.10 per 1,000 characters in September, $0.08 on 9 November 2026, once a plan's monthly allowance is used | $0.10 per 1,000 characters |
 | Eleven Music v2.5 | ElevenLabs: $0.15 per minute, with a paid plan or a prepaid balance | — |
 | GPT-Live-Transcribe | OpenAI: $0.017 per minute | — |
 | grok-voice-transcribe-2.0 | xAI: $0.20 per hour while streaming, about $0.0033 per minute | — |

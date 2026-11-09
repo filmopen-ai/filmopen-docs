@@ -17,6 +17,7 @@ This operation differs from [Speech Synthesis](../speech-synthesis/): a voice de
 
 ## Plugins
 
-- [fo-elevenlabs](../../fo-elevenlabs/)
+- [fo-elevenlabs](/docs/platforms/elevenlabs/)
+- [fo-fal](/docs/platforms/fal/)
 
 [All types of plugins](../)

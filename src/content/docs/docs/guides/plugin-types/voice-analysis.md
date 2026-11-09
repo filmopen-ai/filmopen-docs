@@ -16,6 +16,6 @@ Feed the resulting description to [Voice Generation](../voice-generation/), audi
 
 ## Plugins
 
-- [fo-fal-voice](../../fo-fal-voice/)
+- [fo-fal](/docs/platforms/fal/)
 
 [All types of plugins](../)

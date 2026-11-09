@@ -19,7 +19,7 @@ An uploaded WAV or MP3 alone is not a reusable ElevenLabs voice ID. Use [Voice G
 
 ## Plugins
 
-- [fo-elevenlabs](../../fo-elevenlabs/)
-- [fo-fal](../../fo-fal/)
+- [fo-elevenlabs](/docs/platforms/elevenlabs/)
+- [fo-fal](/docs/platforms/fal/)
 
 [All types of plugins](../)

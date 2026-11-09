@@ -3,34 +3,41 @@
     "slug": "image-generation",
     "title": "Image Generation",
     "packages": [
+      "fo-atlascloud",
       "fo-cui",
       "fo-fal",
-      "fo-openai"
+      "fo-google",
+      "fo-openai",
+      "fo-wan2gp"
     ],
     "description": "Create still images from a generation request.",
     "subtypes": [
       "Text to image — implemented",
-      "Image to image / reference-guided editing — implemented by fo-fal"
+      "Image to image / reference-guided editing — implemented by fo-fal and fo-google"
     ]
   },
   {
     "slug": "video-generation",
     "title": "Video Generation",
     "packages": [
-      "fo-fal"
+      "fo-atlascloud",
+      "fo-cui",
+      "fo-fal",
+      "fo-wan2gp"
     ],
     "description": "Create moving images from text or reference media.",
     "subtypes": [
-      "Text to video — implemented by fo-fal (MiniMax H3 Max, Seedance 2.5)",
-      "Image to video — implemented by fo-fal, from a first frame",
-      "Reference to video / video to video — future adapters"
+      "Text to video — implemented by fo-fal and fo-atlascloud",
+      "Image to video — implemented, from a first frame",
+      "Reference images to video — implemented for Seedance 2.5",
+      "Video to video — future adapters"
     ]
   },
   {
     "slug": "character-analysis",
     "title": "Character Analysis",
     "packages": [
-      "fo-openai-vision"
+      "fo-openai"
     ],
     "description": "Extract visible character traits and a reusable character prompt from reference media.",
     "subtypes": [
@@ -41,7 +48,7 @@
     "slug": "voice-analysis",
     "title": "Voice Analysis",
     "packages": [
-      "fo-fal-voice"
+      "fo-fal"
     ],
     "description": "Describe reference audio as voice traits and an original voice-design prompt.",
     "subtypes": [
@@ -52,7 +59,7 @@
     "slug": "style-analysis",
     "title": "Style Analysis",
     "packages": [
-      "fo-openai-style"
+      "fo-openai"
     ],
     "description": "Extract reusable visual treatment, independently of characters and locations.",
     "subtypes": [
@@ -60,21 +67,11 @@
     ]
   },
   {
-    "slug": "character-transformation",
-    "title": "Character Transformation",
-    "packages": [
-      "fo-openai-character"
-    ],
-    "description": "Apply written or transcribed changes to existing character JSON.",
-    "subtypes": [
-      "Character JSON + instructions to revised character JSON — implemented"
-    ]
-  },
-  {
     "slug": "voice-generation",
     "title": "Voice Generation",
     "packages": [
-      "fo-elevenlabs"
+      "fo-elevenlabs",
+      "fo-fal"
     ],
     "description": "Design and audition an original reusable voice from a description.",
     "subtypes": [
@@ -99,10 +96,15 @@
     "slug": "platform-connectors",
     "title": "Platform Connectors",
     "packages": [
+      "fo-anthropic",
+      "fo-atlascloud",
       "fo-cui",
       "fo-fal",
+      "fo-google",
       "fo-openai",
-      "fo-openrouter"
+      "fo-openrouter",
+      "fo-wan2gp",
+      "fo-xai"
     ],
     "description": "Provide authenticated transport, discovery and reusable provider operations.",
     "subtypes": [
@@ -126,7 +128,7 @@
     "slug": "assistants",
     "title": "Assistants",
     "packages": [
-      "fo-assist"
+      "fo-assistant"
     ],
     "description": "Expose user-facing assistance through host-selected AI routing.",
     "subtypes": [
@@ -148,14 +150,12 @@
     "slug": "prompt-writers",
     "title": "Prompt Writers",
     "packages": [
-      "fo-prompts",
-      "fo-gpt-expressions"
+      "fo-prompts"
     ],
-    "description": "Build editable default prompts from character appearance.",
+    "description": "Build editable default prompts from a template or a text model.",
     "subtypes": [
-      "Character to reference-image prompt — implemented",
-      "Character to sheet prompt — implemented",
-      "GPT Image 2.5 sheet with facial expressions — implemented"
+      "Template writer: Basic, and Turnaround, Face, Full detail and Expressions for character sheets — implemented",
+      "Model writer: Smart — implemented"
     ]
   },
   {
@@ -167,6 +167,20 @@
     "description": "Offer ready-made prompt words to add to a render, such as a visual style.",
     "subtypes": [
       "Visual style catalogue to render prompt — implemented"
+    ]
+  },
+  {
+    "slug": "script-writers",
+    "title": "Script Writers",
+    "packages": [
+      "fo-parse-script",
+      "fo-script-aid",
+      "fo-script-aid-lite"
+    ],
+    "description": "Develop a story with its owner and write it into the project, one reviewed step at a time.",
+    "subtypes": [
+      "Story development and screenplay — implemented by Script Aid and Script Aid Lite",
+      "Parse an imported screenplay — planned"
     ]
   }
 ]

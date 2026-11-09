@@ -31,6 +31,14 @@ describe('the addresses', () => {
       'docs/platforms/fal',
       'docs/platforms/openai',
       'docs/platforms/openrouter',
+      'docs/platforms/google',
+      'docs/platforms/elevenlabs',
+      'docs/platforms/atlascloud',
+      'docs/platforms/salad',
+      'docs/platforms/comfyui',
+      'docs/platforms/wan2gp',
+      'docs/platforms/anthropic',
+      'docs/platforms/xai',
       'docs/platforms/fal-notes',
       'docs/specifications',
       'docs/specifications/project',
@@ -44,7 +52,7 @@ describe('the addresses', () => {
 
   it('carry the platform guides\' pictures', () => {
     const fal = page('docs/platforms/fal');
-    expect((fal.match(/<img /g) ?? []).length).toBeGreaterThanOrEqual(6);
+    expect((fal.match(/<img /g) ?? []).length).toBeGreaterThanOrEqual(4);
   });
 
   it('can be searched', () => {

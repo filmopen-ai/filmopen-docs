@@ -13,12 +13,15 @@ fo-cui renders Z-Image Turbo on ComfyUI, with model stacks and GPU constraints. 
 ## Subtypes
 
 - Text to image — implemented
-- Image to image / reference-guided editing — implemented by fo-fal
+- Image to image / reference-guided editing — implemented by fo-fal and fo-google
 
 ## Plugins
 
-- [fo-cui](../../fo-cui/)
-- [fo-fal](../../fo-fal/)
-- [fo-openai](../../fo-openai/)
+- [fo-atlascloud](/docs/platforms/atlascloud/)
+- [fo-cui](/docs/platforms/comfyui/)
+- [fo-fal](/docs/platforms/fal/)
+- [fo-google](/docs/platforms/google/)
+- [fo-openai](/docs/platforms/openai/)
+- [fo-wan2gp](/docs/platforms/wan2gp/)
 
 [All types of plugins](../)

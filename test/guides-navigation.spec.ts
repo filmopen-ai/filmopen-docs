@@ -50,18 +50,24 @@ describe('guide navigation', () => {
     expect(readdirSync('src/content/docs/docs/guides/style-guides').sort()).toEqual(['index.md', ...categories.map((slug) => `${slug}.md`)].sort());
   });
 
-  it('lists every plugin as one direct page link with its existing address', () => {
-    const plugins = group(navigation(), 'List of plugins');
-    expect(plugins).not.toContain('<summary');
+  it('lists the Platforms folder first, then every plugin guide as one direct page link', () => {
+    const nav = navigation();
+    const platforms = [...group(nav, 'Platforms').matchAll(/<a\b[^>]*href="([^"]+)"/g)].map((match) => match[1]);
+    expect(platforms[0]).toBe('/docs/platforms/');
+    for (const id of ['fal', 'openai', 'openrouter', 'xai', 'anthropic', 'google', 'elevenlabs', 'atlascloud', 'salad', 'comfyui', 'wan2gp']) {
+      expect(platforms).toContain(`/docs/platforms/${id}/`);
+    }
+    expect(platforms.some((href) => href?.endsWith('-notes/'))).toBe(false);
     const expected = readdirSync('src/content/docs/docs/guides')
       .filter((name) => name.startsWith('fo-'))
       .sort()
       .map((name) => `/docs/guides/${name}/`);
     // Only the registered packages' own pages: another plug-in's guide may follow them (publishing.md).
-    const links = [...plugins.matchAll(/<a\b[^>]*href="([^"]+)"/g)]
-      .map((match) => match[1])
-      .filter((href) => href !== undefined && /^\/docs\/guides\/fo-[^/]+\/$/.test(href));
+    const list = nav.slice(nav.indexOf('List of plugins'), nav.indexOf('Specifications'));
+    const links = [...list.matchAll(/<a\b[^>]*href="(\/docs\/guides\/fo-[^/]+\/)"/g)].map((match) => match[1]);
     expect(links).toEqual(expected);
+    expect(list.indexOf('/docs/platforms/')).toBeGreaterThan(-1);
+    expect(list.indexOf('/docs/platforms/')).toBeLessThan(list.indexOf('/docs/guides/fo-'));
   });
 
   it('links every built guide page exactly once, since the Guides group is listed by hand', () => {

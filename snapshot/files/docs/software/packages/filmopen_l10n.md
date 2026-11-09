@@ -4,29 +4,29 @@
 
 Every user-facing string of FilmOpen, **one ARB file per language** (`lib/l10n/app_en.arb`, `app_es.arb`), the generated `AppLocalizations`, and `labels.dart`, which turns the format's codes (warning kinds, account problems, field names) into sentences and gives widgets `context.l10n`.
 
-**Flutter.** 4 files, 23,077 lines under `lib/`; 32 tests in 7 files. Barrel: `lib/filmopen_l10n.dart`.
+**Flutter.** 4 files, 50,809 lines under `lib/`; 88 tests in 21 files. Barrel: `lib/filmopen_l10n.dart`.
 
 ## Depends on
 
-- **filmopen_format** — uses `AccountAuthProblem`, `ChildEntry`, `ChildProblem`, `Deliverable`, `EntityType`, `ExactDecimal`, `FileNameParser`, `PickReason`, `ProblemKind`, `ProjectKind`, `ProjectWarning`, `ResolutionProblem`, `UsageStatus`, `VersionStem`, `WarningKind`
+- **filmopen_format** — uses `AccountAuthProblem`, `ChildEntry`, `ChildProblem`, `Deliverable`, `EntityType`, `ExactDecimal`, `FileNameParser`, `MoneyBasis`, `PickReason`, `ProblemKind`, `ProjectKind`, `ProjectWarning`, `ResolutionProblem`, `UsageStatus`, `VersionStem`, `WarningKind`, `computeSessionEntry`, `conversationCaptionsEntry`, `conversationEntry`, `unmarkedFailure`
 
 Third-party: flutter_localizations, intl.
 
 ## Used by
 
-`filmopen_account`, `filmopen_app`, `filmopen_browser`, `filmopen_compare`, `filmopen_dictation`, `filmopen_drive`, `filmopen_forms`, `filmopen_keys`, `filmopen_media_ui`, `filmopen_plugin_dev`, `filmopen_plugin_host`, `filmopen_plugins_ui`, `filmopen_state`, `filmopen_tree`, `filmopen_ui`
+`filmopen_account`, `filmopen_app`, `filmopen_assistant_ui`, `filmopen_browser`, `filmopen_compare`, `filmopen_device`, `filmopen_dictation`, `filmopen_forms`, `filmopen_insertion_ui`, `filmopen_jobs_ui`, `filmopen_keys`, `filmopen_media_ui`, `filmopen_picker`, `filmopen_plugin_dev`, `filmopen_plugin_host`, `filmopen_plugins_ui`, `filmopen_prompt_ui`, `filmopen_relay`, `filmopen_render_ui`, `filmopen_sharing`, `filmopen_state`, `filmopen_support`, `filmopen_text_ui`, `filmopen_timeline_ui`, `filmopen_tree`, `filmopen_ui`
 
 ## Public API
 
-What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `extension`, `typedef`, a top-level function or variable; under a class, its public constructors, fields, getters, setters and methods.
+What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `extension`, `typedef`, a top-level function, getter, setter or variable; under a class, its public constructors, fields, getters, setters and methods.
 
 ### `lib/l10n/app_strings_by_key.dart`
 
-- **variable** `const appStringsByKey` — Every string of the app by its ARB key, per language: what a plug-in's `app:<key>` reads (milestone 5.1 plan §3.7).
+- **variable** `const appStringsByKey` — Every app string by ARB key and language, read by a plug-in through `app:<key>`.
 
 ### `lib/src/field_labels.dart`
 
-- **function** `String? fieldLabel(AppLocalizations l10n, String key)` — The display label for a JSON key of the FilmOpen vocabulary (Appendix A), or null for keys the vocabulary does not name.
+- **function** `String? fieldLabel(AppLocalizations l10n, String key)` — The display label for a JSON key of the FilmOpen vocabulary (Appendix A).
 - **function** `String flatPathLabel(AppLocalizations l10n, String path)` — A dotted leaf path as words: `appearance.hair.colour` becomes *Appearance · Hair · Colour*.
 
 ### `lib/src/labels.dart`
@@ -35,7 +35,7 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `AppLocalizations get l10n`
 - **extension `Labels`** — Language-independent text handling of the model's vocabulary.
   - `String typeLabel(EntityType type)`
-  - `String folderKindLabel(String kind)` — A folder's `kind` (Project Specification §10.1) as a word: the vocabulary's in the reader's language, any other token as written, since a file may name one the vocabulary does not know.
+  - `String folderKindLabel(String kind)` — A folder's `kind` (Project Specification §10.1) as a word.
   - `String kindLabel(ProjectKind kind)`
   - `String locationKindLabel(String kind)` — A location kind's name (§9.3), or the token itself.
   - `String voicePitchLabel(String token)` — A `voice.pitch` token's name (A.1), or the token itself.
@@ -48,34 +48,58 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `String deliverableLabel(Deliverable deliverable)`
   - `String warningText(ProjectWarning warning)` — A warning as one sentence, prefixed with its file when it has one.
   - `String pickReasonText(PickReason reason)` — Why a version is the one in use (§6.1 step 2), as a few words.
-  - `String? childProblemText(ChildEntry entry)` — What a reader reports about an entry of a `children` list (Project Specification §8.5), as the reason on its flagged row; null for an entry with nothing to report.
+  - `String? childProblemText(ChildEntry entry)` — What a reader reports about an entry of a `children` list (Project Specification §8.5), as the reason on its flagged row.
+  - `String restoreRefusalText(String code)` — Why a Restore from the recycle bin wrote nothing, from its fixed code (`RestoreRefused`, Project Specification §7).
+  - `String sessionReviewAnswerText(String outcome, String? code)` — What an item's row says after a press on an assistant session's review page (§9.3), from [SessionReview]'s outcome and code, or the page's own `unsaved` where the item's edits could not be written first.
   - `String problemText(ResolutionProblem problem)` — Why a reference is unresolved, as one sentence.
   - `String keyCheckText(String? code, String platform, {bool kept = true})` — Why a step of the account sign-in failed, as one sentence.
   - `String keyRejectedText(String? code, String platform, {bool kept = true})` — The sentence under a refusal: a 403 is a key the platform knows, which it refused the check.
-  - `String get providerKeysPlace` — Where a provider key is added, in the words the app uses for it: Settings → Provider keys.
+  - `String get speechKeysPlace` — Where the speech services' keys are entered: each on its provider plug-in's page, under Settings → Plugins (§6.7); [speechKeyPlace] names the page where the caller knows the provider.
+  - `String speechKeyPlace(String provider)` — Where [provider]'s key is entered: its page, Settings → Plugins → [provider] (§6.7).
+  - `String get speechServicePlace` — Where the speech service is chosen, which is not where its key is entered: Settings → General (§9.4).
+  - `String get keysPlaces` — Where a key is entered, for a sentence whose caller cannot tell whose key it is: every key is a plug-in's, on its page under Settings → Plugins.
+  - `String get pluginsNoKeyText` — A call refused for a missing key, the plug-in's own or one it is granted.
   - `String get pluginsPlace` — Where plug-ins are turned on and chosen, in the words the app uses for it: Settings → Plugins.
-  - `String? pluginRefusalText(String reason, { String model = '', String platform = '', String plugins = '', String plugin = '', String function = '',…` — A plug-in call that came to nothing, in the person's words, by its reason (milestone 5-2b §3.4–§3.5; milestone 5-2's G10), or null for a reason with no sentence of its own.
-  - `String? pluginProblemText(String code, Map<String, Object?> args)` — A problem the reader found in a plug-in's files, in the person's words, or null for a code with no sentence of its own yet.
-  - `String dictationCodeText(String code)` — The sentence for a dictation's code (Software Specification §9.6): why it could not start, or why its session ended by itself.
+  - `String get sharingPlace` — Where a film is shared, in the words the app uses for Settings, its General page and its Sharing card.
+  - `String get usagePlace` — Where what a use cost is read, in the words the app uses for Activity and its Usage section.
+  - `String mediaActionReasonText(String code)` — Why a media entry's injected action may not run, from its local reason's code.
+  - `String providerReasonText(String code)` — Why a provider route refuses, from its code, each refusal in a sentence of its own.
+  - `String orList(List<String> items)` — [items] as one choice among them, in the person's words: *PNG*, *PNG or JPEG*, *PNG, JPEG or WEBP*.
+  - `String? pluginRefusalText(String reason, { String model = '', String platform = '', String plugins = '', String plugin = '', String function = '',…` — A plug-in call that came to nothing, in the person's words, by its reason.
+  - `(String text, bool failed) pluginOutcomeText(PluginCallOutcomeWords outcome, {String? done})` — **One outcome, one sentence**: what a person reads when a plug-in's call comes to an end, and whether it failed.
+  - `String? pluginProblemText(String code, Map<String, Object?> args)` — A problem the reader found in a plug-in's files, in the person's words.
+  - `String? pluginStatusDetailsText({String? serviceVersion, String? gpu, int? gpuMemoryBytes, int? memoryBytes})` — **The facts a plug-in's status measured, with the app's labels and units** (§6.11): the graphics card, its memory, the computer's memory and the service's version, in that order, each **unknown where it was not given…
+  - `String dictationCodeText(String code, {String? owner, String? provider})` — The sentence for a dictation's code (Software Specification §9.6).
   - `String decimalText(ExactDecimal value, int digits)` — [value] to [digits] places, with the decimal mark of the language in effect, written from the exact decimal.
-  - `String moneyText(ExactDecimal amount, String currency)` — An amount of [currency] to four places, never through a double (Software Specification §6.7): dollars as the language writes them, any other currency by its code.
-  - `String usageStatusLabel(UsageStatus status)` — A call's state in the Usage tab (§6.7, *One call's records*).
-  - `String usageWhat(String entry, String? field, {String? target})` — What a use was: a speech-to-text entry is a dictation, any other entry is named by its id; followed by the box it was for, where the record names one (D9).
-  - `String usageBoxLabel(String field, {String? target})` — The box a use was for, as the person saw it (D9): a form's field by its label, a box outside a form — which a record names by its identifier — by its own label, and anything this version does not know as it is.
-  - `String usageErrorText(String entry, String code)` — Why a use failed: a dictation's code as its sentence, any other as the code itself.
+  - `String amountText(ExactDecimal amount, String currency)` — An amount of [currency] as every screen shows one (Software Specification §9.5).
+  - `String signedMoneyText(int cents)` — [cents] of US dollars with its sign — `+` above zero, a true minus below, none at zero — then the amount as [amountText] writes it (§6.7, §9.5).
+  - `String renderNotReadyText(String code, String where)` — Why a render's route cannot run a model now (§9.3), from its code — `RenderNotReady`'s in `filmopen_render` — on the platform or server named [where].
+  - `String? renderParamLabel(String name)` — A render choice's words where its route gives none, by the catalogue's parameter [name]; null for another name.
+  - `String? renderValueLabel(String name, Object? value)` — The words for [value] of a render's choice [name] where its plug-in gives none (§9.3): the qualities, backgrounds and formats the catalogue's image models share; null for any other value, which is shown as it is.
+  - `List<String> treatmentSuggestions(String path)` — The words a treatment's primary leaf [path] suggests (Project Specification A.11), in their order; none for another path.
+  - `String serverPhaseText(String phase, String provider)` — A server session's state in the person's words (§6.15), by its phase's name — `ServerSessionPhase`'s in `filmopen_render` — its provider named [provider].
+  - `String serverRefusalText(String code)` — Why the server sessions refused an action before anything was asked (§6.15), from `ServerSessionRefused`'s code.
+  - `String serverProblemText(String code, String provider)` — A server's last problem said by its code, with timeout and cancellation distinguished.
+  - `String usageBasisLabel(MoneyBasis basis)` — Where a use's counted cost comes from, in Activity's Usage (§6.7, `basis`).
+  - `String usageStatusLabel(UsageStatus status)` — A call's state in Activity's Usage (§6.7, *One call's records*).
+  - `String usageWhat(String entry, String? field, {String? target})` — What a use was: a speech-to-text entry is a dictation, a server's time, a conversation and its captions have their words, any other entry is named by its id.
+  - `String usagePluginUse(String plugin, String hook, {String? actionLabel})` — What a use that asked no model was: [plugin] and what it did.
+  - `String usageBoxLabel(String field, {String? target})` — The box a use was for, as the person saw it.
+  - `String usageErrorText(String entry, String code)` — Why a use failed, in a sentence, never its code bare (§9.4).
   - `String credentialLabel(String label)` — A key box's label: the word FilmOpen knows, in the language in effect, else the platform file's own.
   - `String accountProblemText(AccountAuthProblem problem)`
-  - `String jobStateText(JobWords job)` — **The overview's §4.1**: what a job's `stateCode` says, or — where this build has met neither the code nor its family — the phase's own sentence.
-  - `String jobPhaseText(String phase)` — A job's `JobPhase.name` as the mark a screen draws, and [jobStateText]'s last fallback for a `stateCode` it has never met.
-  - `String jobActionLabel(String action)` — A `JobAction.code` as the word a button wears.
-- **class `PluginCallOutcomeWords`** — What `pluginOutcomeText` reads of a call's outcome: its code, why it failed and the plug-in's own words, where it gave some.
+- **class `PluginCallOutcomeWords`** — What `pluginOutcomeText` reads of a call's outcome.
   - `const PluginCallOutcomeWords({required this.failed, this.code = '', this.reason, this.message})`
   - `final bool failed` — Whether the call came to nothing.
   - `final String code` — The call's own code: `cancelled`, `stale`, `limit`, `hung`, …
   - `final String? reason` — Why, in the contract's words: `no-key`, `no-grant`, `noViewer`, …
   - `final String? message` — The plug-in's own words for the person, where it gave some.
-- **class `JobWords`** — What a screen knows of a job, as words this package can turn into sentences (the overview's §4.1: a widget draws the phase as a mark, turns the state code into a sentence, and never asks why).
-  - `const JobWords({required this.phase, required this.code, this.args = const {}})`
-  - `final String phase` — One of `queued`, `working`, `waiting`, `needsAttention`, `done`, `failed`, `cancelled` — `JobPhase.name`.
-  - `final String code` — The package's own finer word, or empty where it has none.
-  - `final Map<String, String> args`
+- **extension `JobViewText`** — Jobs expose codes and phases; localization never needs their records.
+  - `String jobStateText(String code, { required String phase, String name = '', bool sending = false, bool receiving = false, String? syncOutcome, bool…` — The state sentence for [code], falling back to the phase's receiving, sending or addition words.
+  - `String? renderPhaseText(String code)` — Where a render is, on its job's tile (§9.3), by the render's own phase while its job works; null for any other code, which the job's own words say.
+  - `String renderEndedText(String code, {String? detail})` — Why a render ended, on its job's tile (§9.3), by the code its render manager, the host or its plug-in gave it: the host's refusals in the sentences its pages use, a closed application's, else the plug-in's own as it g…
+  - `String jobActionText(String code)` — The offered action's localized words, with Continue for an unknown action.
+  - `String queueRefusalText(String code)` — A render queue item's refusal, or a queue action's (§6.15), as a sentence: the pass's and the codec's kebab-case codes and the insertion's camelCase ones in one table, a code it does not know shown as it is.
+  - `String workflowRenderReasonText(String code, String? platform)` — Why the Workflow's Render skips a checked place (§9.3), from the preparation's code — its own, a block line's, an outfit's or the route's on [platform] — as a sentence; a code this version does not know is shown as it…
+  - `String importProblemText(String code, {Object? detail})` — An import's refusal or stage outcome (§6.18) as a sentence: a code this version does not know is one generic sentence, never the code itself.
+  - `String importNoteText(String kind, {String? field, Object? detail})` — An import's note (§6.18) as a sentence; [field] is the field it is about, already in words.

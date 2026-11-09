@@ -28,7 +28,7 @@ Current FilmOpen builds open the documentation host directly, for example from *
 - **A released FilmOpen** opens **docs.filmopen.ai**.
 - **A development build of FilmOpen** with development mode available opens **docs.dev.filmopen.ai**, the live `dev` branch.
 
-A plugin declares a site-absolute documentation route such as `/docs/guides/fo-cui/`; the application chooses the documentation host for its build. A page merged into `dev` is available to development builds after deployment. Release builds see it after the next merge into `main`. A guide on an unmerged feature branch is not published merely because its plugin links to it. **An address that exists is never moved or removed:** builds of the app are in people's hands, and a link inside one cannot be changed.
+A plugin declares a site-absolute documentation route such as `/docs/guides/fo-styles/` or `/docs/platforms/comfyui/`; the application chooses the documentation host for its build. A page merged into `dev` is available to development builds after deployment. Release builds see it after the next merge into `main`. A guide on an unmerged feature branch is not published merely because its plugin links to it. **An address that exists is never moved or removed:** builds of the app are in people's hands, and a link inside one cannot be changed.
 
 ## Two kinds of page
 
@@ -39,7 +39,7 @@ A plugin declares a site-absolute documentation route such as `/docs/guides/fo-c
 
 Put them in a folder of their own under `src/content/docs/docs/guides/`, named after your plug-in in lowercase with hyphens, for example `src/content/docs/docs/guides/storyboard-sketcher/index.md`. This page lives at `/docs/guides/storyboard-sketcher/`. Choose the name once: like every address here, it is not moved afterwards. `account`, `plugins`, `publishing`, `plugin-types` and `plugin-packages` are already taken.
 
-Registered FilmOpen packages appear as individual pages under **Guides → List of plugins**. Register a package's capabilities in `src/data/plugin-types.json`: that catalog supplies its sidebar link, and `test/plugin-types.spec.ts` holds the [Types of Plugins](/docs/guides/plugin-types/) pages and the package's own page to it. For another plug-in's guide, or a second page of a plug-in, add its slug to the *List of plugins* group in `astro.config.mjs` — `items: [...pluginGuides, 'docs/guides/storyboard-sketcher']`. The sidebar's groups and labels do not change page addresses.
+Registered FilmOpen packages appear under **Guides → List of plugins**: a plug-in that owns a platform has its page under **Platforms** there, written in the app (`docs/platforms/`), and every other package has a guide of its own. Register a package's capabilities in `src/data/plugin-types.json`: that catalog supplies its sidebar link, and `test/plugin-types.spec.ts` holds the [Types of Plugins](/docs/guides/plugin-types/) pages and the package's own page to it. For another plug-in's guide, or a second page of a plug-in, add its slug to the *List of plugins* group in `astro.config.mjs` — `items: [...pluginGuides, 'docs/guides/storyboard-sketcher']`. The sidebar's groups and labels do not change page addresses.
 
 ## Set up once
 

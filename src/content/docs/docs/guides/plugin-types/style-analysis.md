@@ -18,6 +18,6 @@ The app saves project defaults and folder overrides in `visual_style`. Missing l
 
 ## Plugins
 
-- [fo-openai-style](../../fo-openai-style/)
+- [fo-openai](/docs/platforms/openai/)
 
 [All types of plugins](../)

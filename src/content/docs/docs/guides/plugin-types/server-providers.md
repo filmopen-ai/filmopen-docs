@@ -16,6 +16,6 @@ The Salad adapter includes deployment and shutdown-lease work described in its g
 
 ## Plugins
 
-- [fo-salad](../../fo-salad/)
+- [fo-salad](/docs/platforms/salad/)
 
 [All types of plugins](../)
