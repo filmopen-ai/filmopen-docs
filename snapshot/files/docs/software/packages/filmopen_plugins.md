@@ -4,7 +4,7 @@
 
 What a FilmOpen plug-in is, as pure Dart: the manifest and its schemas (`plugin_manifest.dart`, `setting_spec.dart`), key ids and their store names (`key_id.dart`), **the interface definition read** (`plugin_api.dart`: `PluginApi`, from `plugins/filmopen-plugin-api.json`) held to by the checker the format package keeps and this barrel re-exports (`JsonShape`, `filmopen_format`'s `json_shape.dart`), the locale files and their namespaces (`plugin_strings.dart`), the package a plug-in is read through (`plugin_package.dart`: `PluginPackage`, `SourcePluginPackage`, `PluginFolder`) and the zip it travels in (`plugin_archive.dart`). Problems are codes (`plugin_issue.dart`), never sentences.
 
-**pure Dart.** 12 files, 3,182 lines under `lib/`; 202 tests in 23 files. Barrel: `lib/filmopen_plugins.dart`.
+**pure Dart.** 12 files, 3,207 lines under `lib/`; 205 tests in 23 files. Barrel: `lib/filmopen_plugins.dart`.
 
 ## Depends on
 
@@ -306,6 +306,7 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `final String? category` — For [SettingType.model]: the catalogue category (`llm`, `t2i`, …).
   - `final String? platform` — For [SettingType.model]: the platform the entry must be reachable on.
   - `final List<String> names` — Executable names without extensions to look for on PATH.
+  - `final String? parallel` — For [SettingType.program]: the key of this manifest's machine `number` setting holding its number of copies.
   - `bool accepts(Object? value)` — Whether [value] is one this field may hold.
 - **class `ActionSpec`** — A button on the plug-in's page: [call] is the function of the code that runs with `ctx` alone.
   - `const ActionSpec({required this.id, required this.label, required this.call})`

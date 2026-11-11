@@ -4,23 +4,23 @@
 
 The one render dialog's contract, *Render* on a place's add tile, and the rail's *GPU* page (Software Specification §9.3, §9.7a, §6.15). Only the application imports it.
 
-**Flutter.** 18 files, 10,277 lines under `lib/`; 541 tests in 17 files. Barrel: `lib/filmopen_render_ui.dart`.
+**Flutter.** 19 files, 11,662 lines under `lib/`; 661 tests in 18 files. Barrel: `lib/filmopen_render_ui.dart`.
 
 ## Depends on
 
-- **filmopen_format** — uses `Author`, `BatchStem`, `Catalogue`, `CatalogueEntry`, `ComposedTreatment`, `Entity`, `EntityType`, `ExactDecimal`, `FileNameParser`, `FilmProject`, `MediaEntry`, `MediaKind`, `MediaSlot`, `MediaStage`, `PlatformKind`, `PromptPath`, `ReferenceCodec`, `ReferenceKind`, `RenderTreatment`, `ScriptBlock`, `SetRecord`, `ShortName`, `ShortNameProblem`, `TakeName`, `UsageBasis`, `VersionStem`, `acceptedKindsFor`, `activeVoiceIdFor`, `blockIdsOf`, `blocksOf` and 26 more
-- **filmopen_state** — uses `AccountAuthentication`, `AccountProjects`, `AccountProjectsRefused`, `AudienceSettings`, `Command`, `CommandCaller`, `CommandContext`, `CommandRegistry`, `CommandResult`, `CommunityGroups`, `CommunityGroupsRefused`, `Deadline`, `DeviceRegistration`, `EditableDraft`, `GroupInvitation`, `GroupMember`, `GroupMembership`, `GroupName`, `GroupPage`, `Lending`, `LendingRefused`, `LentOffer`, `LifecycleHook`, `MediaClient`, `MediaObject`, `MediaRefused`, `NavIndex`, `NoLending`, `OpenDrafts`, `PageAccess` and 45 more
+- **filmopen_format** — uses `Author`, `BatchStem`, `Catalogue`, `CatalogueEntry`, `ComposedTreatment`, `Entity`, `EntityType`, `ExactDecimal`, `FileNameParser`, `FilmProject`, `MediaEntry`, `MediaKind`, `MediaSlot`, `MediaStage`, `Pick`, `PlatformKind`, `PromptPath`, `ReferenceCodec`, `ReferenceKind`, `RenderTreatment`, `ScriptBlock`, `SetRecord`, `ShortName`, `ShortNameProblem`, `TakeName`, `UsageBasis`, `VersionStem`, `acceptedKindsFor`, `acceptsFile`, `activeVoiceIdFor` and 34 more
+- **filmopen_state** — uses `AccountAuthentication`, `AccountProjects`, `AccountProjectsRefused`, `Attribution`, `AudienceSettings`, `AutoActivity`, `AutoReferencesController`, `Command`, `CommandCaller`, `CommandContext`, `CommandRegistry`, `CommandResult`, `CommunityGroups`, `CommunityGroupsRefused`, `Deadline`, `DeviceRegistration`, `EditableDraft`, `EntityWritten`, `GroupInvitation`, `GroupMember`, `GroupMembership`, `GroupName`, `GroupPage`, `Lending`, `LendingRefused`, `LentOffer`, `LifecycleHook`, `MediaClient`, `MediaObject`, `MediaRefused` and 58 more
 - **filmopen_store** — uses `AppLog`, `rfc3339Now`
 - **filmopen_machine** — uses `MachineFacts`, `MachineReader`
 - **filmopen_render** — uses `BackendRenderManager`, `ContentHash`, `OutfitRenderComposer`, `RenderBackend`, `RenderCandidate`, `RenderComposition`, `RenderDestination`, `RenderDestinationKind`, `RenderJob`, `RenderManager`, `RenderNotReady`, `RenderOptions`, `RenderPhase`, `RenderQuote`, `RenderRequest`, `RenderRoute`, `RenderStack`, `ServerCapabilities`, `ServerFailure`, `ServerOffer`, `ServerQuota`, `ServerQuote`, `ServerSession`, `ServerSessionPhase`, `ServerSessionRefused`, `ServerSessions`, `ServerStack`, `SourceSnapshot`, `holdsStack`, `lendingRoute` and 5 more
-- **filmopen_insertion** — uses `BlockPlace`, `Function`, `InsertionService`, `InsertionSource`, `InsertionTarget`, `MediaImportException`, `ProducerSource`, `SlotPlace`, `producerFailureOf`, `producerJobKind`
-- **filmopen_jobs** — uses `JobPhase`, `JobUnavailable`, `JobView`
+- **filmopen_insertion** — uses `BlockPlace`, `FilesSource`, `Function`, `InsertionService`, `InsertionSource`, `InsertionTarget`, `MediaImportException`, `ProducerSource`, `SlotPlace`, `producerFailureOf`, `producerJobKind`
+- **filmopen_jobs** — uses `JobAction`, `JobPhase`, `JobUnavailable`, `JobView`
 - **filmopen_insertion_ui** — uses `ActionAvailability`, `ActionAvailable`, `ActionUnavailable`, `Function`, `InsertionAction`
-- **filmopen_media** — uses `MediaProvenance`, `ProjectMedia`, `PromptToken`, `isPromptInput`, `promptInputsOf`, `promptTokenCandidates`, `substitutePromptTokens`
+- **filmopen_media** — uses `MediaInput`, `MediaProvenance`, `ProjectMedia`, `PromptToken`, `isPromptInput`, `promptInputsOf`, `promptTokenCandidates`, `substitutePromptTokens`
 - **filmopen_media_ui** — uses `Function`, `MediaTile`
 - **filmopen_ui** — uses `AppColors`, `Breakpoints`, `ChromeClearance`, `EmptyState`, `StageSelector`, `kLongMessage`, `showMessage`, `showMessageOn`
 - **filmopen_l10n** — uses nothing by name the digest could see
-- **filmopen_prompt_ui** — uses `PromptCard`, `PromptMentionCandidates`, `promptTokenName`, `withPromptWordChanged`
+- **filmopen_prompt_ui** — uses `PromptCard`, `PromptMentionCandidates`, `WriterAnswer`, `askWriter`, `promptByWriter`, `promptTokenName`, `promptWriterTarget`, `startingPromptWriter`, `withPromptWordChanged`, `withWords`, `writerAnswerLine`
 - **filmopen_text_ui** — uses `ProseController`, `ProseEditor`
 - **filmopen_test_support (dev)** — uses nothing by name the digest could see
 
@@ -33,6 +33,17 @@ Third-party: crypto, flutter_riverpod.
 ## Public API
 
 What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `extension`, `typedef`, a top-level function, getter, setter or variable; under a class, its public constructors, fields, getters, setters and methods.
+
+### `lib/src/auto_references.dart` — only AutoReferencesEngine, registerAutoReferences
+
+- **function** `AutoReferencesEngine registerAutoReferences(ProviderContainer container, {@visibleForTesting RenderBackend? backend, InsertionService? insertion})` — Starts hearing the landed writes for the box (§6.15); called once, beside the render commands.
+- **class `AutoReferencesEngine`** — The engine: the line under the box, what it hears, and the one job per entity and place (§6.15).
+  - `final ProviderContainer container` — The app's providers.
+  - `final RenderBackend? given` — The backend a test gave; null reads the render manager's.
+  - `final InsertionService? insertion` — The insertion service the app composed, whose job views are the insertion's own; null reads the current one.
+  - `void askLine({String why = 'dock'})` — Reads the line again; one read at a time, a request during it reading once more after it.
+  - `void heard(EntityWritten event)` — Decides a landed write, synchronously: an entity is marked busy before the first await.
+  - `void stop()` — Stops all of the engine's work (§6.15), the dock header's Stop: a writer waiting its turn is removed and a running one signalled through its call's control, a submitted render asked to stop through its job, and the fo…
 
 ### `lib/src/gpu_page.dart` — without comfyuiOf, comfyuiReady, comfyuiState
 
@@ -133,7 +144,7 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
 
 ### `lib/src/render_commands.dart`
 
-- **function** `void registerRenderCommands(ProviderContainer container, {@visibleForTesting RenderBackend? backend})` — Registers `builtin/render-quote`, `builtin/render-image` and `builtin/job-status` over [container]'s providers (§6.15).
+- **function** `void registerRenderCommands(ProviderContainer container, {@visibleForTesting RenderBackend? backend})` — Registers `builtin/render-quote`, `builtin/render-image`, `builtin/add-media` and `builtin/job-status` over [container]'s providers (§6.15).
 - **typedef** `typedef RenderTarget` — What [renderTarget] answers: the version, how the id was read, and the decision's codes.
 - **function** `RenderTarget renderTarget(FilmProject project, Author? viewer, String id)` — The version a render command's [id] puts its picture in for [viewer], or why none (§6.15, §7.3).
 - **function** `({String mimeType, List<int> bytes, Duration ttl})? mintedMedia(Uri uri)` — The picture behind [uri], a link job-status minted for the relay while it holds, with the link's life left; null for any other URI, once it expired, or while another authority than the one that minted it holds.
@@ -183,10 +194,14 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
 - **function** `List<RenderModel> renderModelsFor(Catalogue catalogue, Set<MediaKind> kinds, {bool voices = false, Set<String> givenInputs = renderGivenInputs, Str…` — Models of [kinds] the context's [givenInputs] can supply, grouped by kind and name; each one left out is handed to [leftOut] with the inputs it lacks.
 - **function** `List<Object?> renderValuesAllowed(RenderModel model, String name, List<Object?> values, {String? stack})` — The values of a route's choice [name] that [model]'s entry allows too, in the route's order.
 
-### `lib/src/render_preparation.dart` — only prepareRender, prepareRenderBeforeWriting
+### `lib/src/render_preparation.dart` — only prepareRender, prepareRenderBeforeWriting, renderResolutionsOf, renderSettledValue, renderSettingsPicked, renderSmallestResolution
 
+- **function** `Future<RenderPicked?> renderSettingsPicked(PluginInvocation plugins, String role, MediaStage stage, Map<String, Object?> chosen, {String? ref, Cata…` — Settings → Models' default [chosen] for [role] at [stage] as an answer (§9.4); null where it names no model or a route its codec does not read.
+- **function** `Future<Object?> renderSettledValue(RenderBackend backend, Catalogue catalogue, String model, RenderRoute route, String name, Object? asked, {Map<St…` — The value [route] renders the choice [name] at for [model] when asked [asked] — the asked value where the route's options take it, else their default, as the preparation settles a choice (§9.3) — or null where the rou…
+- **function** `List<Object?>? renderResolutionsOf(Catalogue catalogue, String model, String? variant)` — The resolutions [catalogue] lists for [model] under [variant] — the variant's own list where it has one —, or null.
+- **function** `Object? renderSmallestResolution(List<Object?> listed)` — The smallest of [listed] by [renderResolutionPixels], as listed; null where one is a form it cannot place.
 - **function** `Future<RenderPreparation?> prepareRenderBeforeWriting(ProviderContainer container, RenderBackend backend, InsertionTarget target)` — Answers whether a prompt is worth writing for [target], before a writer is paid (§9.3).
-- **function** `Future<RenderPreparation?> prepareRender(ProviderContainer container, RenderBackend backend, InsertionTarget target, {String? prompt, String? ref,…` — Prepares a render at [target] as a new dialog opens on it and sends it unchanged, [prompt] standing for the words of its prompt box where given (§6.15); null where nothing is offered at all, or not the picker's route.
+- **function** `Future<RenderPreparation?> prepareRender(ProviderContainer container, RenderBackend backend, InsertionTarget target, {String? prompt, String? negat…` — Prepares a render at [target] as a new dialog opens on it and sends it unchanged, [prompt] standing for the words of its prompt box where given (§6.15); null where nothing is offered at all, or not the picker's route.
 
 ### `lib/src/render_queue.dart`
 

@@ -4,13 +4,21 @@ description: What the xAI API asks of an account, how its keys and requests work
 slug: docs/platforms/xai-notes
 sidebar:
   hidden: true
-lastUpdated: 2026-09-18
+lastUpdated: 2026-11-11
 ---
 
 These notes gather what xAI documents about its API, for anyone comparing platforms or building on FilmOpen. The steps for getting a key are on [xAI (Grok)](/docs/platforms/xai/). Every page in *Sources* was read on 18 September 2026.
 - **Console facts.** What xAI's console showed on 18 September 2026, while an account was opened, credit bought and a key created, is marked *(console)*.
 - **"Not documented"** means xAI's pages say nothing about it.
 - **The name.** xAI's documentation and console now say *SpaceXAI*. The API's host, the console's address, the keys' prefix and the environment variable keep `x.ai` and `xai`.
+
+## Grok plan
+
+FilmOpen's Grok sign-in uses xAI's shared OAuth client, also used by OpenCode and Hermes; xAI's consent page names that client. The authorization server is `https://auth.x.ai`, with a loopback `/callback` and browser origin `https://accounts.x.ai`. The requested scopes are `openid profile email offline_access grok-cli:access api:access`. The signed-in route needs `api:access`; its bearer is injected by the host after the credential-free request is logged. Tokens stay in the device's credential store, separate from the saved account label.
+
+The plan slot checks `GET /v1/models`, sends text to `/v1/chat/completions`, pictures to `/v1/images/generations` or `/v1/images/edits`, and first-frame clips to `/v1/videos/generations`. Image edits embed one reference as `image: {url}` or several as `images: [{url}]`; the host supplies the ordered data URLs. This body follows [xAI's editing documentation](https://docs.x.ai/developers/model-capabilities/images/editing), read on 11 November 2026. Images return inline base64; clips use the existing durable submission receipt and polling, with the selected slot kept throughout.
+
+Plan quotes stay unknown. FilmOpen logs xAI's reported usage and dollar ticks without estimating a plan charge. Plan Usage keeps the account and tokens without monetary pricing. Availability belongs to xAI: a plan tier's 403 refusal is shown with its original words, with no key or credit fallback. No opt-in to training is required by FilmOpen. A video refusal asking for `output.upload_url` is reported rather than changing retention or creating storage. Grok Build is retained only as a manual program route.
 
 ## Account and money
 
@@ -75,6 +83,18 @@ These notes gather what xAI documents about its API, for anyone comparing platfo
 - **In the console:** *Usage* in the sidebar, and each key's *Spend (30d)* on the API keys page (console).
 - **When a cost is counted:** at the time of the request ([billing FAQ](https://docs.x.ai/docs/resources/faq-api/billing)).
 - **Speech to text:** $0.20 an hour live and $0.10 an hour for a recording ([pricing](https://docs.x.ai/developers/pricing)). Whether a live session is billed for the audio sent or for the time connected is not documented.
+
+## First-frame video
+
+The [video API](https://docs.x.ai/developers/rest-api-reference/inference/videos), read on 11 November 2026, takes `POST /v1/videos/generations` with `model`, `prompt`, `image: {url}`, integer `duration` 1–15 and `resolution`. The image URL may be public or a data URL; FilmOpen's host embeds the first frame inline on a plan or key and uploads it for a URL on credit. The returned `request_id` is polled with `GET /v1/videos/{request_id}`; polling does not submit another clip. A completed `video.url` is temporary and is downloaded promptly. xAI documents no cancel operation, so an unknown cancellation may still finish and be charged. A zero-data-retention team can require `output.upload_url`; FilmOpen reports that refusal without asking the person to change retention.
+
+The catalogue and FilmOpen credit use these USD prices per second from [xAI pricing](https://docs.x.ai/developers/pricing), read on 11 November 2026:
+
+| Model | 480p | 720p | 1080p |
+|---|---|---|---|
+| Grok Imagine Video 1.5 Lite | 0.02 | 0.03 | 0.14 |
+| Grok Imagine Video | 0.05 | 0.07 | — |
+| Grok Imagine Video 1.5 | 0.08 | 0.14 | 0.25 |
 
 ## Open questions
 

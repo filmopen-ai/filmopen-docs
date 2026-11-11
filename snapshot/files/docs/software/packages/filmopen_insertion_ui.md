@@ -4,17 +4,17 @@
 
 The media place: one element for every place a film keeps media (Software Specification §9.3).
 
-**Flutter.** 13 files, 2,362 lines under `lib/`; 142 tests in 7 files. Barrel: `lib/filmopen_insertion_ui.dart`.
+**Flutter.** 13 files, 2,510 lines under `lib/`; 149 tests in 7 files. Barrel: `lib/filmopen_insertion_ui.dart`.
 
 ## Depends on
 
-- **filmopen_format** — uses `Author`, `EntityType`, `FileNameParser`, `FilmProject`, `MediaEntry`, `MediaInsertionResult`, `MediaKind`, `MediaSpans`, `MediaStage`, `SpansShape`, `TakeName`, `acceptsFile`, `arrivedAfter`, `blockIdsOf`, `blockLineOf`, `blockMediaGroups`, `blocksOf`, `coverageFrom`, `documentsNamingTake`, `entriesIn`, `entryNaming`, `isViewersTake`, `mediaContainerKey`, `mediaKindOf`, `projectKeyOf`, `spansAllowed`, `takeNamed`, `withEntriesReordered`, `withEntryAttributes`
+- **filmopen_format** — uses `Author`, `EntityType`, `FileNameParser`, `FilmProject`, `MediaEntry`, `MediaInsertionResult`, `MediaKind`, `MediaSpans`, `MediaStage`, `Pick`, `SpansShape`, `TakeName`, `acceptsFile`, `arrivedAfter`, `blockIdsOf`, `blockLineOf`, `blockMediaGroups`, `blocksOf`, `coverageFrom`, `documentsNamingTake`, `entriesIn`, `entryNaming`, `isViewersTake`, `mediaContainerKey`, `mediaKindOf`, `projectKeyOf`, `spansAllowed`, `takeNamed`, `withEntriesReordered`, `withEntryAttributes`
 - **filmopen_state** — uses `AutomationHost`, `BatchSelection`, `MediaEntryAction`, `MediaEntryActionAvailability`, `MediaEntryActionAvailable`, `MediaEntryActionContext`, `MediaEntryActionReason`, `MediaEntryActionUnavailable`, `MediaEntryActions`, `MediaEntryProviderUnavailable`, `PageAccess`, `browserProvider`, `catalogueProvider`, `insertionServiceProvider`, `jobViewsProvider`, `mediaStoreProvider`, `projectClosedProvider`, `projectProvider`, `settingsProvider`
 - **filmopen_insertion** — uses `BlockPlace`, `FilesSource`, `Function`, `InsertionService`, `InsertionSource`, `InsertionTarget`, `MediaImportException`, `SlotPlace`, `producerFailureOf`, `producerJobKind`
 - **filmopen_jobs** — uses `JobAction`, `JobActionAck`, `JobPhase`, `JobUnavailable`, `JobView`, `describeJobError`
 - **filmopen_media** — uses `MediaInput`, `MediaProvenance`, `MediaRef`, `MediaStore`, `ProjectMedia`
-- **filmopen_media_ui** — uses `Function`, `MediaState`, `MediaTile`, `canChooseFiles`, `chooseMediaFiles`, `factLines`, `mediaStateOf`, `mediaTileEdge`, `mediaTileEdgeFor`, `mediaTileGap`, `provenanceLines`, `provenanceText`, `showMediaViewer`
-- **filmopen_ui** — uses `EmptyState`, `scopedId`, `showMessage`
+- **filmopen_media_ui** — uses `Function`, `MediaBatchFrame`, `MediaState`, `MediaTile`, `MediaTileButton`, `canChooseFiles`, `chooseMediaFiles`, `factLines`, `mediaStateOf`, `mediaTileEdge`, `mediaTileEdgeFor`, `mediaTileGap`, `provenanceLines`, `provenanceText`, `showMediaViewer`
+- **filmopen_ui** — uses `AppColors`, `EmptyState`, `scopedId`, `showMessage`
 - **filmopen_l10n** — uses nothing by name the digest could see
 - **filmopen_store** — uses `AppLog`, `LogLevel`
 - **filmopen_test_support (dev)** — uses nothing by name the digest could see

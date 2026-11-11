@@ -25,8 +25,10 @@ Anthropic makes the Claude models. FilmOpen uses them to write and to read text,
 |---|---|
 | Claude Opus 5 | Writes prose, scenes, dialogue and scripts |
 | Claude Sonnet 5 | Reads text and returns structured data, and writes for the assistant, with tools |
+| Claude Fable 5.2, Claude Opus 5.5 | Write prose, scenes, dialogue and scripts, and write for the assistant, with tools |
+| Claude Sonnet 5.5, Claude Haiku 5.5 | Read text and return structured data, and write for the assistant, with tools |
 
-The same models are reachable through [OpenRouter](/docs/platforms/openrouter/).
+Claude Opus 5 and Claude Sonnet 5 are also reachable through [OpenRouter](/docs/platforms/openrouter/).
 
 ## Pricing
 
@@ -38,8 +40,12 @@ Prices per million tokens ([pricing](https://platform.claude.com/docs/en/about-c
 |---|---|---|---|---|
 | Claude Opus 5 | $5 | $25 | $0.50 | $6.25 / $10 |
 | Claude Sonnet 5 | $2 | $10 | $0.20 | $2.50 / $4 |
+| Claude Fable 5.2 | $8 | $40 | $0.20 | $10 / $16 |
+| Claude Opus 5.5 | $4 | $20 | $0.20 | $5 / $8 |
+| Claude Sonnet 5.5 | $2 | $10 | $0.10 | $2.50 / $4 |
+| Claude Haiku 5.5 | $0.10 ($0.50 for prompts over 100,000 tokens) | $0.50 ($2.50) | $0.01 ($0.05) | $0.125 / $0.20 ($0.625 / $1) |
 
-Prices were checked on 9 November 2026. See Anthropic's page for today's.
+Prices were checked on 9 November 2026, those of Fable 5.2, Opus 5.5, Sonnet 5.5 and Haiku 5.5 on 10 November 2026. See Anthropic's page for today's.
 
 **Through Claude Code,** the program bills its own account: a Claude subscription's plan or an API key of your own. FilmOpen makes no charge for those turns, and the tokens the program reports are recorded in Usage without a price.
 
@@ -99,7 +105,7 @@ Claude Code needs no key in FilmOpen. Install it from [Anthropic's page](https:/
 
 ## The plugin
 
-**fo-anthropic** gives FilmOpen Claude Sonnet 5 and Claude Opus 5, on your key or through Claude Code. Turn the plugin on in **Settings → Plugins**; [Installing plugins](/docs/guides/plugin-packages/) explains installing and allowing one. Its page is opened with **Configure** on its row, and **Check** under **Can it work?** asks the platform about your key without making anything.
+**fo-anthropic** gives FilmOpen Claude Sonnet 5, Claude Opus 5, Claude Fable 5.2, Claude Opus 5.5, Claude Sonnet 5.5 and Claude Haiku 5.5, on your key or through Claude Code. Turn the plugin on in **Settings → Plugins**; [Installing plugins](/docs/guides/plugin-packages/) explains installing and allowing one. Its page is opened with **Configure** on its row, and **Check** under **Can it work?** asks the platform about your key without making anything.
 
 **Writing.** Claude's answer streams to the assistant, its thinking shows as notes, and it can call tools. A request is never repeated by itself; an answer cut off in a tool turn is refused so it can't run with broken arguments. Usage records the tokens at the catalogue's prices, and a cost that can't be worked out stays unknown.
 

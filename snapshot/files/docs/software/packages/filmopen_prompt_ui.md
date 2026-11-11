@@ -4,13 +4,13 @@
 
 The Prompt card (Software Specification §9.3): one prompt of a document (Project Specification §9.0) as a card of its own, on every editor that holds a prompt. It sits below its three consumers, `filmopen_forms`, `filmopen_render_ui` and `filmopen_browser`, and imports none; it imports `filmopen_insertion` and `filmopen_insertion_ui` for the box below.
 
-**Flutter.** 5 files, 1,073 lines under `lib/`; 56 tests in 4 files. Barrel: `lib/filmopen_prompt_ui.dart`.
+**Flutter.** 5 files, 1,077 lines under `lib/`; 56 tests in 4 files. Barrel: `lib/filmopen_prompt_ui.dart`.
 
 ## Depends on
 
 - **filmopen_format** — uses `Author`, `Entity`, `EntityGroup`, `EntityType`, `FilmProject`, `MediaKind`, `MediaLocation`, `MediaSlot`, `MediaStage`, `PathValue`, `PromptPath`, `PromptState`, `ReferenceKind`, `ReferenceTarget`, `entityPlacePrompts`, `isGroupDeleted`, `mediaContainerKey`, `parseInstant`, `projectKeyOf`, `promptAt`, `promptCreatedKey`, `promptPluginKey`, `promptStateOf`, `promptWriterKey`, `promptsKey`, `renderStageOf`, `sameJson`, `setPathText`, `setPathValue`, `stringField` and 2 more
 - **filmopen_store** — uses `AppLog`
-- **filmopen_state** — uses `DraftRefusal`, `EditableDraft`, `OpenDrafts`, `PluginCallDone`, `PluginCallFailed`, `PluginInvocation`, `PromptWriter`, `WriterToken`
+- **filmopen_state** — uses `DraftRefusal`, `EditableDraft`, `OpenDrafts`, `PluginCallControl`, `PluginCallDone`, `PluginCallFailed`, `PluginInvocation`, `PromptWriter`, `WriterToken`
 - **filmopen_media** — uses `MediaFetch`, `ProjectMedia`, `PromptToken`, `promptTokenCandidates`
 - **filmopen_media_ui** — uses `Function`, `stageBorder`
 - **filmopen_text_ui** — uses `MentionCandidate`, `MentionCandidates`, `mentionCandidateId`, `shownMentions`

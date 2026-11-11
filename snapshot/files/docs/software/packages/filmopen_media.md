@@ -4,7 +4,7 @@
 
 Local media storage, playback values and input descriptions.
 
-**pure Dart.** 11 files, 1,043 lines under `lib/`; 66 tests in 8 files. Barrel: `lib/filmopen_media.dart`.
+**pure Dart.** 11 files, 1,046 lines under `lib/`; 66 tests in 8 files. Barrel: `lib/filmopen_media.dart`.
 
 ## Depends on
 
@@ -176,7 +176,7 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `final String token` — The token as a prompt writes it: `@inspiration-1`, or in a frame `@ch_kira:character_sheet-1`.
   - `final String holder` — The stem of the file whose media it is: the version being edited, or in a frame the version in use.
   - `final String holderName` — The holder's display name, as the version in use says it.
-  - `final String word` — The token's word: `inspiration`, `reference`, `character_sheet` or `location_sheet` ([mediaTokenGroups]).
+  - `final String word` — The token's word: `inspiration`, `reference` or a sheet, `character_sheet` … `prop_sheet` ([mediaTokenGroups]).
   - `final int n` — The entry's position among its group's usable entries, from 1.
   - `final MediaEntry entry` — The entry it names.
   - `String get group` — The group [word] names.

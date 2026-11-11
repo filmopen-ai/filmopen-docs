@@ -4,7 +4,7 @@
 
 Media insertion, separate from storage and playback. This pure Dart package may depend on `filmopen_jobs`, `filmopen_media`, `filmopen_store` and `filmopen_format`, through their public barrels. It imports no state, forms, plug-in host or Flutter package. Consumers import only `filmopen_insertion.dart`.
 
-**pure Dart.** 25 files, 3,943 lines under `lib/`; 263 tests in 33 files. Barrel: `lib/filmopen_insertion.dart`.
+**pure Dart.** 25 files, 3,946 lines under `lib/`; 264 tests in 33 files. Barrel: `lib/filmopen_insertion.dart`.
 
 ## Depends on
 

@@ -4,7 +4,7 @@
 
 The issue recorder (Software Specification §6.8). While `Recorder.instance` records, every tap, drag, scroll, key, typed text, draft change, navigation, tab, route, setting and log event goes into `tape.jsonl`, with a JPEG of the whole view after each action, into a report folder beside the app's logs (`reportsDirectory()`: on Windows `%LOCALAPPDATA%\FilmOpen\reports\<YYMMDDHHMMSS>\`). The folder also holds `environment.json`, the project's text files as they were at the start (`project/`) and at the stop (`project-after/`), the library's (`library/`) and the app log of this run and the one before, whole (`log.jsonl`, `copyLogRuns`, the runs named in `environment.json`'s `logRuns`). While it records the log is verbose (`AppLog.forceVerbose`), the setting untouched. On the web the tape is kept in memory and nothing is written.
 
-**Flutter.** 8 files, 1,461 lines under `lib/`; 45 tests in 7 files. Barrel: `lib/filmopen_recorder.dart`.
+**Flutter.** 8 files, 1,468 lines under `lib/`; 45 tests in 7 files. Barrel: `lib/filmopen_recorder.dart`.
 
 ## Depends on
 
@@ -121,4 +121,4 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
 
 Files under `lib/` the barrel does not reach; nothing outside the package may import them.
 
-- `lib/src/report_folder_io.dart`: `hasReportFolders`, `DirectoryReportFolder`, `openReportFolder`, `openReportFolderIn`, `operatingSystemVersion`, `userHomeDirectory`, `copyLogRuns`, `_chunks`, `_startLine`, `_startBytes`, `_mentionsStart`, `encodeJpeg`
+- `lib/src/report_folder_io.dart`: `hasReportFolders`, `DirectoryReportFolder`, `openReportFolder`, `openReportFolderIn`, `operatingSystemVersion`, `userHomeDirectory`, `copyLogRuns`, `_eachChunk`, `_startLine`, `_startBytes`, `_mentionsStart`, `encodeJpeg`

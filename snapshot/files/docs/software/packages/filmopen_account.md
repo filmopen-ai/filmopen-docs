@@ -4,7 +4,7 @@
 
 The filmopen.ai account: sign-in through Supabase with PKCE (`account_auth.dart`), the `ai.filmopen.desktop://` callback registration (Windows; a phone's scheme is in its manifest) and the callback's arrival through the platform's link door, the account's state for the app (`accountModelProvider`, made as the rail's profile is first built and kept as long as the app, so that no sign-in's result is dropped while the popup is closed), the account's public snapshot for the app (`AccountSnapshotAdapter`, installed and let go with the state: a passive observer that starts nothing — signed out, loading, or signed in with the account's id, the balance unavailable until the website reports one), the rail's profile (`AccountProfileButton`: from that snapshot, the username in effect with *Login* and *Signup*, *Loading…*, or with the balance as its state says it; it keeps the account's names alive, so signing in sets the username, §6.6 — an amount only where one is known, zero included), the account's popup (`AccountPopup`: who is signed in, the username chosen from the account's names, and the way in or out), the sign-in dialog and the provider marks.
 
-**Flutter.** 23 files, 3,953 lines under `lib/`; 155 tests in 15 files. Barrel: `lib/filmopen_account.dart`.
+**Flutter.** 23 files, 3,986 lines under `lib/`; 158 tests in 15 files. Barrel: `lib/filmopen_account.dart`.
 
 ## Depends on
 

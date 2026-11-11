@@ -5,7 +5,7 @@
 | | |
 |---|---|
 | **Version** | 7.9 |
-| **Date** | 9 November 2026 |
+| **Date** | 10 November 2026 |
 | **Status** | Describes the application as of the date above. Updated in the same change as the code it describes. |
 | **Companion documents** | The *FilmOpen Project Specification* defines the file format this software reads and writes; the *FilmOpen MCP Specification* describes the agent layer as an agent uses it. |
 | **Repository** | `filmopen-app` (`filmopen-ai/filmopen-app` on GitHub). This specification is the folder `docs/software/` there; the pages under `packages/` are generated from the code. |

@@ -4,7 +4,7 @@
 
 Every user-facing string of FilmOpen, **one ARB file per language** (`lib/l10n/app_en.arb`, `app_es.arb`), the generated `AppLocalizations`, and `labels.dart`, which turns the format's codes (warning kinds, account problems, field names) into sentences and gives widgets `context.l10n`.
 
-**Flutter.** 4 files, 50,809 lines under `lib/`; 88 tests in 21 files. Barrel: `lib/filmopen_l10n.dart`.
+**Flutter.** 4 files, 51,885 lines under `lib/`; 88 tests in 21 files. Barrel: `lib/filmopen_l10n.dart`.
 
 ## Depends on
 
@@ -38,6 +38,7 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `String folderKindLabel(String kind)` — A folder's `kind` (Project Specification §10.1) as a word.
   - `String kindLabel(ProjectKind kind)`
   - `String locationKindLabel(String kind)` — A location kind's name (§9.3), or the token itself.
+  - `String genderLabel(String token)` — An `appearance.gender` token's name (A.1), or the word itself.
   - `String voicePitchLabel(String token)` — A `voice.pitch` token's name (A.1), or the token itself.
   - `String voicePaceLabel(String token)` — A `voice.pace` token's name (A.1), or the token itself.
   - `String timeOfDayLabel(String token)` — A time-of-day token's name (A.3, A.5), or the token itself.

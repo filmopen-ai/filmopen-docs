@@ -5,7 +5,7 @@
 | | |
 |---|---|
 | **Version** | 1.45 — Draft |
-| **Date** | 8 November 2026 |
+| **Date** | 11 November 2026 |
 | **Format version** | `"filmopen": 1` |
 | **Status** | Public draft. Open for comment. |
 | **Licence** | This specification: CC-BY-4.0. The JSON Schemas derived from it: CC0. |
@@ -44,6 +44,8 @@ translated or regenerated.
   order — the person's and the assistant's words with `at`, and each tool call with its arguments and the tool's
   answer — and is written from the chat's opening, so that a chat that changed nothing has a record too; absent on a
   record from before it or of a chat not opened in a chat window, and nothing inferred in its place.
+- **A character's gender** (A.1; 10 November 2026): `appearance.gender` is written as one of `male`, `female` or
+  `nonbinary`, and absent while undecided; any other word an older file holds is still read as text and kept.
 - **A character's birth month** (§9.1, A.1): `birth_date` may also be a month, `YYYY-MM` (`"2014-01"`); its year
   fills the age as a year's does. A month is 01–12 and a day 01–31; anything else is malformed.
 
@@ -1477,14 +1479,18 @@ lists the recommended optional vocabulary. An entity with no media yet is valid.
 - a **reference prompt** (`prompts.reference`) its holder's `@inspiration-<n>`;
 - a **sheet prompt** (`prompts.sheet`) its holder's `@inspiration-<n>` and `@reference-<n>`;
 - a block's **frame prompts** (`first_frame`, `last_frame`) a character's `@<stem>:reference-<n>` and
-  `@<stem>:character_sheet-<n>`, a location's `@<stem>:reference-<n>` and `@<stem>:location_sheet-<n>`, and a
-  prop's `@<stem>:reference-<n>`, for the characters, locations and props of the film, each in its version in use (§6.1);
+  `@<stem>:character_sheet-<n>`, a location's `@<stem>:reference-<n>` and `@<stem>:location_sheet-<n>`, an
+  outfit's `@<stem>:reference-<n>` and `@<stem>:outfit_sheet-<n>`, and a prop's `@<stem>:reference-<n>` and
+  `@<stem>:prop_sheet-<n>`, for the characters, locations, outfits and props of the film, each in its version in use
+  (§6.1) (the outfit's tokens and the two sheets of outfits and props since 11 November 2026);
 - the treatment and the voice none.
 
-`<stem>` is an entity reference without its `@` (`ch_<tag>`, `lo_<tag>`, `pr_<tag>`, a tag being dotted
-segments); `<n>` is a positive decimal without a leading zero. The token's word names its group: `inspiration` →
-`inspirations`, `reference` → `reference_images`, `character_sheet` → `character_sheets`, `location_sheet` →
-`location_sheets`. `n` is the entry's position among the group's entries that are neither deleted nor archived,
+`<stem>` is an entity reference without its `@` (`ch_<tag>`, `lo_<tag>`, `of_<tag>`, `pr_<tag>`, a tag being dotted
+segments; an outfit is named only by its media, never by an `@of_<tag>` of its own); `<n>` is a positive decimal
+without a leading zero. The token's word names its group: `inspiration` → `inspirations`, `reference` →
+`reference_images`, `character_sheet` → `character_sheets`, `location_sheet` → `location_sheets`, `outfit_sheet` →
+`outfit_sheets`, `prop_sheet` → `prop_sheets`. A word under another type's stem (`@ch_kira:prop_sheet-1`) names
+nothing. `n` is the entry's position among the group's entries that are neither deleted nor archived,
 kept or still unreviewed, in file order, so a token's number can change when an entry is archived. A token repeated in the
 words is one input. The file keeps the token; at render the application resolves each to its picture, sends the
 pictures as the model's inputs in the order of first appearance, and writes each token in the model's own words
@@ -1537,7 +1543,7 @@ measured, else as reported, and absent where unknown; **`width`** and **`height`
 **`stage`**, the stage
 of the render's request (§12.2), absent on an upload — a render asked at a stage below its holder's `render_stage` is outdated by the stage, a holder's stage moved down outdating nothing, and choosing a stage is no change of content (§7); **`spans`**, on a block's entry, the blocks or extent
 it covers, an object — `{ "blocks": ["bl_8", "bl_9"] }` or `{ "until": "end_of_scene" }` — whose shapes and the groups' rules are §10.3's; **`unreviewed`**, present only as `true`, on a render not yet kept or rejected — usable like a kept entry until deleted or archived; and
-**`kept_at`**, when it was kept, an RFC 3339 instant, for display only. A fork copies the entries as content, `kept_at`
+**`kept_at`**, when it was kept, an RFC 3339 instant, shown with the entry and, where an application needs the latest kept entry of a group, the order that decides it. A fork copies the entries as content, `kept_at`
 included. An entry of `voice_samples` may carry `voice_binding`, from a platform's voice or an upload kept
 as a voice, and `audition_text`, the known words of that sample (§9.1). Any other key is kept by every writer: an application that
 inserts or shows an entry may add what it likes, and a reader may ignore it — **a named exception** to the closed records of new content (§18.3): an entry, and a group beyond its type's list, stay open to an application's own keys and groups. What a take cost, or which
@@ -3281,11 +3287,11 @@ a plugin names itself, since another customer's server may answer under the same
 follow a redirect to a host outside them; and it never writes
 them into the catalogue, a project or a plugin's output (§14.2).
 
-**Signed-in access (9 November 2026).** A platform may add an `oauth` object beside `auth`,
+**Signed-in access (11 November 2026).** A platform may add an `oauth` object beside `auth`,
 keeping its existing key route. `auth.kind: oauth` alone does not offer application sign-in;
 the sibling block defines sign-in on a platform of any authentication kind. The signed-in
 requests use the same `base_url`, `hosts` and credential path restrictions as its key route.
-Every field of the block except optional `token_params` is required:
+Every field of the block except optional `token_params`, `redirect_path` and `callback_origin` is required:
 
 | Field | Type | Meaning |
 |---|---|---|
@@ -3300,6 +3306,8 @@ Every field of the block except optional `token_params` is required:
 | `token_params` | object of strings | Optional extra form fields for code exchange and refresh, with the same `{host_id}` substitution; absent means none. |
 | `sends_output_cap` | boolean | Whether a signed-in completion sends the output cap. |
 | `label` | string | The plan's name for displaying its route. |
+| `redirect_path` | string | Optional loopback callback path; absent means `/`. |
+| `callback_origin` | string | Optional browser origin allowed on the callback and its GET/private-network preflight. |
 
 A manifest key slot may name `auth: oauth`; an omitted `auth` means `key`. Both slots name
 the same platform. The credential name remains `filmopen/<owner>/<slot>`, with no separate
@@ -3812,7 +3820,7 @@ vocabulary, not a constraint. "media ref" means a media reference as defined in 
 | `summary` | string | one or two sentences |
 | `birth_date` | string | `YYYY`, `YYYY-MM` or `YYYY-MM-DD`; its year fills age only on a birth-date change or creation at another epoch (§9.1) |
 | `appearance.age` | number or string | `30`, `"late thirties"`, or `"31 (1999)"` — the age with the year of birth; stored per epoch file (§9.1) |
-| `appearance.gender` | string | free |
+| `appearance.gender` | string | `male` `female` `nonbinary` — what an application writes; an older file's other word (`woman`, …) is read as it is and kept until one is chosen; absent while undecided |
 | `appearance.ethnicity` | string | free; optional; for continuity only |
 | `appearance.species` | string | `human` default |
 | `appearance.height_cm` `appearance.weight_kg` | number | |

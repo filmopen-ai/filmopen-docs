@@ -1,14 +1,15 @@
 ---
 title: xAI (Grok)
-description: "xAI's Grok models in FilmOpen: writing and dictation, what they cost, FilmOpen credit, and how to make your own key."
+description: "xAI's Grok models in FilmOpen: writing, pictures and clips on your Grok plan, dictation, FilmOpen credit, and your own API key."
 slug: docs/platforms/xai
 sidebar:
   label: xAI (Grok)
   order: 4
-lastUpdated: 2026-11-09
+lastUpdated: 2026-11-11
 ---
 
 - [What it is and what FilmOpen uses it for](#what-it-is-and-what-filmopen-uses-it-for)
+- [Sign in with Grok](#sign-in-with-grok)
 - [Pricing](#pricing)
 - [FilmOpen credit](#filmopen-credit)
 - [Create your own key](#create-your-own-key)
@@ -19,11 +20,13 @@ Implemented in plugin [`fo-xai`](#the-plugin).
 
 ## What it is and what FilmOpen uses it for
 
-xAI makes the Grok models. FilmOpen uses it for writing with Grok 4.7, and for turning your voice into text as you speak, at about a fifth of the price of OpenAI's dictation.
+xAI makes the Grok models. FilmOpen uses it for writing with Grok 4.7, pictures with Grok Imagine Image 2.0, clips from a first frame with Grok Imagine Video, and for turning your voice into text as you speak, at about a fifth of the price of OpenAI's dictation.
 
 | Model | What it does in FilmOpen |
 |---|---|
 | Grok 4.7 | Writes and reads text, and can use tools, for the assistant |
+| Grok Imagine Image 2.0 | Makes pictures from text or reference pictures on your Grok plan |
+| Grok Imagine Video | Makes a clip from a first frame on your plan, own key or FilmOpen credit |
 | grok-voice-transcribe-2.0 | Turns your speech into text while you talk, over xAI's live connection |
 
 xAI's speech to text understands 25 languages, English, Spanish and Portuguese among them ([speech to text](https://docs.x.ai/developers/model-capabilities/audio/speech-to-text)).
@@ -32,9 +35,17 @@ xAI's speech to text understands 25 languages, English, Spanish and Portuguese a
 
 The [technical notes](/docs/platforms/xai-notes/) cover xAI's API in more depth.
 
+## Sign in with Grok
+
+In **Settings → Plugins**, open **Configure** on **xAI**, then **Sign in** on the **Grok** card. Your browser opens xAI's consent page. It names xAI's shared client, also used by OpenCode and Hermes, rather than a FilmOpen client. Sign in with your own Grok account and approve access; FilmOpen receives the browser callback and the card shows the signed-in account. **Sign out** revokes access and clears the saved sign-in.
+
+A SuperGrok or X Premium+ plan can supply text, pictures and clips through **xAI / Grok plan**. xAI controls availability and limits: some tiers receive a **403** refusal, whose words FilmOpen shows. A refusal never switches to your API key or FilmOpen credit. The price line says **through Grok plan**; it does not promise free use. Usage names the signed-in account and keeps tokens without a monetary charge. Provider-reported spending stays in the log.
+
+Choose the plan route in **Settings → Models** or the render dialog. Text Automatic uses a stored sign-in before keys or credit. **Grok Build** remains an explicit program choice for someone who has configured it; Automatic and a new render do not choose that program by default. Dictation still needs your own xAI API key.
+
 ## Pricing
 
-xAI is prepaid: you buy credit before you use the API, and what you use is taken from your balance.
+The API key and FilmOpen credit routes are separate from your Grok plan. On your own API key, xAI is prepaid: you buy credit before you use the API, and what you use is taken from your balance.
 - **Buying credit is a one-off purchase, not a subscription.** You're charged when you buy the credit ([billing FAQ](https://docs.x.ai/docs/resources/faq-api/billing)), and xAI's invoice for it says *Single Purchase*. With the setting xAI starts you on, requests are refused once the credit is used up, rather than billed later ([billing](https://docs.x.ai/console/billing)).
 - **Auto top-up is what can charge you again.** It is on at your first purchase unless you turn it off (see *Add money*).
 - **Refunds.** xAI doesn't refund prepaid credit, except where the law requires it ([billing FAQ](https://docs.x.ai/docs/resources/faq-api/billing)). Its billing pages give no expiry date for credit.
@@ -165,9 +176,11 @@ After pasting a key anywhere, clear your clipboard history if your system keeps 
 
 ## The plugin
 
-**fo-xai** gives FilmOpen Grok 4.7 for writing. Turn the plugin on in **Settings → Plugins**; [Installing plugins](/docs/guides/plugin-packages/) explains installing and allowing one. Its page is opened with **Configure** on its row, and **Check** under **Can it work?** asks the platform about your key without making anything. Check reads your key's own record, so a working key doesn't promise a model.
+**fo-xai** gives FilmOpen Grok 4.7 for writing, Grok Imagine pictures on your plan, and first-frame clips. Turn the plugin on in **Settings → Plugins**; [Installing plugins](/docs/guides/plugin-packages/) explains installing and allowing one. Its page is opened with **Configure** on its row, and **Check** under **Can it work?** checks the configured API route without making anything. Check reads the model list on a saved plan sign-in, or your key's own record for the key route; a successful Check does not promise a model.
 
-**Writing.** Grok 4.7 streams its answer to the assistant and can call tools. A request runs once and is never repeated by itself: if the answer is lost, check your xAI usage before asking again. Usage records the cost xAI reports for each request. Where xAI gives none, it stays unknown, never zero.
+**Writing.** Grok 4.7 streams its answer to the assistant and can call tools. A request runs once and is never repeated by itself: if the answer is lost, check your xAI usage before asking again. On an API key or FilmOpen credit, Usage records the cost xAI reports for each request. Where xAI gives none, it stays unknown, never zero.
+
+**Clips from a first frame.** Choose **Grok Imagine Video** in a block's render dialog, through **xAI / Grok plan**, your own key or FilmOpen credit. On the plan the quote is unknown; on a key or credit the API estimate follows the catalogue. Lite is the first choice for a preview; the dialog shows the price per second for the chosen model and resolution, multiplied by the duration, and refreshes it when either choice changes. Clips run for 1–15 whole seconds at 480p or 720p, with 1080p also available on both 1.5 variants. FilmOpen downloads the finished clip into the film. Grok Build's program route instead chooses its own model, offers 480p/720p and has an unknown price; if its zero data retention prevents a video, FilmOpen explains how to choose the priced API route without changing your account's retention choice or rendering automatically.
 
 **Dictation.** Grok's speech to text is part of FilmOpen's dictation, chosen under **Settings → General → Speech service**. It needs your own key.
 

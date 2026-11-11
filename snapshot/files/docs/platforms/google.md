@@ -25,13 +25,14 @@ Google makes the Gemini models. With a key from **Google AI Studio**, FilmOpen w
 |---|---|
 | Gemini 3.1 Pro | Writes prose, scenes and scripts, and can use tools |
 | Gemini 3.8 Flash | Reads text and returns structured data |
+| Gemini 4 Carbon, Gemini 4 Argon | Write prose, scenes and scripts, and can use tools: Carbon the strongest, Argon the faster and lighter |
 | Nano Banana Pro and Nano Banana 2 | Make an image from a prompt, or edit one with reference images |
 
 ## Pricing
 
 A Google AI Studio key can run on Google's **free tier** or on a **paid** one, once you turn on billing.
 
-- **Free tier:** Gemini 3.8 Flash is free of charge within Google's limits. Your prompts and answers may be used to improve Google's products. Gemini 3.1 Pro and the Nano Banana image models are not on the free tier.
+- **Free tier:** Gemini 3.8 Flash is free of charge within Google's limits. Your prompts and answers may be used to improve Google's products. Gemini 3.1 Pro, Gemini 4 Carbon, Gemini 4 Argon and the Nano Banana image models are not on the free tier.
 - **Paid tier:** press **Set up billing** in AI Studio. New accounts prepay, with $5 the smallest purchase; credits expire after 12 months and can't be refunded. At a balance of zero, requests fail ([billing](https://ai.google.dev/gemini-api/docs/billing)).
 - **A Google AI plan's credit:** the Developer Program gives Google AI Pro subscribers $10 a month of GenAI and Cloud credit, and Google AI Ultra subscribers $40 (20TB) or $100 (30TB), once you claim it ([plans](https://developers.google.com/program/plans-and-pricing)). On the usual *Prepay* billing, Google requires at least $5 of prepaid credit before that credit works on the Gemini API, and says the plan's credit is then used first. Monthly credits expire a year after they are granted ([benefits FAQ](https://developers.google.com/profile/help/benefits)). See [Use a Google AI plan's credit](#use-a-google-ai-plans-credit). What that credit covers is on Google's bill: FilmOpen records each call at Google's price and doesn't know whether the credit paid for it.
 
@@ -41,6 +42,7 @@ Paid prices ([pricing](https://ai.google.dev/gemini-api/docs/pricing)):
 |---|---|
 | Gemini 3.8 Flash | $0.75 per million tokens in, $3.75 out, until 31 December 2026; then $1.50 and $7.50 |
 | Gemini 3.1 Pro | $2 per million tokens in, $12 out; above 200,000 input tokens, $4 and $18 |
+| Gemini 4 Carbon, Gemini 4 Argon | Each $2 per million tokens in, $10 out, until 30 November 2026; then $4 and $20 |
 | Nano Banana Pro | $0.134 an image at 1K or 2K, $0.24 at 4K |
 | Nano Banana 2 | $0.045 an image at 0.5K, $0.067 at 1K, $0.101 at 2K, $0.151 at 4K |
 
@@ -64,7 +66,7 @@ There is no separate account: you sign in to Google AI Studio with your Google a
 
 ### Add money
 
-Skip this for the free tier. For Gemini 3.1 Pro, Nano Banana, or a plan's credit:
+Skip this for the free tier. For Gemini 3.1 Pro, Gemini 4, Nano Banana, or a plan's credit:
 
 1. Press **Set up billing** on your key's row in AI Studio, and choose or add a billing account.
 2. **Set a limit first.** In AI Studio, open **Spend**, press **Set spend cap**, enter the most this project may spend in a month, and press **Save**. Google marks the cap *Experimental*: usage pauses when it is reached, up to about ten minutes of further use can get through, and it resets on the first of each month. Google's page doesn't say whether usage paid by a plan's credit counts toward it.
@@ -179,5 +181,5 @@ Google says that if your prepaid balance reaches $0, the plan's credit stops wor
 - **"You do not have permission to create a key in this project":** ask whoever owns the Google Cloud project, or choose another.
 - **Requests are refused for "too many requests":** you have reached the free tier's limit. Wait, or turn on billing.
 - **Requests fail with payment needed, or you see "Prepay credits depleted":** your prepaid balance has reached zero, even if you have never bought any. Buy credits in AI Studio. Google says a plan's credit doesn't count until you have.
-- **Gemini 3.1 Pro or Nano Banana is refused:** they need a billing account, since they aren't on the free tier.
+- **Gemini 3.1 Pro, Gemini 4 or Nano Banana is refused:** they need a billing account, since they aren't on the free tier.
 - **FilmOpen says the key is invalid, or that it could not check it:** nothing was saved and the box keeps the key. See [Add the key to FilmOpen](#add-the-key-to-filmopen).

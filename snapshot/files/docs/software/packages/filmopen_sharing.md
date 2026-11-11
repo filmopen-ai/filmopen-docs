@@ -4,7 +4,7 @@
 
 How a film is shared: the sync target a film names — Google Drive by the folder id in its manifest, or a folder of this computer kept in its preferences — the Google account it needs, the *Sharing* card of Settings that starts, shows and stops it, and the new-project dialog's cloud choice and director block. A feature package: it imports the sync, the Drive client, the state, the widgets and the words; the application imports it, and `filmopen_tree` for the new-project dialog.
 
-**Flutter.** 12 files, 2,769 lines under `lib/`; 185 tests in 14 files. Barrel: `lib/filmopen_sharing.dart`.
+**Flutter.** 12 files, 2,794 lines under `lib/`; 187 tests in 14 files. Barrel: `lib/filmopen_sharing.dart`.
 
 ## Depends on
 

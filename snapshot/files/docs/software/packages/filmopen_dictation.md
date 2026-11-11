@@ -4,14 +4,14 @@
 
 Dictation on a text box, as Software Specification §9.6 describes it.
 
-**Flutter.** 15 files, 4,348 lines under `lib/`; 144 tests in 19 files. Barrel: `lib/filmopen_dictation.dart`.
+**Flutter.** 15 files, 4,405 lines under `lib/`; 144 tests in 19 files. Barrel: `lib/filmopen_dictation.dart`.
 
 ## Depends on
 
 - **filmopen_format** — uses `Catalogue`, `ExactDecimal`, `Money`, `MoneyBasis`, `UsageBasis`, `UsageOperation`, `UsagePurpose`, `UsageRecord`, `UsageStatus`, `newUsageId`, `usageRecordTime`
 - **filmopen_l10n** — uses nothing by name the digest could see
 - **filmopen_platform** — uses `AudioDevice`, `AudioFormat`, `AudioRecording`, `AudioSource`, `AudioSourceUnavailable`, `CredentialStore`, `CredentialStoreUnavailable`
-- **filmopen_state** — uses `CreditFunding`, `ExitTasks`, `FundingUnavailable`, `LiveDictation`, `MicrophoneGranted`, `MicrophoneOccupied`, `MicrophoneOwner`, `MicrophoneOwnership`, `NavIndex`, `ProviderFunding`, `Settings`, `SpeechProvider`, `appVersionProvider`, `catalogueProvider`, `kFilmOpenDomain`, `kTranscriptionOperation`, `navIndexProvider`, `projectProvider`, `settingsProvider`, `settingsTabProvider`, `speechProviderOf`
+- **filmopen_state** — uses `CreditFunding`, `ExitTasks`, `FundingResult`, `FundingUnavailable`, `LiveDictation`, `MicrophoneGranted`, `MicrophoneOccupied`, `MicrophoneOwner`, `MicrophoneOwnership`, `NavIndex`, `PluginCatalogueView`, `ProviderFunding`, `Settings`, `SpeechProvider`, `appVersionProvider`, `catalogueProvider`, `kFilmOpenDomain`, `kTranscriptionOperation`, `navIndexProvider`, `pluginRouteLine`, `projectProvider`, `providerFundingProvider`, `settingsProvider`, `settingsTabProvider`, `speechProviderOf`
 - **filmopen_store** — uses `AppLog`, `LogLevel`, `UsageLog`, `UsageLogUnavailable`
 - **filmopen_ui** — uses `EditableTextSelection`, `EditableTextTarget`, `ProvisionalTextEdit`, `SectionCard`, `ShortNameBox`, `ShortNameField`, `TextEditGeneration`, `TextEditOutcome`, `showMessage`
 - **filmopen_test_support (dev)** — uses nothing by name the digest could see
@@ -111,7 +111,8 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
 
 ### `lib/src/dictation_engine_card.dart`
 
-- **class `DictationEngineCard`** — Settings → General chooses or repairs the selected speech service, and *Configure* opens its provider plug-in's page, where its key is (§6.7).
+- **variable** `final dictationRouteProvider` — The selected speech service's metadata route, following dictation's own-key and OpenAI-credit rule.
+- **class `DictationEngineCard`** — Settings → Models chooses the speech service and opens its provider's page through Configure.
   - `const DictationEngineCard({super.key})`
 
 ### `lib/src/dictation_settings_card.dart`

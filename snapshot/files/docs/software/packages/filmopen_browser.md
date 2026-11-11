@@ -4,7 +4,7 @@
 
 The pages: the browser page with the tree pane and the detail pane, the entity page (header, version row, tabs: the form, Script, Workflow, Compare, Takes, Commentary), the epoch overview (a character's cards listing its outfits at each epoch, with *New outfit*, which asks a name only), the category lists (*Add character*, *Add location* and *Add prop*), the Script page, in three tabs — *Contents*, *Script* and *Workflow* —, the Workflow tab (the chosen scriptwriting plug-in's steps, each with whether it is done and the model it will use, under the *Create Script* card on the Script page, on every folder's and scene's page too; *Run* asks the step's fields in a dialog with what the run will cost about and where it stops, runs it on the entity the row stands under — the run held while the app is open (`workflowRunsProvider`) —, and shows its progress, *Stop*, its spend, its text or failure, and *Show the script*; below the steps, the media sections — the focus's characters with their outfits, locations, props and scenes, then the project's other characters and locations, those in no scene marked *Not in any scene*, each version's media card once, with a checkbox on each place the viewer may write and *Select all* / *Select none* per section, `workflow_media.dart`, which keeps each offered place's target; and *Render {n}*, fixed at the tab's bottom right, which settles the drafts, decides each ticked prompt's writer, asks each such place whether its render can run and leaves out those no words could help, shows a prompts summary first where a model would write one of the rest, writes them, prepares each checked place still offered but those left out, shows a summary of what is ready, what is skipped and why and what Basic wrote free, and on its word adds the ready ones to the batch and submits exactly them, `workflow_render.dart`), the Contents card (a folder's contents, or the script's, as a file manager shows them, with *Add folder…* and *Add scene…* over the rows and a menu on each, which a folder's page shows above its form), the Script tab (`script_tab.dart`: a scene, a folder or the whole film read as a screenplay page, as a grid of scene cards or as a timeline of the scenes by page length with a lane per character (`filmopen_ui`'s `ScriptTimeline`), each run of scenes headed by its folders, a card opening its scene; a folder's and the whole film's narrowed by `script_filters.dart`'s chips, pull-downs and search, kept per film in `scriptViewProvider`, a scene opened by itself always whole), the project overview and chooser, the render batch record and the one set page that shows a comp, an assistant session or a render queue (`sets/set_list_page.dart`), a discarded version's notice, with no action, the other files. The Takes tab draws each take with `filmopen_media_ui`'s `MediaTile`, wearing its own batch's provenance strip, above its caption. The comps are its part too: *Add to comp* on a placed medium's menu (`sets/comp_action.dart`, held by the browser page while it is mounted) and the comp's page (`sets/comp_page.dart`) — the pending comp's title, description and visibility autosaved with POST beside them, a posted comp read with *Open in browser* and *Share*. The render queue is its part as well: a render batch waiting to be sent opens on the queue's page (`sets/queue_page.dart`) — its rows with their states, *Render* on the viewer's own pending batch, the interrupted pass and the unresolved items, each item's job followed to its take and record, and *Add again* on a refused row.
 
-**Flutter.** 30 files, 9,512 lines under `lib/`; 165 tests in 16 files. Barrel: `lib/filmopen_browser.dart`.
+**Flutter.** 30 files, 9,580 lines under `lib/`; 165 tests in 16 files. Barrel: `lib/filmopen_browser.dart`.
 
 ## Depends on
 
@@ -171,6 +171,7 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
 
 ### `lib/src/script_tab.dart`
 
+- **function** `({List<ScriptRow> rows, String source, String list}) folderTabRows(ScriptOutline? outline, FilmProject project, Entity folder, {Author? viewer})` — The rows a folder's Script and Workflow tabs read: the working list where the script draws [folder] (§5.12).
 - **class `ScriptTab`** — The script of a scene, a folder or the whole film, as a screenplay page or as a grid of scene cards (§9.3).
   - `const ScriptTab({ super.key, required this.project, required this.entity, this.viewer, this.editable = true, })`
   - `const ScriptTab.whole({super.key, required this.project, required List<ScriptRow> this.rows, this.viewer})` — The whole film's script, from the top-level Script node: [rows] is the project file's own list.
@@ -178,7 +179,7 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `final Entity? entity` — The scene or folder whose script this is; null for the whole film.
   - `final Author? viewer` — Whose world the scene's own references are read in (§6.1 step 2) — unless the scene is the official one, which reads through official however the reader is signed in.
   - `final bool editable` — Whether the viewer may write this version, which its empty page's words follow.
-  - `final List<ScriptRow>? rows` — The rows to walk for the whole film; null for a scene, which is its own, and for a folder, whose version on screen's own outline the tab walks once per open (§5.12).
+  - `final List<ScriptRow>? rows` — The rows to walk for the whole film; null for a scene or a folder, which the tab reads for itself (§5.12).
 - **function** `String folderTitle(AppLocalizations l10n, Entity folder)` — A folder as a section names it: its kind and its name, `Act 3: John comes home`.
 
 ### `lib/src/sets/comp_action.dart`
@@ -237,7 +238,7 @@ Files under `lib/` the barrel does not reach; nothing outside the package may im
 - `lib/src/sets/queue_page.dart`: `QueueRowState`, `QueuePage`, `_QueuePageState`
 - `lib/src/sets/set_list_page.dart`: `SetListPage`, `_SetListPageState`
 - `lib/src/workflow_media.dart`: `WorkflowSection`, `WorkflowHeading`, `WorkflowHeadingRow`, `WorkflowMediaLine`, `WorkflowMedia`
-- `lib/src/workflow_render.dart`: `_Place`, `_Written`, `_wordsAt`, `_Generated`, `_onlyWordsCanSay`, `WorkflowRenderButton`, `_WorkflowRenderButtonState`, `_PromptsSummary`, `_PromptsSummaryState`, `_Summary`, `_SummaryState`
+- `lib/src/workflow_render.dart`: `_Place`, `_Written`, `_wordsAt`, `_Generated`, `_onlyWordsCanSay`, `_firstFramePending`, `_firstFramePendingWhy`, `WorkflowRenderButton`, `_WorkflowRenderButtonState`, `_PromptsSummary`, `_PromptsSummaryState`, `_Summary`, +1
 - `lib/src/workflow_run_dialog.dart`: `showWorkflowRunDialog`, `_Typed`, `_RunDialog`, `_RunDialogState`
 - `lib/src/workflow_runs.dart`: `WorkflowRun`, `WorkflowRuns`, `workflowRunsProvider`
 - `lib/src/workflow_tab.dart`: `WorkflowTab`, `_Line`, `_WorkflowTabState`, `_Elapsed`, `_ElapsedState`

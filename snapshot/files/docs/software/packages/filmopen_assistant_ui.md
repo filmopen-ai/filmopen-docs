@@ -4,14 +4,14 @@
 
 Reusable field-assistant controls, with session contracts supplied by `filmopen_state`.
 
-**Flutter.** 6 files, 3,218 lines under `lib/`; 155 tests in 5 files. Barrel: `lib/filmopen_assistant_ui.dart`.
+**Flutter.** 6 files, 3,737 lines under `lib/`; 177 tests in 5 files. Barrel: `lib/filmopen_assistant_ui.dart`.
 
 ## Depends on
 
 - **filmopen_keys** — uses `KeyringEmptyLine`, `providerCatalogueProvider`
-- **filmopen_state** — uses `AssistantApply`, `AssistantApplyKind`, `AssistantChoice`, `AssistantFieldAt`, `AssistantLevel`, `AssistantModelChoice`, `AssistantModelSelection`, `AssistantOffer`, `AssistantPreferences`, `AssistantRequest`, `AssistantService`, `AssistantSession`, `AssistantSessionLedgers`, `AssistantShortcut`, `AssistantTarget`, `AssistantTranscriptState`, `AssistantUnavailable`, `AssistantVoiceMessage`, `AssistantVoicePhase`, `AssistantVoiceProvider`, `AssistantVoiceRequest`, `AssistantVoiceService`, `AssistantVoiceSession`, `AssistantWhere`, `AssistantWhereController`, `BatchSelection`, `ChangeNotice`, `ConversationFinishReason`, `EntitySelection`, `EntityWriteBinding` and 28 more
+- **filmopen_state** — uses `AssistantApply`, `AssistantApplyKind`, `AssistantChoice`, `AssistantFieldAt`, `AssistantLevel`, `AssistantModelChoice`, `AssistantModelSelection`, `AssistantOffer`, `AssistantPreferences`, `AssistantRequest`, `AssistantService`, `AssistantSession`, `AssistantSessionLedgers`, `AssistantShortcut`, `AssistantTarget`, `AssistantTranscriptState`, `AssistantUnavailable`, `AssistantVoiceMessage`, `AssistantVoicePhase`, `AssistantVoiceProvider`, `AssistantVoiceRequest`, `AssistantVoiceService`, `AssistantVoiceSession`, `AssistantWhere`, `AssistantWhereController`, `AutoActivity`, `BatchSelection`, `ChangeNotice`, `ConversationFinishReason`, `EntitySelection` and 38 more
 - **filmopen_ui** — uses `Breakpoints`, `EditableTextSelection`, `EditableTextTarget`, `EmptyState`, `SidebarSplitView`, `SlideOut`, `TextEditGeneration`, `TextEditOutcome`, `showMessageOn`
-- **filmopen_l10n** — uses `Labels`
+- **filmopen_l10n** — uses `Labels`, `fieldLabel`
 - **filmopen_dictation** — uses `DictateButton`, `DictationTarget`, `dictationEngines`, `dictationSelectedEngineProvider`
 - **filmopen_exchange (dev)** — uses nothing by name the digest could see
 - **filmopen_format (dev)** — uses nothing by name the digest could see

@@ -4,7 +4,7 @@
 
 Renders asked for anywhere in the application, run in one queue that needs no film (Software Specification §6.15). Pure Dart: it depends on `filmopen_jobs` and `filmopen_format` and nothing else of FilmOpen, and imports no Flutter and no library the web build lacks, so that a render can run where no film and no screen is — a peer's request through a later sharing service among them. A test holds that boundary (`test/boundary_test.dart`).
 
-**pure Dart.** 12 files, 4,743 lines under `lib/`; 271 tests in 13 files. Barrel: `lib/filmopen_render.dart`.
+**pure Dart.** 12 files, 4,764 lines under `lib/`; 273 tests in 13 files. Barrel: `lib/filmopen_render.dart`.
 
 ## Depends on
 
@@ -50,6 +50,7 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
 - **class `RenderNotReady`** — Why a route cannot run a model now, as codes the dialog says in words.
   - `static const consent` — The plug-in has not been allowed to run.
   - `static const noKey` — No key is saved for its platform.
+  - `static const notSignedIn` — The route's plan slot is not signed in.
   - `static const noGrant` — A key is saved, and the plug-in may not use it.
   - `static const noServer` — No server is set, or the one named is not there.
   - `static const off` — The plug-in is turned off.
@@ -62,11 +63,13 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `static const throughNewerApp` — The platform plug-in it runs through needs a newer FilmOpen.
   - `static const throughMissing` — A plug-in it calls to reach its platform is not installed ([RenderCandidate.through] names it by its tag).
 - **class `RenderCandidate`** — One way a model can run here, with whether it can now and the resource it would queue on: a route that can run in several places — the person's own ComfyUI, a server a provider started — is one candidate for each.
-  - `const RenderCandidate({ required this.route, this.destination, required this.label, required this.bills, required this.ready, this.notReady, this.t…` — A candidate.
+  - `const RenderCandidate({ required this.route, this.destination, required this.label, required this.bills, this.funding = 'key', required this.ready,…` — A candidate.
   - `final RenderRoute route` — The plug-in and platform, with the key it would be sent on.
   - `final RenderDestination? destination` — Where it would run, which tells apart the candidates of one route; null where the route has no choice.
   - `final String label` — The person's words for it: *This computer's ComfyUI*, *fal*, a server's name.
   - `final bool bills` — Whether it spends money on a key, where running on the person's own machine does not.
+  - `final String funding` — The decided funding origin: `key`, `credit`, `plan`, `local`, `server` or `lent`; a destination supplies its own label.
+  - `final bool manual` — Whether this route is offered only for an explicit choice, never a first-ready default.
   - `final bool ready` — Whether it can run now.
   - `final String? notReady` — Why not: one of [RenderNotReady]'s codes.
   - `final String? through` — The platform plug-in the route runs through — by name, or by tag where not installed — where [notReady] is its.
@@ -240,11 +243,12 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
 - **enum `RenderOrigin`** — Where a render comes from: this application, or a peer's request through a sharing service.
   - values: `local`, `remote`, `developer`
 - **class `RenderRoute`** — The way a render runs: the plug-in that answers for the model, on its platform, with the key and the way of running it the person chose.
-  - `const RenderRoute({required this.plugin, required this.platform, this.keyId, this.stack})` — A route.
+  - `const RenderRoute({required this.plugin, required this.platform, this.keyId, this.stack, this.program})` — A route.
   - `final String plugin` — The plug-in's tag: `fo-cui-zimage`.
   - `final String platform` — The catalogue's platform id: `comfyui`, `fal`.
   - `final String? keyId` — The id of the key the render is sent on, `<owner>:<slot>`; never its value, and null where none is.
   - `final String? stack` — Which of the plug-in's ways of running the model, as its options named it.
+  - `final String? program` — The machine program setting used by this route, or null for a route without a program.
   - `Map<String, Object?> toJson()` — The route as a request holds it.
   - `static RenderRoute? fromJson(Object? json)` — A route as [toJson] wrote it, or null for one that is not.
 - **enum `RenderDestinationKind`** — What kind of place a render runs in.

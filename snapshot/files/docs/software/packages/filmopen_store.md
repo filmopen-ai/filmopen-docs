@@ -4,7 +4,7 @@
 
 Where a project's files come from and how they are written, as pure Dart: the folder source (`directory_source*.dart`, `dart:io` behind a stub), the loader, **the writer** (`project_writer.dart`) with its refusals, the creator and the template, `Guards` (development mode's policy), the log (`app_log.dart`, `log_file*.dart`) and the library install.
 
-**pure Dart.** 27 files, 4,702 lines under `lib/`; 561 tests in 49 files. Barrel: `lib/filmopen_store.dart`.
+**pure Dart.** 27 files, 4,740 lines under `lib/`; 568 tests in 50 files. Barrel: `lib/filmopen_store.dart`.
 
 ## Depends on
 
@@ -15,7 +15,7 @@ Third-party: crypto.
 
 ## Used by
 
-`filmopen_account`, `filmopen_app`, `filmopen_assistant_ui`, `filmopen_automation`, `filmopen_browser`, `filmopen_cloud`, `filmopen_compare`, `filmopen_device`, `filmopen_dictation`, `filmopen_drive`, `filmopen_engine`, `filmopen_engine_bench`, `filmopen_engine_mlt`, `filmopen_engine_mpv`, `filmopen_exchange`, `filmopen_fdx`, `filmopen_forms`, `filmopen_insertion`, `filmopen_insertion_ui`, `filmopen_jobs_ui`, `filmopen_keys`, `filmopen_machine`, `filmopen_media_ui`, `filmopen_picker`, `filmopen_platform`, `filmopen_plugin_host`, `filmopen_prompt_ui`, `filmopen_recorder`, `filmopen_relay`, `filmopen_render_ui`, `filmopen_sharing`, `filmopen_state`, `filmopen_support`, `filmopen_test_support`, `filmopen_timeline`, `filmopen_timeline_ui`, `filmopen_tree`
+`filmopen_account`, `filmopen_app`, `filmopen_assistant_ui`, `filmopen_automation`, `filmopen_browser`, `filmopen_cloud`, `filmopen_compare`, `filmopen_device`, `filmopen_dictation`, `filmopen_drive`, `filmopen_engine`, `filmopen_engine_bench`, `filmopen_engine_mlt`, `filmopen_engine_mpv`, `filmopen_exchange`, `filmopen_fdx`, `filmopen_forms`, `filmopen_insertion`, `filmopen_insertion_ui`, `filmopen_jobs_ui`, `filmopen_keys`, `filmopen_machine`, `filmopen_media_ui`, `filmopen_picker`, `filmopen_platform`, `filmopen_plugin_host`, `filmopen_plugins_ui`, `filmopen_prompt_ui`, `filmopen_recorder`, `filmopen_relay`, `filmopen_render_ui`, `filmopen_sharing`, `filmopen_state`, `filmopen_support`, `filmopen_test_support`, `filmopen_timeline`, `filmopen_timeline_ui`, `filmopen_tree`
 
 ## Public API
 
@@ -137,6 +137,8 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
 - **variable** `const JsonEncoder projectJsonEncoder` — Two-space indentation and a final newline, as §18.1 asks of writers.
 - **function** `String encodeProjectJson(Object? json)`
 - **variable** `const String firstSceneTag` — The short name of the scene a new project starts with.
+- **variable** `const Set<String> firstSceneKeys` — The keys [writeNewProject] writes into the first scene: a scene with these and no other is as it was made.
+- **function** `bool isUntouchedFirstScene(Entity scene)` — Whether [scene] is the first scene a new project is made with, untouched: [firstSceneTag], v1, exactly [firstSceneKeys], and never saved since (`created` equal to `updated`).
 - **function** `Future<String> writeNewProject(ProjectSource target, { required String tag, required Author author, String? name, required String epochLabel, requi…` — Writes the root manifest and the scene and project documents in data/ (§4.1).
 - **function** `String rfc3339Now([DateTime? now])` — RFC 3339 UTC to the second (§7 `created` / `updated`), without Dart's microseconds.
 

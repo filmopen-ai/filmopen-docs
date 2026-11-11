@@ -24,8 +24,9 @@ OpenAI makes the GPT models. FilmOpen uses it for images, for writing, for readi
 | Model | What it does in FilmOpen |
 |---|---|
 | GPT Image 2.5 | Makes an image from a prompt |
+| GPT-6 Astra, GPT-6.1 Sol, GPT-6.1 Terra, GPT-6 Luna, GPT-6 Sol, GPT-5.5 | Write and read text for the assistant, including structured data and tools, on any of the three routes below |
 | GPT-5.6 Terra | Writes and reads text for the assistant, including structured data and tools |
-| GPT-6 Astra | Describes a picture's style, and a character's reference picture |
+| GPT-6 Astra | Also describes a picture's style, and a character's reference picture |
 | GPT-Live-Transcribe | Turns your speech into text while you talk |
 
 **Writing can run three ways.** FilmOpen uses the first of these you have set up, in this order: your [**ChatGPT sign-in**](#or-sign-in-with-chatgpt), your own [**Codex**](#or-use-codex) program, then your **OpenAI key** or FilmOpen credit. A call stays on the route it started on: if it is refused it ends there, and never moves to one that costs money. Images, analyses and dictation use the key or FilmOpen credit only.
@@ -42,14 +43,19 @@ OpenAI is prepaid: you buy credit before you use the API.
 |---|---|
 | GPT-Live-Transcribe | $0.017 per minute of audio |
 | GPT-5.6 Terra | $2 per million input tokens, $12 per million output tokens; $4 and $18 above 272,000 input tokens |
-| GPT-6 Astra | $10 per million input tokens, $1 cached, $50 output (for analyses, FilmOpen's estimate from the tokens used) |
+| GPT-6 Astra | $10 per million input tokens, $1 cached, $50 output; $20, $2 and $75 above 272,000 input tokens (for analyses, FilmOpen's estimate from the tokens used) |
+| GPT-6.1 Sol | $2 per million input tokens, $0.10 cached, $10 output; $4, $0.20 and $15 above 272,000 input tokens |
+| GPT-6.1 Terra | $1 per million input tokens, $0.05 cached, $5 output; $2, $0.10 and $7.50 above 272,000 input tokens |
+| GPT-6 Luna | $0.10 per million input tokens, $0.01 cached, $0.50 output; $0.20, $0.02 and $0.75 above 272,000 input tokens |
+| GPT-6 Sol | $2 per million input tokens, $0.20 cached, $10 output; $4, $0.40 and $15 above 272,000 input tokens |
+| GPT-5.5 | $5 per million input tokens, $0.50 cached, $30 output; $10, $1 and $45 above 272,000 input tokens. On Codex it runs only where Codex is signed in with an API key |
 | GPT Image 2.5 | $5 per million text tokens in, $30 per million image tokens out |
 
 - **With a ChatGPT sign-in,** writing comes out of your ChatGPT plan's allowance, not your API credit. **With Codex,** it is billed however you signed Codex in: to your ChatGPT plan, or to your own OpenAI key. Either way FilmOpen charges nothing for those turns, and Usage records the tokens OpenAI reports, labelled **ChatGPT plan** (or **OpenAI key in Codex**, where Codex is signed in with a key), without a dollar price. On 9 November 2026 OpenAI's Codex page listed Plus at $20 a month and Pro from $100 a month ([plans](https://learn.chatgpt.com/codex/pricing)).
 - **Batch requests:** they come back later and cost half.
 - **Usage tiers:** new accounts start at Tier 1 once they have paid $5. Tier 1 allows up to $100 of usage a month, and the limit rises as your spending grows ([rate limits](https://developers.openai.com/api/docs/guides/rate-limits)).
 
-Prices are from FilmOpen's catalogue on 9 November 2026, GPT-6 Astra's from the plugin's rates of 22 September 2026. See [OpenAI's pricing](https://developers.openai.com/api/docs/pricing) for today's.
+Prices are from FilmOpen's catalogue: GPT-6 Astra, GPT-6.1 Sol, GPT-6.1 Terra, GPT-6 Luna, GPT-6 Sol and GPT-5.5 as OpenAI's pricing page gave them on 10 November 2026, the others on 9 November 2026. See [OpenAI's pricing](https://developers.openai.com/api/docs/pricing) for today's.
 
 ## FilmOpen credit
 

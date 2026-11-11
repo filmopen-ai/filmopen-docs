@@ -4,7 +4,7 @@
 
 QuickJS-NG, bound for one call at a time. It knows nothing of FilmOpen: the plug-in host (`filmopen_plugin_host`) gives it a script, a function name, JSON arguments and the data `ctx` is built from, and answers the script's requests through a `JsDoor`.
 
-**pure Dart.** 3 files, 569 lines under `lib/`; 59 tests in 2 files. Barrel: `lib/filmopen_js.dart`.
+**pure Dart.** 3 files, 568 lines under `lib/`; 60 tests in 2 files. Barrel: `lib/filmopen_js.dart`.
 
 ## Depends on
 
@@ -39,7 +39,7 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `final String function`
   - `final Object? args` — The second argument, as JSON; ignored when [withArgs] is false and the function is called with `ctx` alone.
   - `final bool withArgs`
-  - `final Map<String, Object?> context` — What `ctx`'s synchronous members read: `plugin`, `settings`, `selection`, `strings`.
+  - `final Map<String, Object?> context` — What `ctx`'s synchronous members read, including `operation`, the host call's frame id.
   - `final JsLimits limits`
 - **class `JsOutcome`** — What a call came to.
   - `const JsOutcome()`

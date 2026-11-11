@@ -4,17 +4,17 @@
 
 A desktop browser for **FilmOpen projects**: a folder of plain JSON files that describes a film completely (characters, outfits, locations, props, styles, the script as folders and scenes, shots, cues, models, platforms, plugins, render batches, commentary and official pointers). Every entity is a versioned file per author, can be forked, and an `_official.json` pointer names the version the project has chosen. See `docs/FilmOpen-Project-Specification v1.0.md`. How the application itself is built is in `docs/software/` (the Software Specification, in parts, with a generated page per package).
 
-**Flutter.** 15 files, 4,144 lines under `lib/`; 1177 tests in 121 files. The application: no barrel; `lib/main.dart` wires the packages together.
+**Flutter.** 16 files, 4,525 lines under `lib/`; 1222 tests in 124 files. The application: no barrel; `lib/main.dart` wires the packages together.
 
 ## Depends on
 
 - **filmopen_comps** — uses `CompsAccessToken`, `CompsAssembler`, `CompsCancellation`, `CompsEvent`, `CompsException`, `CompsPreparedBundle`, `CompsPublisher`, `CompsUploadReceipt`, `PortableCompsMediaPreparer`, `compsFileSource`, `createCompsFileWorkspace`
-- **filmopen_format** — uses `Author`, `BatchStem`, `Deliverable`, `Entity`, `FileNameParser`, `FilmProject`, `JsonShape`, `JsonShapeException`, `MediaKind`, `SetRecord`, `ShortName`, `VersionStem`, `WarningKind`, `newUsageId`, `numField`, `projectKeyOf`, `stringField`, `takeNamed`
+- **filmopen_format** — uses `Author`, `BatchStem`, `Catalogue`, `Deliverable`, `Entity`, `FileNameParser`, `FilmProject`, `JsonShape`, `JsonShapeException`, `MediaKind`, `MediaStage`, `SetRecord`, `ShortName`, `VersionStem`, `WarningKind`, `naturalCompare`, `newUsageId`, `numField`, `projectKeyOf`, `stringField`, `takeNamed`
 - **filmopen_store** — uses `AppLog`, `LineLogSink`, `LogLevel`, `UnavailableUsageLog`, `UsageLog`, `openFileLogSink`, `openUsageLog`
 - **filmopen_l10n** — uses nothing by name the digest could see
 - **filmopen_ui** — uses `Breakpoints`, `ChromeClearance`, `ChromeInsets`, `EmptyState`, `SectionCard`, `ShortNameField`, `SidebarSplitView`, `SlideOut`, `buildTheme`, `kLongMessage`, `kMonoFontFallback`, `showMessage`
 - **filmopen_platform** — uses `AudioSource`, `CredentialStore`, `IncomingLinks`, `KeyVerifier`, `UnavailableAudioSource`, `UnavailableCredentialStore`, `UnavailableIncomingLinks`, `UnavailableKeyVerifier`, `canRevealFiles`, `createDeviceAudioSource`, `createDeviceBackgroundTransfers`, `createDeviceCredentialStore`, `createDeviceIncomingLinks`, `hasAppFiles`, `isDesktop`, `jobsDirectory`, `logFilePath`, `logLevelFromEnvironment`, `readEnvironment`, `revealInFileManager`, `syncDirectory`, `usageDirectory`
-- **filmopen_state** — uses `AccountAuthentication`, `AccountLedger`, `AccountProjects`, `AccountSnapshot`, `AccountSnapshots`, `AutomationHost`, `ClipboardAsksMessenger`, `Command`, `CommandAllowedKeys`, `CommandCaller`, `CommandRegistry`, `CommandValidator`, `CommunityGroups`, `CompPostException`, `CompPostOutcome`, `CompPostState`, `CompPoster`, `CompPosting`, `DeviceRegistration`, `DraftsNotSettledException`, `EntitySelection`, `ExitTasks`, `InsertionAppBinding`, `LeavingOutcome`, `LeavingResult`, `Lending`, `MediaClient`, `NavIndex`, `NoAccountLedger`, `NoAccountProjects` and 69 more
+- **filmopen_state** — uses `AccountAuthentication`, `AccountLedger`, `AccountProjects`, `AccountSnapshot`, `AccountSnapshots`, `AutomationHost`, `ClipboardAsksMessenger`, `Command`, `CommandAllowedKeys`, `CommandCaller`, `CommandRegistry`, `CommandValidator`, `CommunityGroups`, `CompPostException`, `CompPostOutcome`, `CompPostState`, `CompPoster`, `CompPosting`, `DeviceRegistration`, `DraftsNotSettledException`, `EntitySelection`, `ExitTasks`, `InsertionAppBinding`, `LeavingOutcome`, `LeavingResult`, `Lending`, `MediaClient`, `NavIndex`, `NoAccountLedger`, `NoAccountProjects` and 73 more
 - **filmopen_media** — uses `MediaStore`, `PlayableFile`, `ProjectMedia`
 - **filmopen_insertion** — uses `Function`, `InsertionService`, `InsertionSource`, `InsertionTarget`, `maxImportBytesWeb`
 - **filmopen_jobs** — uses `JobAction`, `JobActionAck`, `JobPhase`, `JobView`, `JobViews`, `describeJobError`
@@ -31,12 +31,12 @@ A desktop browser for **FilmOpen projects**: a folder of plain JSON files that d
 - **filmopen_recorder** — uses `PictureSize`, `Recorder`
 - **filmopen_relay** — uses `RelayClient`, `RemoteControlCard`, `canHoldRelaySocket`
 - **filmopen_support** — uses `CommentaryButton`, `CommentaryChoiceBox`, `CommentaryPhase`, `HttpReportSender`, `NoReportSender`, `RecordingCommentary`, `RecordingFlash`, `ReportFacts`, `ReportFlow`, `SupportAccount`, `UnsentReports`, `commentaryChoiceProvider`, `supportTicketUrl`
-- **filmopen_dictation** — uses `DictationEngineCard`, `DictationSettingsCard`, `Transcriber`, `UnavailableTranscriber`, `createDeviceTranscriber`, `dictateShortName`
+- **filmopen_dictation** — uses `DictationEngineCard`, `DictationSettingsCard`, `Transcriber`, `UnavailableTranscriber`, `createDeviceTranscriber`, `dictateShortName`, `dictationRouteProvider`
 - **filmopen_plugin_host** — uses `closePluginProcesses`, `createPluginRuntime`, `installAssistantService`, `pluginsSettled`, `pokeLendingSupplier`, `refreshAssistantReadiness`, `startRenders`, `startServers`
 - **filmopen_plugins_ui** — uses `PluginsTab`, `openPluginDocs`
 - **filmopen_plugin_dev** — uses `showPluginDevPage`
-- **filmopen_render** — uses `BackendRenderManager`, `ManagedRenderProducer`, `RenderAttentionManager`, `RenderBackend`, `RenderJob`, `RenderManager`, `isRenderJobId`, `renderProducerKind`
-- **filmopen_render_ui** — uses `Function`, `GpuPage`, `GpuStatus`, `GpuStatusKind`, `RenderQueue`, `RenderQueueItem`, `gpuSessionsProvider`, `gpuStatusProvider`, `mintedLinks`, `mintedMedia`, `prepareRender`, `prepareRenderBeforeWriting`, `refreshLocalStatus`, `registerMachineCommand`, `registerRenderCommands`, `renderActionOver`, `renderQueueProvider`
+- **filmopen_render** — uses `BackendRenderManager`, `ManagedRenderProducer`, `RenderAttentionManager`, `RenderBackend`, `RenderJob`, `RenderManager`, `RenderRoute`, `isRenderJobId`, `renderProducerKind`
+- **filmopen_render_ui** — uses `Function`, `GpuPage`, `GpuStatus`, `GpuStatusKind`, `RenderQueue`, `RenderQueueItem`, `gpuSessionsProvider`, `gpuStatusProvider`, `mintedLinks`, `mintedMedia`, `prepareRender`, `prepareRenderBeforeWriting`, `refreshLocalStatus`, `registerAutoReferences`, `registerMachineCommand`, `registerRenderCommands`, `renderActionOver`, `renderQueueProvider`, `renderResolutionsOf`, `renderSettingsPicked`, `renderSettledValue`, `renderSmallestResolution`
 - **filmopen_timeline_ui** — uses `MonitorViews`
 - **filmopen_engine** — uses `EngineException`, `FakeEngine`, `LoggingEngine`, `MediaProbe`, `TimelineEngine`
 - **filmopen_engine_android** — uses `AndroidEngine`
@@ -192,9 +192,25 @@ No package of FilmOpen.
   - `final List<String> lines` — Lines under the label, one line each, ellipsised rather than wrapped — a lone line has the room of two, as the account's lone status line has —; said by the tooltip after the badge's sentence, then [linesNote], and so…
   - `final String? linesNote` — What the tooltip adds after [lines].
 
+### `lib/screens/settings_models.dart`
+
+- **variable** `const settingsModelKinds` — The kinds of render Settings → Models offers a default for, in their order: those a place asks by (§9.4).
+- **typedef** `typedef _Model` — A model with a route here, its routes one per plug-in, platform and key — the place within a route is the render's to choose.
+- **class `SettingsModelsTab`** — Settings → Models (§9.4): at *Prototype* or *Final*, the default model of each kind of render that has a model with a route here, and the assistant's text model.
+  - `const SettingsModelsTab({super.key, this.backend})` — The page; [backend] answers which routes run each model, the application's where none is given.
+  - `final RenderBackend? backend`
+- **class `_SettingsModelsTabState`**
+- **class `_KindRow`** — One kind's default at one stage: its model, and the route where the model has more than one.
+  - `final String kind`
+  - `final String stage`
+  - `final List<_Model> models`
+  - `final Catalogue catalogue`
+  - `final RenderBackend? backend`
+- **class `_KindRowState`**
+
 ### `lib/screens/settings_page.dart`
 
-- **class `SettingsPage`** — Settings (Software Specification §9.4): *General*, the cards Settings always had and the app's keys (§6.7), and *Plugins*, each plug-in's own keys on its page — chosen from a list beside the page at `Breakpoints.treeI…
+- **class `SettingsPage`** — Settings (Software Specification §9.4): *General*, the cards Settings always had and the app's keys (§6.7), *Plugins*, each plug-in's own keys on its page, and *Models*, the default model of each kind of render — chos…
   - `const SettingsPage({super.key})`
 - **class `_SettingsPageState`**
 - **variable** `const generalListKey` — The key of General's list, which a test scrolls.

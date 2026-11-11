@@ -4,12 +4,12 @@
 
 Media tiles and their provenance, the file dialog by kind, the viewer and the platform player.
 
-**Flutter.** 18 files, 1,737 lines under `lib/`; 96 tests in 12 files. Barrel: `lib/filmopen_media_ui.dart`.
+**Flutter.** 18 files, 1,863 lines under `lib/`; 96 tests in 12 files. Barrel: `lib/filmopen_media_ui.dart`.
 
 ## Depends on
 
 - **filmopen_engine** — uses `EngineClock`, `EngineEvent`, `EngineException`, `EngineOutcome`, `EngineTimeline`, `MediaProbe`, `TimelineEngine`, `fileTimeline`, `frameStart`
-- **filmopen_format** — uses `Catalogue`, `EntityType`, `ExactDecimal`, `FileMedia`, `FileNameParser`, `FilmProject`, `MediaKind`, `MediaStage`, `VersionStem`, `mediaExtensions`, `mediaFilePath`, `plainLine`, `projectKeyOf`, `projectSourceKey`
+- **filmopen_format** — uses `Catalogue`, `EntityType`, `ExactDecimal`, `FileMedia`, `FileNameParser`, `FilmProject`, `MediaKind`, `MediaStage`, `Pick`, `VersionStem`, `mediaExtensions`, `mediaFilePath`, `plainLine`, `projectKeyOf`, `projectSourceKey`
 - **filmopen_media** — uses `LocalMediaStore`, `MediaChange`, `MediaChangeKind`, `MediaFact`, `MediaFetch`, `MediaFetchProblem`, `MediaFetchState`, `MediaFetchStatus`, `MediaProvenance`, `MediaStatus`, `MediaStore`, `Playable`, `PlayableBytes`, `PlayableFile`, `PlayableUrl`, `ProjectMedia`
 - **filmopen_store** — uses `AppLog`
 - **filmopen_platform** — uses `canRevealFiles`, `folderDialogsAvailable`, `revealInFileManager`
@@ -51,6 +51,7 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `final String? secondary`
   - `final StageBorder border`
 - **function** `MediaState? mediaStateOf(AppLocalizations l10n, ThemeData theme, { MediaStage? stage, MediaStatus? status, bool unreviewed = false, List<MediaChang…` — The state of a media from its [stage], [status], [unreviewed] and [changes] (`MediaChange.after`, first first); null where none of them says anything, so no box is drawn.
+- **function** `StageBorder unreviewedBorder(ThemeData theme)` — The border of what waits to be picked or rejected (§9.3): dashed in the caution colour, the outline for a theme without the app's colours.
 - **class `MediaStateBox`** — A [MediaState] as a box: its border's colour, width and dash around its word and its sentence (§9.3), the top line of a tile's tooltip and of the viewer.
   - `const MediaStateBox(this.state, {super.key, this.style})`
   - `final MediaState state`
@@ -79,9 +80,23 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `final String? busy` — What a job still settling on it is doing, in the job's words; null where none settles.
   - `final MediaStage? stage` — The stage its render was asked at, for the border; null for an upload and where the caller does not say.
   - `final MediaStatus? status` — Whether what it was rendered from changed since, as the caller computed it; null where it says nothing.
-  - `final bool unreviewed` — Whether the render waits to be kept or rejected.
+  - `final bool unreviewed` — Whether the render waits to be picked or deleted.
   - `final List<String>? lines` — What is known of it beyond the strip, one sentence a line, for the tooltip and the label.
   - `final MediaState? state` — Its status as the caller computed it with [mediaStateOf], the same value the viewer is given; null builds one from [stage], [status] and [unreviewed], with no reason.
+  - `final bool grouped` — Whether a [MediaBatchFrame] round its batch draws the border and *New*: the tile draws neither (§9.3).
+  - `final Widget? leading` — Drawn in the tile's top-left corner: a place's Pick check.
+  - `final Widget? trailing` — Drawn at the tile's lower right, above its strip: a place's archive and trash.
+- **class `MediaBatchFrame`** — One border round the unreviewed renders of a batch (§9.3), with *New* once above them where any is new.
+  - `const MediaBatchFrame({super.key, required this.children, this.isNew = false})`
+  - `final List<Widget> children` — The batch's tiles, in the place's order.
+  - `final bool isNew` — Whether any of them arrived since the person last looked.
+- **class `MediaTileButton`** — A small round control on a tile — the Pick check, archive, trash —, on the surface colour so it reads over any picture, with its [tooltip] and its [identifier]; drawn without a press where [onPressed] is null.
+  - `const MediaTileButton({ super.key, required this.identifier, required this.icon, required this.tooltip, this.color, this.onPressed, })`
+  - `final String identifier` — The control's identifier, unique on its page: the tile's own with `.pick`, `.archive` or `.trash`.
+  - `final IconData icon` — The glyph drawn: the version row's check, archive or unarchive, or the trash can.
+  - `final String tooltip` — What the control does, or for a mark what it says: its tooltip and its label for a screen reader.
+  - `final Color? color` — The icon's colour; the surface's text colour where null.
+  - `final VoidCallback? onPressed` — What a press does; null makes the control a mark that says [tooltip] and does nothing, as the lit check.
 
 ### `lib/src/media_viewer.dart`
 
