@@ -132,7 +132,8 @@
     ],
     "description": "Expose user-facing assistance through host-selected AI routing.",
     "subtypes": [
-      "Prompt-to-answer action — implemented"
+      "Prompt-to-answer action — implemented",
+      "Message feed — specified"
     ]
   },
   {
