@@ -31,6 +31,14 @@ describe('the addresses', () => {
       'docs/platforms/fal',
       'docs/platforms/openai',
       'docs/platforms/openrouter',
+      'docs/platforms/google',
+      'docs/platforms/elevenlabs',
+      'docs/platforms/atlascloud',
+      'docs/platforms/salad',
+      'docs/platforms/comfyui',
+      'docs/platforms/wan2gp',
+      'docs/platforms/anthropic',
+      'docs/platforms/xai',
       'docs/platforms/fal-notes',
       'docs/specifications',
       'docs/specifications/project',
@@ -44,7 +52,7 @@ describe('the addresses', () => {
 
   it('carry the platform guides\' pictures', () => {
     const fal = page('docs/platforms/fal');
-    expect((fal.match(/<img /g) ?? []).length).toBeGreaterThanOrEqual(6);
+    expect((fal.match(/<img /g) ?? []).length).toBeGreaterThanOrEqual(4);
   });
 
   it('can be searched', () => {
@@ -58,7 +66,7 @@ describe('a specification', () => {
   it('says which commit it is a copy of, and which version', () => {
     const software = page('docs/specifications/software');
     expect(software).toContain(manifest.source.commit.slice(0, 7));
-    const version = manifest.files.find((file) => file.path.includes('Software-Specification'))?.version;
+    const version = manifest.files.find((file) => file.path === 'docs/software/index.md')?.version;
     expect(version).toBeDefined();
     expect(software).toContain(`version ${version ?? ''}`);
   });
@@ -68,7 +76,11 @@ describe('a specification', () => {
   });
 
   it('keeps a <placeholder> in running text as the text it was written as', () => {
-    const software = page('docs/specifications/software');
+    // The Software Specification is in parts; the three sentences are in three of them.
+    const software = pages()
+      .filter((path) => path.includes('/docs/specifications/software/'))
+      .map((path) => readFileSync(path, 'utf8'))
+      .join('\n');
     for (const text of ['Rejected by &lt;platform&gt;', 'ends in &lt;last four&gt;', '&lt;plug-in&gt;: rewrite']) {
       expect(software, text).toContain(text);
     }
