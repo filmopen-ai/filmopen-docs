@@ -94,7 +94,7 @@ Links open outside the application: in the browser, or on a phone in whichever a
 
 Callable in any of an assistant's calls. Shows one row and answers `{ shown: true }`, without waiting for the picture. A row with the same `id` is replaced in place; an `id` the person dismissed answers `{ shown: false }` and stays dismissed on that computer — publish a new `id` to show it again. At ten rows a new one evicts the oldest. Rows are kept in memory only and start empty at every start; leaving a message out of a later feed does not remove it.
 
-A refusal is thrown as an error with `code` and `reason`: `badArgs` with the field's name as `reason`, or `notAssistant`.
+A refusal is thrown as an error with `code` and `reason`: `badArgs` with the field's name as `reason`, or a refusal whose `reason` is `notAssistant`.
 
 ### What `checkMessages` answers
 
@@ -102,7 +102,9 @@ A refusal is thrown as an error with `code` and `reason`: `badArgs` with the fie
 
 ### Logging
 
-Log with `ctx.log` the event, the request, the answer whole, every message whole with its outcome or refusal (`code` and `reason`), and the counts at the end. Nothing is masked; FilmOpen times each line. No retry and no cache: a feed that is down is logged and answered honestly, and the next start, enable or 44 hours asks again.
+Every operation logs verbosely — its start, steps and state changes, completion or refusal, elapsed time, codes, the values it worked on and the reason for each decision — so that an error can be debugged from the log alone. Everything is logged, the person's own data, prompts, the messages sent to a model and its answers included, and nothing is masked, redacted or scanned, since the API keys are injected after the call is logged. An unexpected failure is logged where and why and answered with an honest failure. No mechanism — retry, fallback, compensation, reconciliation, extra state — is added for a failure nobody has seen or a use case nobody required, while the basic authorization, input bounds, agreed-price and duplicate-charge protections stay. An operation without its logging is not done.
+
+For a feed, log with `ctx.log` the event, the request, the answer whole, every message whole as it starts and with its outcome or refusal (`code`, `reason` and the error's message), and the counts at the end. FilmOpen times each line; your JavaScript has no clock. No retry and no cache: a feed that is down is logged and answered honestly, and the next start, enable or 44 hours asks again.
 
 ```js
 async checkMessages(ctx, event) {
@@ -125,6 +127,7 @@ async checkMessages(ctx, event) {
     return fail('shape', { body: response });
   counts.received = body.messages.length;
   for (const [index, message] of body.messages.entries()) {
+    ctx.log('my-plugin.messages.message.start', { index, message });
     if (!message || typeof message !== 'object' || Array.isArray(message)) {
       counts.refused++;
       ctx.log('my-plugin.messages.message.refused', { index, message, code: 'badArgs', reason: 'notObject' }, 'warning');
@@ -136,7 +139,7 @@ async checkMessages(ctx, event) {
       ctx.log('my-plugin.messages.message.' + outcome, { index, message, answer });
     } catch (e) {
       counts.refused++;
-      ctx.log('my-plugin.messages.message.refused', { index, message, code: e?.code, reason: e?.reason ?? e?.message ?? String(e) }, 'warning');
+      ctx.log('my-plugin.messages.message.refused', { index, message, code: e?.code, reason: e?.reason ?? e?.message ?? String(e), error: e?.message ?? String(e) }, 'warning');
     }
   }
   return done(counts.refused ? { ok: false, reason: 'refused' } : { ok: true });
