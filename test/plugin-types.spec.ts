@@ -10,7 +10,8 @@ const read = (path: string): string => readFileSync(join(root, path), 'utf8');
 const platformOf: Record<string, string> = {
   'fo-fal': 'fal', 'fo-openai': 'openai', 'fo-openrouter': 'openrouter', 'fo-xai': 'xai', 'fo-google': 'google',
   'fo-elevenlabs': 'elevenlabs', 'fo-atlascloud': 'atlascloud', 'fo-salad': 'salad', 'fo-cui': 'comfyui',
-  'fo-wan2gp': 'wan2gp', 'fo-anthropic': 'anthropic',
+  'fo-wan2gp': 'wan2gp', 'fo-anthropic': 'anthropic', 'fo-fish': 'fishaudio', 'fo-qwen': 'qwen',
+  'fo-runninghub': 'runninghub',
 };
 describe('plugin type catalog', () => {
   it('covers every package guide and has distinct unique capability types', () => {

@@ -8,12 +8,12 @@ sidebar:
 
 These packages generate still images from a prompt; fo-fal also edits from a reference image. Each renders the catalogue entries marked for its platform and supplies their options and output receipts; the host imports finished images as ordinary project media. Choosing a different backend does not create a new plugin type.
 
-fo-cui renders Z-Image Turbo on ComfyUI, with model stacks and GPU constraints. fo-fal takes its models and options from the catalogue, including FLUX.2 klein 4B and GPT Image 2.5 editing for character sheets. fo-openai renders GPT Image 2.5 from text only. See each guide for supported settings and cost behavior.
+fo-cui renders Z-Image Turbo on ComfyUI, with model stacks and GPU constraints. fo-fal takes its models and options from the catalogue, including FLUX.2 klein 4B and GPT Image 2.5 editing for character sheets. fo-openai renders GPT Image 2.5 from text only. fo-qwen renders Z-Image Turbo and Qwen-Image on Qwen Cloud, and edits from up to ten pictures. fo-runninghub runs FilmOpen's ComfyUI workflows for Z-Image Turbo and the FLUX.2 klein 4B edit on RunningHub. See each guide for supported settings and cost behavior.
 
 ## Subtypes
 
 - Text to image — implemented
-- Image to image / reference-guided editing — implemented by fo-fal and fo-google
+- Image to image / reference-guided editing — implemented by fo-fal, fo-google, fo-qwen and fo-runninghub
 
 ## Plugins
 
@@ -22,6 +22,8 @@ fo-cui renders Z-Image Turbo on ComfyUI, with model stacks and GPU constraints. 
 - [fo-fal](/docs/platforms/fal/)
 - [fo-google](/docs/platforms/google/)
 - [fo-openai](/docs/platforms/openai/)
+- [fo-qwen](/docs/platforms/qwen/)
+- [fo-runninghub](/docs/platforms/runninghub/)
 - [fo-wan2gp](/docs/platforms/wan2gp/)
 
 [All types of plugins](../)

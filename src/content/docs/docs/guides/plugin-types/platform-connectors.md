@@ -22,9 +22,12 @@ The app owns credential storage, consent, network permissions and usage persiste
 - [fo-atlascloud](/docs/platforms/atlascloud/)
 - [fo-cui](/docs/platforms/comfyui/)
 - [fo-fal](/docs/platforms/fal/)
+- [fo-fish](/docs/platforms/fishaudio/)
 - [fo-google](/docs/platforms/google/)
 - [fo-openai](/docs/platforms/openai/)
 - [fo-openrouter](/docs/platforms/openrouter/)
+- [fo-qwen](/docs/platforms/qwen/)
+- [fo-runninghub](/docs/platforms/runninghub/)
 - [fo-wan2gp](/docs/platforms/wan2gp/)
 - [fo-xai](/docs/platforms/xai/)
 

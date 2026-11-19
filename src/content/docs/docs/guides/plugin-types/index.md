@@ -11,16 +11,17 @@ A **type** describes what a plugin does. A **subtype** describes its input/outpu
 
 | Type | Current packages |
 |---|---|
-| [Image Generation](./image-generation/) | [fo-atlascloud](/docs/platforms/atlascloud/), [fo-cui](/docs/platforms/comfyui/), [fo-fal](/docs/platforms/fal/), [fo-google](/docs/platforms/google/), [fo-openai](/docs/platforms/openai/), [fo-wan2gp](/docs/platforms/wan2gp/) |
-| [Video Generation](./video-generation/) | [fo-atlascloud](/docs/platforms/atlascloud/), [fo-cui](/docs/platforms/comfyui/), [fo-fal](/docs/platforms/fal/), [fo-wan2gp](/docs/platforms/wan2gp/) |
+| [Image Generation](./image-generation/) | [fo-atlascloud](/docs/platforms/atlascloud/), [fo-cui](/docs/platforms/comfyui/), [fo-fal](/docs/platforms/fal/), [fo-google](/docs/platforms/google/), [fo-openai](/docs/platforms/openai/), [fo-qwen](/docs/platforms/qwen/), [fo-runninghub](/docs/platforms/runninghub/), [fo-wan2gp](/docs/platforms/wan2gp/) |
+| [Video Generation](./video-generation/) | [fo-atlascloud](/docs/platforms/atlascloud/), [fo-cui](/docs/platforms/comfyui/), [fo-fal](/docs/platforms/fal/), [fo-qwen](/docs/platforms/qwen/), [fo-runninghub](/docs/platforms/runninghub/), [fo-wan2gp](/docs/platforms/wan2gp/) |
 | [Character Analysis](./character-analysis/) | [fo-openai](/docs/platforms/openai/) |
 | [Voice Analysis](./voice-analysis/) | [fo-fal](/docs/platforms/fal/) |
 | [Style Analysis](./style-analysis/) | [fo-openai](/docs/platforms/openai/) |
-| [Voice Generation](./voice-generation/) | [fo-elevenlabs](/docs/platforms/elevenlabs/), [fo-fal](/docs/platforms/fal/) |
-| [Speech Synthesis](./speech-synthesis/) | [fo-elevenlabs](/docs/platforms/elevenlabs/), [fo-fal](/docs/platforms/fal/) |
-| [Platform Connectors](./platform-connectors/) | [fo-anthropic](/docs/platforms/anthropic/), [fo-atlascloud](/docs/platforms/atlascloud/), [fo-cui](/docs/platforms/comfyui/), [fo-fal](/docs/platforms/fal/), [fo-google](/docs/platforms/google/), [fo-openai](/docs/platforms/openai/), [fo-openrouter](/docs/platforms/openrouter/), [fo-wan2gp](/docs/platforms/wan2gp/), [fo-xai](/docs/platforms/xai/) |
+| [Voice Generation](./voice-generation/) | [fo-elevenlabs](/docs/platforms/elevenlabs/), [fo-fal](/docs/platforms/fal/), [fo-fish](/docs/platforms/fishaudio/), [fo-qwen](/docs/platforms/qwen/) |
+| [Speech Synthesis](./speech-synthesis/) | [fo-elevenlabs](/docs/platforms/elevenlabs/), [fo-fal](/docs/platforms/fal/), [fo-fish](/docs/platforms/fishaudio/), [fo-qwen](/docs/platforms/qwen/) |
+| [Platform Connectors](./platform-connectors/) | [fo-anthropic](/docs/platforms/anthropic/), [fo-atlascloud](/docs/platforms/atlascloud/), [fo-cui](/docs/platforms/comfyui/), [fo-fal](/docs/platforms/fal/), [fo-fish](/docs/platforms/fishaudio/), [fo-google](/docs/platforms/google/), [fo-openai](/docs/platforms/openai/), [fo-openrouter](/docs/platforms/openrouter/), [fo-qwen](/docs/platforms/qwen/), [fo-runninghub](/docs/platforms/runninghub/), [fo-wan2gp](/docs/platforms/wan2gp/), [fo-xai](/docs/platforms/xai/) |
 | [Server Providers](./server-providers/) | [fo-salad](/docs/platforms/salad/) |
 | [Assistants](./assistants/) | [fo-assistant](../fo-assistant/) |
+| [Directors](./directors/) | [fo-director](../fo-director/) |
 | [Model Pickers](./model-pickers/) | [fo-model-picker](../fo-model-picker/) |
 | [Prompt Writers](./prompt-writers/) | [fo-prompts](../fo-prompts/) |
 | [Prompt Builders](./prompt-builders/) | [fo-styles](../fo-styles/) |
