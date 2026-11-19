@@ -1,9 +1,9 @@
 {
   "about": "Copies of the application's public documents, byte for byte from one commit of its repository. Written by scripts/import.ts and never by hand; checked by scripts/verify-snapshot.ts. To change a document, change it there and import again.",
-  "source": {"commit":"2f02f8ca97909b34ea41c6c1b2af06f409b84c08","committedAt":"2026-11-19T13:39:47+00:00"},
+  "source": {"commit":"904ace2859d895ca442bb8e1663d11143cdae5e4","committedAt":"2026-11-19T22:18:55+00:00"},
   "importedOn": "2026-11-19",
   "files": [
-    {"path":"docs/FilmOpen-MCP Specification v1.0.md","sha256":"ac235ceb65a20872b1fc29e5c2d9cb88f7669d190a42bcbdc4920141d8b44ff4","bytes":160930,"version":"1.12"},
+    {"path":"docs/FilmOpen-MCP Specification v1.0.md","sha256":"843b428bbca3997e55a2c5657d9fbf6e0375e74478ed082494700cc1034cb85f","bytes":130304,"version":"1.12"},
     {"path":"docs/FilmOpen-Project-Specification v1.0.md","sha256":"dd171e94db8ee488e87ae96e72dc563a5996677f5db5f2176700770c63d7092b","bytes":347831,"version":"1.45 — Draft"},
     {"path":"docs/platforms/anthropic.md","sha256":"2968a8c97e85e895d55181ea7a962d7294a078a8af7db60acbe41160c831b191","bytes":8810},
     {"path":"docs/platforms/atlascloud.md","sha256":"cb82f9ba23551751193a4c0257af79c63237c59a18bb6789445611b68cdd1440","bytes":9236},
