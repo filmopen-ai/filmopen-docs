@@ -4,11 +4,11 @@
 
 Local media storage, playback values and input descriptions.
 
-**pure Dart.** 11 files, 1,046 lines under `lib/`; 66 tests in 8 files. Barrel: `lib/filmopen_media.dart`.
+**pure Dart.** 11 files, 1,365 lines under `lib/`; 84 tests in 9 files. Barrel: `lib/filmopen_media.dart`.
 
 ## Depends on
 
-- **filmopen_format** — uses `Author`, `Entity`, `EntityGroup`, `EntityType`, `FileNameParser`, `FilmProject`, `MediaEntry`, `MediaKind`, `MediaLocation`, `MediaStage`, `ProjectArea`, `ProjectSource`, `ReferenceCodec`, `ReferenceKind`, `ReferenceTarget`, `RenderBatch`, `RenderItem`, `ScriptBlock`, `StaleFileException`, `Take`, `TakeName`, `blockIdsOf`, `blocksOf`, `coverageIntact`, `entriesIn`, `entryNaming`, `isDeleted`, `isGroupDeleted`, `isMediaFileName`, `liveReferencesOf` and 14 more
+- **filmopen_format** — uses `Author`, `EffectiveRead`, `Entity`, `EntityGroup`, `EntityType`, `FileNameParser`, `FilmProject`, `MediaEntry`, `MediaKind`, `MediaLocation`, `MediaPlaces`, `MediaStage`, `ProjectArea`, `ProjectSource`, `ReferenceCodec`, `ReferenceKind`, `ReferenceTarget`, `RenderBatch`, `RenderItem`, `ScriptBlock`, `StaleFileException`, `Take`, `TakeName`, `baseEpoch`, `blockIdsOf`, `blockMediaGroups`, `blocksOf`, `clipSpansOf`, `coverageIntact`, `effectiveEntityOf` and 32 more
 - **filmopen_test_support (dev)** — uses nothing by name the digest could see
 
 ## Used by
@@ -21,8 +21,9 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
 
 ### `lib/src/epoch_picture.dart`
 
-- **function** `MediaLocation? epochPictureFor(FilmProject project, EntityGroup group, String? epoch, Entity entity)` — The picture for [group] at [epoch], whose version in use is [entity] (§9.0).
-- **function** `MediaLocation? pictureInUse(FilmProject project, EntityGroup group, String? epoch, Author? viewer)` — The picture of [group] as [viewer] sees it at [epoch], for a picker's entry (§9.0).
+- **typedef** `typedef EpochPicture` — A picture chosen for an epoch's card or a picker's entry, and how it was chosen, for the caller's log (§9.0).
+- **function** `EpochPicture epochPictureFor(FilmProject project, EntityGroup group, Entity entity, {required Author? viewer})` — The picture for [group] whose version [entity] — its base or an epoch's overlay — is the one the caller shows (§9.0).
+- **function** `EpochPicture pictureInUse(FilmProject project, EntityGroup group, String? epoch, Author? viewer)` — The picture of [group] as [viewer] sees it at [epoch], for a picker's entry (§9.0).
 - **function** `Take? epochFallbackTake(FilmProject project, EntityGroup group, String? epoch, Entity entity)` — The picture an epoch's card falls back to: the first image take rendered for any version of [group] at [epoch] that [entity], the version in use, does not hold deleted — whoever keeps its file (§9.0).
 - **function** `List<String> epochPictureCandidates(Entity entity)` — What an epoch's card may take its picture from, in order: the version's `preview`, then its `picks.sheet`.
 
@@ -105,11 +106,12 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `static MediaStatus of(FilmProject project, Map<String, dynamic> document, MediaEntry entry, { String? group, String? block, })` — The status of [entry] as [document] shows it, its record read from [project] (§6.9).
   - `static MediaStatus fromChanges(List<MediaChange>? changes)` — The status [changes] give, as `MediaChange.after` answers them: unknown for null, current for none.
 - **enum `MediaChangeKind`** — What a change that outdates a render was made to.
-  - values: `document`, `block`, `coverage`, `source`, `stage`
+  - values: `document`, `block`, `coverage`, `source`, `stage`, `reference`
 - **class `MediaChange`** — One thing a render depended on that changed after it was asked (§6.9).
-  - `const MediaChange({required this.kind, this.at, this.position, this.stem, this.renderStage, this.holderStage})`
+  - `const MediaChange({required this.kind, this.at, this.position, this.stem, this.renderStage, this.holderStage, this.place})`
   - `final MediaChangeKind kind` — What changed.
-  - `final DateTime? at` — When it changed, as its `updated` says; null for a [MediaChangeKind.coverage] and a [MediaChangeKind.stage].
+  - `final DateTime? at` — When it changed, as its `updated` says, or its [place]'s time, or for a [MediaChangeKind.reference] the picked image's `kept_at`; null for a [MediaChangeKind.coverage], a [MediaChangeKind.stage], and a [MediaChangeKin…
+  - `final String? place` — The place of `mediaDependsOn` whose time a [MediaChangeKind.document] change was read at (`reference`, `voice`); null where it was the whole file's `updated`.
   - `final int? position` — The 1-based position of a [MediaChangeKind.block] among the document's blocks, the count the editor shows.
   - `final String? stem` — The version stem of a [MediaChangeKind.source].
   - `final MediaStage? renderStage` — The stage a [MediaChangeKind.stage]'s render was asked at.
@@ -172,21 +174,46 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
 ### `lib/src/prompt_inputs.dart`
 
 - **class `PromptToken`** — One piece of media a prompt may name: its token, whose it is, and its entry.
-  - `const PromptToken({ required this.token, required this.holder, required this.holderName, required this.word, required this.n, required this.entry, })` — Describes the [n]th usable entry of [word]'s group on [holder].
+  - `const PromptToken({ required this.token, required this.holder, required this.holderName, required this.word, required this.n, required this.entry,…` — Describes the [n]th usable entry of [word]'s group on [holder].
   - `final String token` — The token as a prompt writes it: `@inspiration-1`, or in a frame `@ch_kira:character_sheet-1`.
   - `final String holder` — The stem of the file whose media it is: the version being edited, or in a frame the version in use.
   - `final String holderName` — The holder's display name, as the version in use says it.
   - `final String word` — The token's word: `inspiration`, `reference` or a sheet, `character_sheet` … `prop_sheet` ([mediaTokenGroups]).
   - `final int n` — The entry's position among its group's usable entries, from 1.
   - `final MediaEntry entry` — The entry it names.
-  - `String get group` — The group [word] names.
+  - `final String? tag` — The tag a `@md_<tag>` token names its entry by, or null for a positional token.
+  - `String get group` — The group the entry is in: a tagged token's own, else the one [word] names.
   - `bool get scoped` — Whether the token names its holder, as a frame's do.
   - `ReferenceTarget get target` — The codec's target for this token.
 - **function** `bool isPromptInput(MediaEntry entry)` — Whether [entry] may be sent to a model as a prompt's input.
-- **function** `List<PromptToken> promptTokenCandidates(FilmProject project, Entity document, String kind, {required Author? viewer})` — The tokens a prompt of the writers' [kind] on [document] may name for [viewer], in order (§9.8).
+- **function** `List<PromptToken> promptTokenCandidates(FilmProject project, Entity document, String kind, {required Author? viewer, TaggedMediaScan? scan, void Fu…` — The tokens a prompt of the writers' [kind] on [document] may name for [viewer], in order (§9.8).
+- **function** `bool promptKindNamesMedia(String kind)` — Whether a prompt of the writers' [kind] names media, so that its candidates scan the film's tags: every kind [promptTokenGroups] gives groups, and a Layout's plain prompt.
+- **variable** `const String layoutPromptKind` — The kind a Layout's plain prompt is read as for `@`: no writer's, so no Prompt card and no prompt record.
+- **function** `List<PromptToken> taggedPromptTokens(TaggedMediaScan scan)` — The tagged pictures of [scan] as prompt tokens, `@md_<tag>`, in the scan's order: what a prompt with no own groups, such as a Layout's plain prompt, may name.
+- **class `TaggedMedia`** — One live media entry with a tag, and where it is.
+  - `const TaggedMedia({ required this.tag, required this.entry, required this.holder, required this.holderName, required this.group, required this.bloc…` — Describes [entry], tagged [tag], in [group] of [holder] (of [block] where a block's).
+  - `final String tag` — The tag, as the entry says it.
+  - `final MediaEntry entry` — The entry.
+  - `final String holder` — The stem of the version that holds it.
+  - `final String holderName` — That version's name.
+  - `final String group` — Its group.
+  - `final String? block` — The id of the block whose media holds it, or null for the entity's own.
+  - `final bool picture` — Whether its media is a picture, from its media facts (§6.3), so that a model may take it as an image.
+  - `Map<String, Object?> get logged` — The values a caller logs.
+- **class `TaggedMediaScan`** — What [taggedMedia] found: every occurrence, each tag resolved to its one reference, and the tags left unresolved.
+  - `const TaggedMediaScan({required this.occurrences, required this.resolved, required this.ambiguous, this.skippedDeleted = const []})` — The scan's result.
+  - `final List<TaggedMedia> occurrences` — Every live tagged entry, in the walk's order.
+  - `final Map<String, TaggedMedia> resolved` — Each tag that names one reference, at its first occurrence, in the walk's order.
+  - `final Map<String, List<TaggedMedia>> ambiguous` — Each tag that names more than one reference, with every occurrence: left unresolved, never picked.
+  - `final List<String> skippedDeleted` — The entities left out because their base is in the recycle bin, by group key.
+  - `List<String> get coalesced` — The tags found more than once, all on the same reference, in the walk's order.
+  - `Map<String, Object?> get diagnostics` — The scan as its caller logs it: every occurrence, the coalesced tags with their reference and holders, the ambiguous tags with their occurrences, the entities left out with their deleted base.
+- **function** `TaggedMediaScan taggedMedia(FilmProject project, Author? viewer, {Entity? document})` — The film's tagged media for [viewer]: one tag names one reference across the selected, live versions.
 - **function** `({List<String> own, Map<EntityType, List<String>> film}) promptTokenGroups(String kind)` — The media groups a prompt of the writers' [kind] names, its own file's or the film's per type (§9.8).
 - **function** `({List<PromptToken> inputs, List<String> missing}) promptInputsOf(String text, List<PromptToken> candidates)` — What [text]'s media tokens name among [candidates], and the tokens that name none.
 - **function** `String substitutePromptTokens(String words, List<PromptToken> inputs, String placeholders)` — [words] with each media token naming one of [inputs] written in the model's [placeholders] (§9.8).
+- **function** `List<String> promptInputReferences(List<PromptToken> inputs)` — The pictures [inputs] name, each once, in order of first appearance: what a render sends.
+- **function** `Map<String, int> promptTokenNumbers(List<PromptToken> inputs)` — The number each of [inputs]' tokens is written as: its picture's position in [promptInputReferences] from 1, two spellings of one picture — a tag and a positional token — one number.
 
 ### `lib/src/store_problem.dart`
 

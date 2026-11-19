@@ -4,7 +4,7 @@
 
 Settings → Plugins (Software Specification §9.4): the list of plug-ins, a tree by what their manifests name in `x.dependencies`, with *Install from file…* and the preferred providers, the consent screen, and a plug-in's page — its switch, its settings on this computer, its actions and their answers, *Check* and what it implements, its own key cards (drawn by the builder the app hands in, since this package imports no keys package), the keys it asks to use and what a call may spend, and its README — all drawn by the app's own widgets from what `filmopen_state`'s seam answers — three of its roles: `PluginCatalogueView` for what is installed, `PluginSettingsControl` for what the person changes, and `PluginInvocation` for an action and *Check*. Only the app imports it.
 
-**Flutter.** 7 files, 1,761 lines under `lib/`; 91 tests in 7 files. Barrel: `lib/filmopen_plugins_ui.dart`.
+**Flutter.** 7 files, 1,761 lines under `lib/`; 92 tests in 7 files. Barrel: `lib/filmopen_plugins_ui.dart`.
 
 ## Depends on
 

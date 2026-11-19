@@ -4,7 +4,7 @@
 
 Media tiles and their provenance, the file dialog by kind, the viewer and the platform player.
 
-**Flutter.** 18 files, 1,863 lines under `lib/`; 96 tests in 12 files. Barrel: `lib/filmopen_media_ui.dart`.
+**Flutter.** 18 files, 2,331 lines under `lib/`; 111 tests in 12 files. Barrel: `lib/filmopen_media_ui.dart`.
 
 ## Depends on
 
@@ -61,6 +61,7 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
 
 - **variable** `const double mediaTileEdge` — The edge of a tile.
 - **variable** `const double mediaTileGap` — The gap between tiles, and the edge a strip falls back to where two full-size tiles will not fit beside each other.
+- **variable** `const double mediaPlaceGap` — The gap between two places of a row of places, wider than [mediaTileGap] so that a place reads as one.
 - **variable** `const double mediaTileEdgeNarrow` — The edge a row of tiles falls back to where two full-size tiles will not fit.
 - **function** `double mediaTileEdgeFor(double width)` — The edge of the tiles in a row [width] wide: two to a row wherever two narrow ones fit and two full-size ones do not — a card in the narrow pane is about 240 px — and the full edge otherwise.
 - **class `MediaTile`** — One piece of media as a square tile, opened by a tap in every mode.
@@ -90,6 +91,7 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `const MediaBatchFrame({super.key, required this.children, this.isNew = false})`
   - `final List<Widget> children` — The batch's tiles, in the place's order.
   - `final bool isNew` — Whether any of them arrived since the person last looked.
+  - `static double widthOf(ThemeData theme, {required int tiles, required double edge})` — The width of a frame round [tiles] tiles of [edge] laid in one line: theirs and their gaps, its padding and its border, which a place adds up to find its own width.
 - **class `MediaTileButton`** — A small round control on a tile — the Pick check, archive, trash —, on the surface colour so it reads over any picture, with its [tooltip] and its [identifier]; drawn without a press where [onPressed] is null.
   - `const MediaTileButton({ super.key, required this.identifier, required this.icon, required this.tooltip, this.color, this.onPressed, })`
   - `final String identifier` — The control's identifier, unique on its page: the tile's own with `.pick`, `.archive` or `.trash`.
@@ -102,6 +104,22 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
 
 - **function** `Widget? Function(BuildContext context, ProjectMedia media, Playable playable, {required bool autoplay})? debugMediaPlayer` — The player the viewer opens for a clip or a sound.
 - **function** `TimelineEngine Function()? mediaEngineFactory` — The engine a clip or a sound plays through: the app's `main` sets it to the factory the dock's scenes play through (§19.16), so the pop-up and the dock share one backend; unset, a clip or a sound says *Coming soon*.
+- **class `ViewerTake`** — One take of the gallery the viewer steps through (§9.3): what a single opening is given, and the project its thumbnail in the strip is drawn from.
+  - `const ViewerTake({ required this.media, required this.project, this.archived = false, this.note, this.state, this.provenance, this.leading, this.me…`
+  - `final ProjectMedia media` — The take's file, which the large view shows and its thumbnail draws.
+  - `final FilmProject project` — The film the take is of, which its thumbnail in the strip is drawn from.
+  - `final bool archived` — Whether the take is archived: its thumbnail is dimmed, as its tile is.
+  - `final String? note` — The version's note on the take, under the large view.
+  - `final MediaState? state` — The same value the take's tile wears; none draws no box.
+  - `final String? provenance` — The provenance strip's words, under the large view.
+  - `final Widget? leading` — The tile's own controls for this take, drawn only while it is on show and in the tile's corners (§9.3): [leading] (its Pick) before the name, [menu] after it, [trailing] (archive, trash) at the bottom beside *Close*,…
+  - `final Widget? menu` — The tile's menu for this take, after the name.
+  - `final Widget? trailing` — The tile's archive and trash for this take, at the bottom beside *Close*.
+  - `List<String> get controls` — The controls drawn, by name, as the log says them.
+- **class `ViewerUpdate`** — A place's takes as they stand after a change, given to an open viewer (§9.3): [action] names the control that made it, where one did, for the log.
+  - `const ViewerUpdate(this.takes, {this.action})`
+  - `final List<ViewerTake> takes` — Every take of the place, in its order, each wearing its controls.
+  - `final String? action` — The control whose change this is, such as `pick`, `archive` or `delete`; null where none said.
 - **function** `Future<void> showMediaViewer(BuildContext context, { required ProjectMedia media, required MediaStore store, String? provenance, String? note, Medi…` — Opens [media].
 
 ### `lib/src/player/player_controls.dart`

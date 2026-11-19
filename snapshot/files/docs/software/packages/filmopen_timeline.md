@@ -4,23 +4,44 @@
 
 A scene's timeline, derived from its file and its project and never stored whole (Software Specification §19.12–§19.14).
 
-**pure Dart.** 5 files, 1,701 lines under `lib/`; 50 tests in 4 files. Barrel: `lib/filmopen_timeline.dart`.
+**pure Dart.** 7 files, 2,649 lines under `lib/`; 88 tests in 8 files. Barrel: `lib/filmopen_timeline.dart`.
 
 ## Depends on
 
-- **filmopen_engine** — uses `EngineException`, `EngineItem`, `EngineSubtitle`, `EngineSubtitleStyle`, `EngineTimeline`, `EngineTrack`, `ItemKind`, `MediaProbe`, `TrackKind`, `frameStart`
-- **filmopen_format** — uses `Beat`, `Entity`, `FilmProject`, `MediaEntry`, `MediaPlaces`, `MediaSpans`, `ScriptBlock`, `Subtitle`, `blockMediaGroups`, `blocksOf`, `entriesIn`, `mediaContainerKey`, `spansAllowed`
+- **filmopen_engine** — uses `EngineException`, `EngineItem`, `EngineSubtitle`, `EngineSubtitleStyle`, `EngineTimeline`, `EngineTrack`, `ItemKind`, `MediaProbe`, `TrackKind`, `frameAt`, `frameStart`
+- **filmopen_format** — uses `Author`, `Beat`, `Entity`, `FilmProject`, `MediaEntry`, `MediaPlaces`, `MediaSpans`, `ScriptBlock`, `Subtitle`, `blockLogName`, `blockMediaGroups`, `blocksOf`, `entriesIn`, `isDialogueBlock`, `mediaContainerKey`, `placeholdersOf`, `sceneEpochOf`, `spansAllowed`
 - **filmopen_media** — uses `MediaStore`, `PlayableFile`, `ProjectMedia`
 - **filmopen_store** — uses `AppLog`
 - **filmopen_test_support (dev)** — uses nothing by name the digest could see
 
 ## Used by
 
-`filmopen_engine_mlt`, `filmopen_engine_mpv`, `filmopen_state`, `filmopen_timeline_ui`
+`filmopen_browser`, `filmopen_engine_mlt`, `filmopen_engine_mpv`, `filmopen_state`, `filmopen_timeline_ui`
 
 ## Public API
 
 What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `extension`, `typedef`, a top-level function, getter, setter or variable; under a class, its public constructors, fields, getters, setters and methods.
+
+### `lib/src/block_clock.dart`
+
+- **variable** `const wordsPerMinute` — The words a minute a line without a voice line in use is read at (§19.12).
+- **variable** `const unsetBeatSeconds` — The seconds a *before* or *after* beat lasts where it gives none (§19.12).
+- **enum `SpeechSource`** — Where a line's seconds come from.
+  - values: `measured`, `estimate`
+- **class `BlockClock`** — A block's three windows (§19.12): its *before* beats, its line with the *during* beats inside it, and its *after* beats from the line's end.
+  - `const BlockClock({ required this.beats, required this.before, required this.line, required this.after, this.source, this.words = 0, })` — A clock of the values given; [blockClock] makes one from a block.
+  - `final List<Beat> beats` — The block's beats, in its order.
+  - `final num before, line, after` — The seconds of the *before* beats, then of the line, then of the *after* beats: a *before* or *after* beat without `duration_sec` lasts [unsetBeatSeconds].
+  - `final SpeechSource? source` — Where the line's seconds come from; null where nobody speaks.
+  - `final int words` — The line's words.
+  - `bool get spoken` — Whether anybody speaks in the block.
+  - `num get seconds` — The seconds the three windows ask for together.
+  - `TimedLayout<Beat> lay(num blockSeconds)` — The beats laid over a block of [blockSeconds]: in a spoken block each in its window, laid there by [layTimed] — the *during* beats without seconds sharing what is left of the line —, every window cut at the block's end.
+- **function** `BlockClock blockClock(ScriptBlock block, int? speechMs)` — [block]'s clock, its line measured by [speechMs] where its voice line in use has a length, else read from its dialogue's words at [wordsPerMinute] (§19.12).
+
+### `lib/src/fcpxml.dart`
+
+- **function** `String writeFcpxml(List<ScenePlacement> scenes, {required String name, AppLog? log})` — [scenes] as one FCPXML 1.10 document, end to end in the order given (§15.5).
 
 ### `lib/src/lay_timed.dart`
 
@@ -57,7 +78,21 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `final String otio` — The `.otio` file's JSON text.
   - `final List<ManifestItem> manifest` — Every file placed, in track order.
   - `final List<ReportEntry> report` — What the export says about itself.
+- **typedef** `typedef PlacedBlock` — A block's place on an export's timeline.
+- **typedef** `typedef PlacedGap` — Frames of a lane where nothing plays — black, silence or a missing file — first frame in, out exclusive.
+- **class `ScenePlacement`** — A scene as the exports place it (§15.5), built by [placeScene].
+  - `const ScenePlacement({ required this.scene, required this.name, required this.format, required this.frames, required this.blocks, required this.ite…` — A placement of the values given.
+  - `final String scene` — The scene's version stem.
+  - `final String name` — The scene's name.
+  - `final TimelineFormat format` — The project's format: the rate and the size.
+  - `final int frames` — The scene's length in frames: the first frame after its last block.
+  - `final List<PlacedBlock> blocks` — The blocks in the order they play.
+  - `final List<ManifestItem> items` — Every file placed, in track order, the `Picture` lane first.
+  - `final List<PlacedGap> gaps` — Every lane's gaps; the `Picture` lane's run to the scene's end.
+  - `final List<ReportEntry> report` — What the export says about itself.
+- **function** `ScenePlacement placeScene(SceneTimeline timeline, {required String name, AppLog? log})` — [timeline] placed as its OTIO export places it (§15.5), the scene called [name].
 - **function** `SceneExport writeOtio(SceneTimeline timeline, {AppLog? log})` — [timeline] as one OTIO `Timeline.1` (§15.5): a video track and one audio track per lane — the clips' own sound, the speech, then each music and effects lane — on the same frames as its [SceneTimeline.toEngineTimeline]…
+- **function** `String writeCutOtio(SceneTimeline timeline, {required String cut, AppLog? log})` — A script filter's cut [timeline] as one OTIO `Timeline.1` (§15.5): the cut's flat edit list, written from the same compile the MP4 plays ([SceneTimeline.toEngineTimeline]), its metadata naming the [cut].
 
 ### `lib/src/rules.dart`
 
@@ -67,6 +102,7 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - values: `set`, `clip`, `speech`, `asked`, `fallback`
   - `const DurationReason(this.code)`
   - `final String code` — The reason as the log writes it.
+- **function** `num speechLead(ScriptBlock block)` — The seconds a block's speech waits for its `before_dialogue` beats (§19.12): their `duration_sec` summed.
 - **function** `({num seconds, DurationReason reason}) blockOutputDuration(ScriptBlock block, {int? clipMs, int? speechMs})` — The seconds a block lasts in the scene's output, and why (Project Specification §10.3).
 - **enum `PictureKind`** — What a block's picture is made of.
   - values: `clip`, `stills`, `black`
@@ -118,6 +154,10 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `final PictureKind picture` — What its picture is.
   - `final TimelineSource? clip, first, last` — The picture's sources: its clip, or its first and last frames, as [picture] uses them.
   - `final TimelineSource? speech` — Its voice line in use.
+  - `final num lead` — The seconds its speech waits for its `before_dialogue` beats, [speechLead].
+  - `final bool dialogue` — Whether its dialogue holds words ([isDialogueBlock]): what a script filter's *Dialogue only* keeps.
+  - `final num? line` — The seconds of its line ([BlockClock.line]): its voice line's measured length, else its words read; null where nobody speaks in it.
+  - `final int into` — The frames of its own sources skipped before its first frame: none on a scene's timeline, its silent head on one a script filter cut ([SceneTimeline.cut]).
   - `int get halfFrame` — The frame its first still gives way to its last, where both are shown.
 - **class `TimelineSound`** — A music or sound-effect entry, or a spanning clip, on the timeline: its kind, its lane among that kind, its frames.
   - `const TimelineSound({ required this.kind, required this.block, required this.source, required this.startFrame, required this.endFrame, required thi…` — A sound of [kind] from [block] on [lane].
@@ -132,6 +172,15 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `final int index` — Its place in the block's `subtitles`.
   - `final String text` — The words, as the person typed them.
   - `final int startFrame, endFrame` — Its first frame, and the first frame after it, inside its block's.
+- **class `TimelineShot`** — A planned shot on the timeline (Project Specification §10.3): a live placeholder's blocks, from its head's start to the end of its last block, and whether a clip of exactly those blocks is in use at its head.
+  - `const TimelineShot({ required this.n, required this.blocks, required this.startFrame, required this.endFrame, required this.seconds, required this.…` — The [n]th shot of the scene, covering [blocks].
+  - `final int n` — Its place among the scene's shots, from 1: computed, never stored.
+  - `final List<String> blocks` — The blocks it covers, in script order, its head first.
+  - `final int startFrame, endFrame` — Its head's first frame, and the first frame after its last block.
+  - `final num seconds` — The seconds its blocks last together.
+  - `final bool rendered` — Whether the clip in use at its head covers exactly [blocks].
+  - `Map<String, Object?> toJson()` — The shot as the log writes it.
+- **typedef** `typedef TimelineCutSource` — What a cut timeline was made from (§19.15): the timeline it was cut from, and the frames of it kept, in order.
 - **class `SceneTimeline`** — A scene's timeline, derived from its file and never stored whole (Software Specification §19.13).
   - `const SceneTimeline({ required this.id, required this.revision, required this.format, required this.blocks, required this.sounds, required this.dia…` — A timeline of the values given; [build] makes one from a scene.
   - `final String id` — The scene's version stem.
@@ -141,17 +190,23 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `final List<TimelineSound> sounds` — The music and sound effects, in the order their blocks hold them.
   - `final List<TimelineDiagnostic> diagnostics` — What the build noticed.
   - `final List<TimelineSound> clipSpans` — The clips that span blocks (Project Specification §10.3), from their block's start to the end of the last block they cover, each on a lane of its own where two overlap; a silent one keeps its lane and plays no sound.
+  - `final List<TimelineShot> shots` — The scene's planned shots, its live placeholders in script order (Project Specification §10.3): what the Shots lane draws.
   - `final List<TimelineSubtitle> subtitles` — The subtitles burnt over the picture, in script order.
   - `final Map<int, TimedLayout<Beat>> beatLayouts` — Each block's beats laid over its seconds, by the block's index: what the dock draws (§19.15).
   - `final Map<int, TimedLayout<Subtitle>> subtitleLayouts` — Each block's subtitles laid over its seconds, by the block's index: the layout [subtitles] are burnt from.
+  - `final TimelineCutSource? cutFrom` — The timeline this one was cut from by a script filter and the frames of it kept ([cut]); null for a scene's own.
+  - `TimelineBlock? blockAt(int index)` — The block at [index] of the script; null where this timeline does not show it ([cut]).
+  - `SceneTimeline withRevision(int revision)` — This timeline at [revision], nothing else changed: a scene's own shown again after a cut (§19.2).
   - `int get endFrame` — The first frame after the last block.
   - `int lanesOf(TrackKind kind)` — The number of lanes of [kind]: one for speech where any block speaks, one per overlap for music and effects.
+  - `TimelineShot? shotOf(int n, List<String> ids)` — The [n]th shot, covering [ids] from its head on (§10.3); null where a block of [ids] is not on this timeline — the script changed since it was built.
   - `TimelineSound? coverOf(TimelineBlock block)` — The spanning clip whose picture [block] shows where its own clip does not: the nearest one that started before it and has not ended; null where none covers it.
   - `int ownClipEnd(TimelineBlock block)` — The first frame after [block]'s own clip stops showing: its start without a clip, its end where the clip spans or nothing measured it, else where the clip ends; past it, a covering clip shows (§10.3).
   - `({int from, int into, bool held})? resumeOf(TimelineBlock block)` — Where the clip covering [block] shows in it: from the frame [ownClipEnd] gives, resumed [into] frames into its source — the frames since its own block's start, no later than [lastStartOf] its source, [held] where that…
   - `int? lastStartOf(TimelineSource source)` — The latest project frame a piece of [source] may start at and still hold a decoded frame: a frame of the slower of the source's rate and the project's before its measured end, 100 ms where its rate is unknown — the so…
   - `static Future<SceneTimeline> build(FilmProject project, Entity scene, { required SourceResolver resolve, MediaProber? probe, int revision = 0, AppL…` — The timeline of [scene] in [project], logged step by step (`timeline.build.*`, §19.9).
   - `static SourceResolver storeResolver(FilmProject project, MediaStore store, {AppLog? log})` — A resolver through the project's media store (`ProjectMedia.open` → `MediaStore.open`): a file's path, or null for a URL, a reference no file answers and media held only as bytes.
-  - `static Future<Map<String, String>> inputsOf(FilmProject project, Entity scene, MediaStore store, { AppLog? log, })` — What a build of [scene] in [project] is made of, by part, each as text (§19.13): `blocks` the scene's script blocks (their ids, text, durations, cues and media), `scene_media` the scene's own media (which hide a block…
+  - `static Future<Map<String, String>> inputsOf(FilmProject project, Entity scene, MediaStore store, { AppLog? log, Author? viewer, })` — What a build of [scene] in [project] is made of, by part, each as text (§19.13): `blocks` the scene's script blocks (their ids, text, durations, cues and media), `scene_media` the scene's own media (which hide a block…
   - `EngineTimeline toEngineTimeline()` — The scene as one [EngineTimeline] at its [revision]: one picture track without holes, the speech lane, and the music and effects lanes in the order their first entry appears, at their default gains (§19.13).
-  - `int speechEnd(TimelineBlock block)` — Where [block]'s voice line stops: its measured end, cut at the block's end.
+  - `SceneTimeline cut({required bool dialogueOnly, required bool skipSilentBeats, required int revision, AppLog? log})` — This timeline as a script filter shows it (Software Specification §19.15), at [revision].
+  - `({int from, int to, String decision}) speechPlacement(TimelineBlock block)` — Where [block]'s voice line plays (§19.12), the one placement every consumer lays: from the block's start after its before-dialogue beats' [TimelineBlock.lead] for its own measured frames, both cut at the block's end,…

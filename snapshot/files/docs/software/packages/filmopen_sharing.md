@@ -4,17 +4,17 @@
 
 How a film is shared: the sync target a film names — Google Drive by the folder id in its manifest, or a folder of this computer kept in its preferences — the Google account it needs, the *Sharing* card of Settings that starts, shows and stops it, and the new-project dialog's cloud choice and director block. A feature package: it imports the sync, the Drive client, the state, the widgets and the words; the application imports it, and `filmopen_tree` for the new-project dialog.
 
-**Flutter.** 12 files, 2,794 lines under `lib/`; 187 tests in 14 files. Barrel: `lib/filmopen_sharing.dart`.
+**Flutter.** 12 files, 3,049 lines under `lib/`; 198 tests in 14 files. Barrel: `lib/filmopen_sharing.dart`.
 
 ## Depends on
 
-- **filmopen_sync** — uses `FolderSyncTarget`, `NoSyncService`, `SyncLane`, `SyncTarget`, `SyncTargetException`
+- **filmopen_sync** — uses `FolderSyncTarget`, `NoSyncService`, `SyncLane`, `SyncTarget`, `SyncTargetException`, `TargetEntry`, `TargetInventory`
 - **filmopen_jobs** — uses `JobAction`, `JobActionAck`, `JobPhase`, `JobView`, `describeJobError`
 - **filmopen_drive** — uses `DriveAuth`, `DriveClient`, `DriveError`, `DriveException`, `DriveFile`, `DriveSyncTarget`, `DriveTrail`
-- **filmopen_cloud** — uses `FilmOpenCloudTarget`
+- **filmopen_cloud** — uses `CloudBatch`, `FilmOpenCloudTarget`
 - **filmopen_state** — uses `AccountAccess`, `AccountAuthentication`, `AccountIdentity`, `AccountNames`, `AccountNamesStatus`, `AccountProjects`, `AccountProjectsRefused`, `AccountSnapshot`, `AccountSnapshots`, `KnownAccountBalance`, `ProjectRecord`, `RecordSave`, `Settings`, `accountNamesProvider`, `accountOpenerProvider`, `accountSnapshotProvider`, `folderDialogsAvailableProvider`, `incomingLinksProvider`, `kDefaultViewerHandle`, `kFilmOpenDomain`, `projectClosedProvider`, `projectProvider`, `settingsProvider`, `syncJobsProvider`, `syncServiceProvider`
 - **filmopen_store** — uses `AppLog`, `LogLevel`, `ManifestRefused`, `NoManifestException`, `NoViewerException`, `ProjectFolderNotEmptyException`, `kManifestMaxBytes`, `verifiedManifest`
-- **filmopen_format** — uses `FilmProject`, `ShortName`, `StaleFileException`, `SyncSettings`, `canonicalRootPath`, `newUsageId`, `projectKeyOf`, `projectManifestFileName`
+- **filmopen_format** — uses `FilmProject`, `ProjectArea`, `ShortName`, `StaleFileException`, `SyncSettings`, `canonicalRootPath`, `documentsFolder`, `isMediaFileName`, `newUsageId`, `projectAreaOf`, `projectKeyOf`, `projectManifestFileName`
 - **filmopen_platform** — uses `IncomingLinks`
 - **filmopen_ui** — uses `AppColors`, `SectionCard`, `ShortNameField`, `showMessage`
 - **filmopen_l10n** — uses nothing by name the digest could see
@@ -134,10 +134,14 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `final String? code` — Why it stopped; null where it is ready.
   - `bool get ready` — Whether the share went through.
 - **class `RecordPullFailure`** — Why opening a recorded project's manifest stopped: the [stage] (`lookup`, `manifest`, `bootstrap`) and a safe [code] — a refusal's own, or, where [unexpected], the failure's type.
-  - `const RecordPullFailure(this.stage, this.code, {this.unexpected = false})` — A stop at [stage] for [code].
+  - `const RecordPullFailure(this.stage, this.code, {this.unexpected = false, this.listed})` — A stop at [stage] for [code].
   - `final String stage` — Where it stopped.
-  - `final String code` — Why: `unsupportedProvider`, `driveUnconfigured`, `signInRefused`, `driveFolderAbsent`, `badIdentity`, a target's code, `manifestLength`, `manifestMd5`, `manifestNotText`, `notEmpty`, `badTag`; a type where [unexpected].
+  - `final String code` — Why: `unsupportedProvider`, `driveUnconfigured`, `signInRefused`, `driveFolderAbsent`, `badIdentity`, a target's code, `manifestLength`, `manifestMd5`, `manifestNotText`, `noProjectFile`, `notEmpty`, `badTag`, `receiv…
+  - `final int? listed` — How many files the target listed, where the stop is about the listing (`noProjectFile`).
   - `final bool unexpected` — Whether nothing foresaw the failure: [code] is then its type.
+- **typedef** `typedef PullProgress` — How far an open's first download is: [done] of the project's [documents] fetched, its [media] left to the sync.
+- **variable** `const kOpenBatchPaths` — How many paths each `files-batch` request of a FilmOpen Cloud project's first open asks for (§9.2).
+- **variable** `const kOpenBatchWorkers` — How many `files-batch` requests a FilmOpen Cloud project's first open has in flight at once (§9.2).
 - **typedef** `typedef CloudTargetFor` — Makes the FilmOpen Cloud target for `<username>/<tag>` [identity], which asks [accessToken] inside its operations.
 - **class `SharingModel`** — The Sharing card's state and its actions on the open film, with the Google sign-in they need.
   - `SharingModel(this.ref, {required this.account, this.authTimeout = const Duration(seconds: 30), this.cloudTarget = _cloudTargetFor})` — The model over [account], reading the open film, the settings and the sync service through [ref].
@@ -165,7 +169,7 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `Future<void> stopSharing(FilmProject project)` — Stops sharing the film: removes `sync` from its manifest and this machine's folder for it.
   - `Future<DriveFile?> findDriveFolder(String tag)` — The Drive folder `FilmOpen/<tag>` of *My Drive*, or null where either folder is absent; **never makes one**.
   - `Future<String> driveFolderOf(ProjectRecord record)` — The id of [record]'s Drive folder, after the sign-in Drive needs: `FilmOpen/<tag>` found by [findDriveFolder].
-  - `Future<String> pullManifest(ProjectRecord record, String parentPath, {String? driveFolderId})` — Makes `<parentPath>/<tag>` for [record], a project the account records on FilmOpen Cloud or Drive, from the manifest its target holds, and answers the folder's path; the ordinary sync fills it once it is opened (§9.4).
+  - `Future<String> pullManifest(ProjectRecord record, String parentPath, {String? driveFolderId, void Function(PullProgress progress)? onDocuments})` — Makes `<parentPath>/<tag>` for [record], a project the account records on FilmOpen Cloud or Drive, from the manifest its target holds, and answers the folder's path, ready to load (§9.2, §9.4).
 - **variable** `final sharingModelProvider` — The application's one [SharingModel], over its Google account: made on first read, and ended with the container.
 
 ### `lib/src/sharing_targets.dart`

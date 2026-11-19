@@ -4,11 +4,11 @@
 
 Pure Dart vocabulary for exchanging FilmOpen content: ids, field paths, projections and the `$` key codec. The public API is exported through `filmopen_exchange.dart`.
 
-**pure Dart.** 16 files, 2,711 lines under `lib/`; 256 tests in 25 files. Barrel: `lib/filmopen_exchange.dart`.
+**pure Dart.** 16 files, 3,136 lines under `lib/`; 297 tests in 30 files. Barrel: `lib/filmopen_exchange.dart`.
 
 ## Depends on
 
-- **filmopen_format** — uses `AllocationInventory`, `Author`, `Catalogue`, `ChildEntry`, `ChildProblem`, `Entity`, `EntityGroup`, `EntityType`, `EpochDeclaration`, `FileNameParser`, `FilmProject`, `MediaEntry`, `Pick`, `PickReason`, `ShapeLibrary`, `ShapeProblemCode`, `ShortName`, `StaleFileException`, `VersionStem`, `ageFromBirthDate`, `blockNumber`, `canonicalJson`, `castOf`, `childTypes`, `copyDocument`, `cueGroupsByOwner`, `declaredEpochs`, `deepCopy`, `encodeEpochs`, `encodeNextEpoch` and 18 more
+- **filmopen_format** — uses `AllocationInventory`, `Author`, `Catalogue`, `ChildEntry`, `ChildProblem`, `EffectiveDecision`, `EffectiveRead`, `Entity`, `EntityGroup`, `EntityType`, `EpochDeclaration`, `FileNameParser`, `FilmProject`, `MediaEntry`, `Pick`, `PickReason`, `ProblemKind`, `ScriptOutline`, `ShapeLibrary`, `ShapeProblemCode`, `ShortName`, `StaleFileException`, `VersionStem`, `baseEpoch`, `blockNumber`, `canonicalJson`, `castOf`, `childTypes`, `copyDocument`, `cueGroupsByOwner` and 25 more
 - **filmopen_store** — uses `AppLog`, `EntityExistsException`, `Guards`, `IdentityChangedException`, `InvalidContentException`, `NextEpochLoweredException`, `NoViewerException`, `NotYourFileException`, `ProjectReadOnlyException`, `ProjectWriter`, `validateContent`
 - **filmopen_test_support (dev)** — uses nothing by name the digest could see
 
@@ -40,6 +40,7 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
 - **function** `String sourceHash(Projection projection, Map<String, dynamic> content, EntityType type)` — Hashes the selected content before dollar escaping and exchange metadata.
 - **variable** `const exchangeCollections` — The fixed type-to-collection placement shared by export and import.
 - **function** `ExportDocument assemble(ExchangeContext ctx, ScopeSelection selection, {required Scope scope, DateTime? now, bool lean = false, Map<String, Entity>…` — Places selected picks in fixed body order and builds the deterministic export envelope.
+- **function** `Map<String, Map<String, dynamic>> shownObjects(Map<String, Object?> document)` — Every entity object of an exchange [document] — a whole export, an entity read's group or one object — by its `\$id`, its content decoded: what its reader was shown (§8.2).
 
 ### `lib/src/codec.dart`
 
@@ -70,6 +71,7 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
 ### `lib/src/export.dart`
 
 - **function** `Map<String, Object?> exportEntityDocument(Entity entity, {bool lean = false})` — The exchange object of [entity] alone: its identity and whole projected, escaped content.
+- **function** `Map<String, Object?> exportView(ExchangeView view, {bool lean = false})` — The exchange object of one [view] (§8.2): its logical id and whole projected, escaped complete content; `\$stem` only where a file is stored at that id, and never in a [lean] object.
 - **function** `ExportDocument exportScope(FilmProject project, Author? viewer, {required String scope, Object? arg, DateTime? now, bool lean = false})` — Exports a registered scope from the project version in use for this viewer.
 
 ### `lib/src/field_path.dart`
@@ -140,6 +142,7 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `final List<ImportNote> notes` — Information about ignored keys and absent removals.
   - `final ImportProblem? problem` — The whole-patch refusal, null when the patch was accepted.
 - **function** `PatchResult patchDocument(Map<String,dynamic> before, DecodedFileObject patch, EntityType type)` — Applies replace, leaf merge and explicit removal without mutating either input.
+- **variable** `const patchNeverWritten` — The root keys a patch never writes: the file's own header, its provenance and what the app owns (§3.5).
 
 ### `lib/src/pattern.dart`
 
@@ -190,11 +193,16 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `final ImportAction action` — The action selected by the current pick and dry validation.
   - `final Entity? target` — The current pick the reviewed change starts from, absent for a creation.
   - `final Map<String,dynamic>? before` — The complete current content, absent for a creation.
-  - `final Map<String,dynamic> after` — The complete proposed content, including preserved unknown fields.
+  - `final Map<String,dynamic> after` — The complete proposed content, including preserved unknown fields: what is written.
+  - `final Map<String,dynamic>? effectiveBefore` — For an entity with a base, the view the answer was compared with: the base merged with the epoch's overlay (§8.2).
+  - `final Map<String,dynamic>? effectiveAfter` — For an entity with a base, the view the write leaves: the base merged with the overlay as written.
+  - `Map<String,dynamic>? get reviewBefore` — What the review shows and logs before: the effective view where there is one, else the file.
+  - `Map<String,dynamic> get reviewAfter` — What the review shows and logs after: the effective view where there is one, else the file.
   - `final List<String> paths` — The changed content paths, retaining ungrammatical root keys verbatim.
   - `final List<String> removed` — The explicitly removed paths.
   - `final List<ImportNote> notes` — Information shown beside this change, with structured payloads retained.
   - `final ImportProblem? refused` — The reason this change was refused, where applicable.
+  - `final bool overlay` — Whether a creation is an empty overlay at a declared epoch of a base that exists or this import makes first, its reviewed content written after; else a new entity at its base (§8.2).
   - `final Map<ImportStage,String?> done` — Completed stages and their artifacts, never inferred from an identity alone.
 - **class `ImportChangeInfo`** — A wire change containing identifiers and diagnostics rather than file content.
   - `ImportChangeInfo(ImportChange change)` — Copies the bounded portion of a reviewed change.
@@ -222,10 +230,12 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `bool sameAs(ImportPlan other)` — Binds consent to targets, content, removals and diagnostic payloads (§3.6).
   - `ImportAnswer toAnswer()` — Builds the bounded wire answer without publishing before or after content.
 - **function** `ImportPlan planImport(FilmProject project, Author? viewer, Map<String,Object?> document, {Map<String,Object?>? base, Guards guards = Guards.enforce…` — Plans patches on the viewer's current picks without reading or writing a source.
+- **function** `({Map<String,Object?> kept, List<String> echoes}) withoutEchoes(Map<String,Object?> patch, Map<String,dynamic> shown)` — [patch], a command's change, without the leaves it gives back unchanged from the view its author was [shown] (the echo rule, §8.2): a `null` resets an override and is never an echo, and equality with the base decides…
+- **function** `Map<String,dynamic> shownAfterWrite(Map<String,dynamic> shown, Map<String,Object?> patch)` — The view [shown] as its reader knows it after its own change [patch] is written (§8.2): each leaf the patch gives set to it, and one it resets with `null` gone, since what it inherits again was not shown.
 
 ### `lib/src/projection.dart`
 
-- **variable** `const Set<String> neverExported` — The nine file-header keys omitted from every entity projection.
+- **variable** `const Set<String> neverExported` — The ten file-header keys omitted from every entity projection, the writer's place times among them.
 - **variable** `const Map<EntityType, Map<String, String>> identifiedLists` — The lists whose entries compose field-locally by their stable key.
 - **class `Projection`** — Content selected from a file, with the file's name and project frame retained.
   - `const Projection(this.name, this.paths)` — Defines a named path projection whose label does not select whole-file rules.
@@ -244,11 +254,12 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
 ### `lib/src/scope.dart`
 
 - **class `Scope`** — A frozen scope identity, argument contract and shared selection recipe.
-  - `const Scope({required this.name, required this.description, required this.arg, required this.select})` — Defines a scope without its own document placement or serialization.
+  - `const Scope({required this.name, required this.description, required this.arg, required this.select, this.narrow = false})` — Defines a scope without its own document placement or serialization.
   - `final String name` — The permanent identity; incompatible recipes require another name.
   - `final String description` — The scope's description for callers discovering the registry.
   - `final ArgSpec arg` — The argument shape checked before selection.
   - `final void Function(ScopeSelection into, ExchangeContext ctx) select` — The selector and projection composition for this scope.
+  - `final bool narrow` — Whether an assistant's opening is this selection alone (§6.11a): no index of the film beside it, and a lean document's script holding only the entries selected and the folders above them.
 - **class `ArgSpec`** — The shape of a scope argument, including typed tag lists and named parts.
   - `static const none` — Accepts no argument.
   - `const ArgSpec.tags(EntityType type)` — Accepts a list of string tags for the given entity type.
@@ -276,19 +287,33 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
 - **variable** `final characterLines` — Named characters' dialogue, retaining each scene's name and synopsis.
 - **variable** `final sceneDialogue` — Named scenes whole, with every other scene, every character and the scenes' folders above them in synopsis.
 - **variable** `final focus` — The project frame and story in brief, with named folders and scenes and their closure whole.
-- **variable** `final scopeRegistry` — The nine shipped scopes, each composed on the shared selection vocabulary.
+- **variable** `final sceneChange` — Named scenes whole with just what changing them needs, and nothing more: the opening of a change to a scene.
+- **variable** `final scopeRegistry` — The ten shipped scopes, each composed on the shared selection vocabulary.
 - **function** `List<Map<String,Object?>> scopes()` — Lists each scope's name, description and argument descriptor in registry order.
 - **class `ExchangeContext`** — The viewer's indexed film and inputs shared by selection and assembly.
-  - `ExchangeContext({required FilmProject project, required this.viewer, this.arg})` — Builds a context of the project version the viewer has in use.
+  - `ExchangeContext({required FilmProject project, required this.viewer, this.arg, this.working = const {}})` — Builds a context of the project version the viewer has in use.
   - `final FilmProject project` — The project after applying its viewer selection.
   - `final Author? viewer` — The handle resolution runs for, or null.
   - `final Object? arg` — The original scope argument, checked before the scope runs.
+  - `final Map<String, Entity> working` — The versions the caller hands by exchange id in place of the one in use (the assistant's round, an open form), which a scope reads its scenes from where it selects what they name ([sceneOf]).
+  - `Entity? sceneOf(ExchangeId id)` — The scene [id] names as the caller sends it: its [working] version, else the version in use.
   - `late final PickedScript script` — The one picked walk every structural selector reads.
   - `final List<ExchangeProblem> problems` — Problems found while selecting references and arguments.
   - `String get projectTag` — The folder manifest's tag, falling back to an indexed project tag.
   - `List<String> tags(EntityType type, {String? part})` — Normalizes typed stems in the argument or a named part and reports invalid or missing tags individually.
   - `Pick? pickOf(ExchangeId id, {bool report = true})` — Reads concrete picks, with the project identity naming the explicitly selected project.
+  - `ExchangeView? viewOf(ExchangeId id, {Map<String, Entity> working = const {}})` — The entity [id] names as a plug-in reads it (§8.2), or null where nothing resolves.
+  - `ExchangeView? viewRef(EntityType type, String reference, {String? epoch, bool explicit = false})` — The entity a reference lands on, as [viewOf] reads it, and the id it lands at (§8.2).
   - `Entity? resolveRef(EntityType type, String reference, {String? epoch, bool explicit = false})` — Resolves tags and typed references through viewer picks with explicit or implicit epochs.
+- **class `ExchangeView`** — One entity as the exchange hands it to a plug-in (§8.2): complete, never the sparse overlay, never stored.
+  - `static ExchangeView? ofRead(ExchangeId id, EffectiveRead read)` — The view of an effective [read] at [id], or null where nothing resolves; a deleted base still answers, marked, so that a walk goes on through it and a reader says it is in the recycle bin.
+  - `final ExchangeId id` — The logical identity: at the epoch asked, even where no overlay is stored there.
+  - `final Map<String, dynamic> content` — The complete content: the base merged with the epoch's overlay, its `epoch` the one asked; else the file's.
+  - `final Entity? stored` — The file stored at [id]: the overlay, the base for a base view, the file of a type without epochs; null for an epoch with no overlay, whose view is the base's alone.
+  - `final Entity? base` — The base the view stands on; null where the entity has none.
+  - `final EffectiveRead? read` — The effective read that made the view; null where the file is taken as it is.
+  - `final bool deleted` — Whether the entity is in the recycle bin: the file deleted, or its base, which hides every epoch.
+  - `Map<String, Object?> toLog()` — What the view is made of, values whole, for the caller's log: each key inherited, overridden or computed.
 
 ### `lib/src/selectors.dart`
 
@@ -304,9 +329,10 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `static Selector ids(Iterable<ExchangeId> list)` — Selects the versionless ids given, including group ids.
   - `static Selector scenes(Iterable<String> tags)` — Selects named scenes and reports tags no scene has.
   - `static Selector inScenes(Selector scenes, {CueGrouping groupCues = cueGroupsByOwner})` — Selects each named scene's characters, outfits, setting, resources, shots and cues.
-  - `static Selector siblingsOf(Selector scenes)` — Selects other scenes in the same picked lists as any given scene occurrence.
+  - `static Selector castIn(Selector scenes)` — Selects each named scene's cast at the epochs they land on, the outfit each wears there and its location.
+  - `static Selector siblingsOf(Selector entries, {EntityType type = EntityType.scene})` — Selects other entries of [type], scenes by default, in the same picked lists as any given occurrence.
   - `static Iterable<ExchangeId> folders(ExchangeContext ctx)` — Selects every drawn and unfiled folder, in natural tag order.
-  - `static Selector foldersAbove(Selector entries)` — Selects ancestors of every given occurrence in the picked script.
+  - `static Selector foldersAbove(Selector entries, {bool nearest = false})` — Selects ancestors of every given occurrence in the picked script; [nearest]: only the folder holding it.
   - `static Selector descendantsOf(Iterable<String> folderTags)` — Selects descendants through each named folder's picked children, stopping cycles.
   - `static Selector scenesAt(Iterable<String> locationTags)` — Selects scenes at any resolved epoch of the named locations.
   - `static Selector scenesWith(String characterTag)` — Selects scenes casting the character or naming it as a block speaker.

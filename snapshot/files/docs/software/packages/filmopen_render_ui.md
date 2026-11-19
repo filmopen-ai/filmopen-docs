@@ -4,31 +4,32 @@
 
 The one render dialog's contract, *Render* on a place's add tile, and the rail's *GPU* page (Software Specification §9.3, §9.7a, §6.15). Only the application imports it.
 
-**Flutter.** 19 files, 11,662 lines under `lib/`; 661 tests in 18 files. Barrel: `lib/filmopen_render_ui.dart`.
+**Flutter.** 22 files, 13,577 lines under `lib/`; 803 tests in 22 files. Barrel: `lib/filmopen_render_ui.dart`.
 
 ## Depends on
 
-- **filmopen_format** — uses `Author`, `BatchStem`, `Catalogue`, `CatalogueEntry`, `ComposedTreatment`, `Entity`, `EntityType`, `ExactDecimal`, `FileNameParser`, `FilmProject`, `MediaEntry`, `MediaKind`, `MediaSlot`, `MediaStage`, `Pick`, `PlatformKind`, `PromptPath`, `ReferenceCodec`, `ReferenceKind`, `RenderTreatment`, `ScriptBlock`, `SetRecord`, `ShortName`, `ShortNameProblem`, `TakeName`, `UsageBasis`, `VersionStem`, `acceptedKindsFor`, `acceptsFile`, `activeVoiceIdFor` and 34 more
-- **filmopen_state** — uses `AccountAuthentication`, `AccountProjects`, `AccountProjectsRefused`, `Attribution`, `AudienceSettings`, `AutoActivity`, `AutoReferencesController`, `Command`, `CommandCaller`, `CommandContext`, `CommandRegistry`, `CommandResult`, `CommunityGroups`, `CommunityGroupsRefused`, `Deadline`, `DeviceRegistration`, `EditableDraft`, `EntityWritten`, `GroupInvitation`, `GroupMember`, `GroupMembership`, `GroupName`, `GroupPage`, `Lending`, `LendingRefused`, `LentOffer`, `LifecycleHook`, `MediaClient`, `MediaObject`, `MediaRefused` and 58 more
-- **filmopen_store** — uses `AppLog`, `rfc3339Now`
+- **filmopen_format** — uses `Author`, `BatchStem`, `Catalogue`, `CatalogueEntry`, `ComposedTreatment`, `EffectiveRead`, `Entity`, `EntityType`, `ExactDecimal`, `FileNameParser`, `FilmProject`, `MediaEntry`, `MediaKind`, `MediaSlot`, `MediaStage`, `Pick`, `PlatformKind`, `PromptPath`, `ReferenceCodec`, `ReferenceKind`, `RenderTreatment`, `ScriptBlock`, `SetRecord`, `ShortName`, `ShortNameProblem`, `TakeName`, `UsageBasis`, `VersionStem`, `VoiceBinding`, `VoiceKeepProblem` and 56 more
+- **filmopen_state** — uses `AccountAuthentication`, `AccountProjects`, `AccountProjectsRefused`, `Attribution`, `AudienceSettings`, `AutoActivity`, `AutoReferencesController`, `Command`, `CommandCaller`, `CommandContext`, `CommandRegistry`, `CommandResult`, `CommunityGroups`, `CommunityGroupsRefused`, `Deadline`, `DeviceRegistration`, `DraftsNotSettledException`, `EditableDraft`, `EntityWritten`, `GroupInvitation`, `GroupMember`, `GroupMembership`, `GroupName`, `GroupPage`, `Lending`, `LendingRefused`, `LentOffer`, `LifecycleHook`, `MediaClient`, `MediaObject` and 63 more
+- **filmopen_store** — uses `AppLog`, `ProjectWriter`, `rfc3339Now`
 - **filmopen_machine** — uses `MachineFacts`, `MachineReader`
 - **filmopen_render** — uses `BackendRenderManager`, `ContentHash`, `OutfitRenderComposer`, `RenderBackend`, `RenderCandidate`, `RenderComposition`, `RenderDestination`, `RenderDestinationKind`, `RenderJob`, `RenderManager`, `RenderNotReady`, `RenderOptions`, `RenderPhase`, `RenderQuote`, `RenderRequest`, `RenderRoute`, `RenderStack`, `ServerCapabilities`, `ServerFailure`, `ServerOffer`, `ServerQuota`, `ServerQuote`, `ServerSession`, `ServerSessionPhase`, `ServerSessionRefused`, `ServerSessions`, `ServerStack`, `SourceSnapshot`, `holdsStack`, `lendingRoute` and 5 more
-- **filmopen_insertion** — uses `BlockPlace`, `FilesSource`, `Function`, `InsertionService`, `InsertionSource`, `InsertionTarget`, `MediaImportException`, `ProducerSource`, `SlotPlace`, `producerFailureOf`, `producerJobKind`
+- **filmopen_insertion** — uses `BlockPlace`, `FilesSource`, `Function`, `InsertionService`, `InsertionSource`, `InsertionTarget`, `MediaImportException`, `MediaImporter`, `ProducerSource`, `SlotPlace`, `producerFailureOf`, `producerJobKind`
 - **filmopen_jobs** — uses `JobAction`, `JobPhase`, `JobUnavailable`, `JobView`
 - **filmopen_insertion_ui** — uses `ActionAvailability`, `ActionAvailable`, `ActionUnavailable`, `Function`, `InsertionAction`
-- **filmopen_media** — uses `MediaInput`, `MediaProvenance`, `ProjectMedia`, `PromptToken`, `isPromptInput`, `promptInputsOf`, `promptTokenCandidates`, `substitutePromptTokens`
+- **filmopen_media** — uses `MediaInput`, `MediaProvenance`, `ProjectMedia`, `PromptToken`, `isPromptInput`, `layoutPromptKind`, `promptInputReferences`, `promptInputsOf`, `promptTokenCandidates`, `promptTokenNumbers`, `substitutePromptTokens`, `taggedMedia`
 - **filmopen_media_ui** — uses `Function`, `MediaTile`
 - **filmopen_ui** — uses `AppColors`, `Breakpoints`, `ChromeClearance`, `EmptyState`, `StageSelector`, `kLongMessage`, `showMessage`, `showMessageOn`
 - **filmopen_l10n** — uses nothing by name the digest could see
-- **filmopen_prompt_ui** — uses `PromptCard`, `PromptMentionCandidates`, `WriterAnswer`, `askWriter`, `promptByWriter`, `promptTokenName`, `promptWriterTarget`, `startingPromptWriter`, `withPromptWordChanged`, `withWords`, `writerAnswerLine`
-- **filmopen_text_ui** — uses `ProseController`, `ProseEditor`
+- **filmopen_prompt_ui** — uses `PromptCard`, `PromptMentionCandidates`, `WriterAnswer`, `askWriter`, `mentionOpenerWith`, `promptByWriter`, `promptTokenName`, `promptWriterTarget`, `withPromptNotesChanged`, `withPromptWordChanged`, `withWords`, `writerAnswerLine`
+- **filmopen_text_ui** — uses `MentionOpener`, `ProseController`, `ProseEditor`, `mentionCandidateId`
 - **filmopen_test_support (dev)** — uses nothing by name the digest could see
+- **filmopen_forms (dev)** — uses nothing by name the digest could see
 
 Third-party: crypto, flutter_riverpod.
 
 ## Used by
 
-`filmopen_app`
+`filmopen_app`, `filmopen_browser`
 
 ## Public API
 
@@ -44,6 +45,32 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `void askLine({String why = 'dock'})` — Reads the line again; one read at a time, a request during it reading once more after it.
   - `void heard(EntityWritten event)` — Decides a landed write, synchronously: an entity is marked busy before the first await.
   - `void stop()` — Stops all of the engine's work (§6.15), the dock header's Stop: a writer waiting its turn is removed and a running one signalled through its call's control, a submitted render asked to stop through its job, and the fo…
+
+### `lib/src/dialogue_windows.dart`
+
+- **class `DialogueLimits`** — What one Text to Dialogue call takes at most: characters in all and distinct voices, from the catalogue.
+  - `const DialogueLimits({required this.maxCharacters, required this.maxVoices})` — The two bounds.
+  - `final int maxCharacters` — The characters of every line of a call, context included.
+  - `final int maxVoices` — The distinct voices of a call.
+  - `static DialogueLimits? of(Map<String, Object?>? entry)` — [entry]'s `capabilities.inputs.dialogue`, or null where the entry names no dialogue bounds.
+- **class `DialogueLine`** — One spoken block of a scene, in scene order: its id, its words, and the voice it speaks in on this platform — null, with [skip] saying why, where it cannot be spoken here.
+  - `const DialogueLine({required this.id, required this.text, this.voice, this.skip})` — A spoken block.
+  - `final String id` — The block's id.
+  - `final String text` — The words spoken.
+  - `final String? voice` — The voice id on this platform; null where the block is incompatible.
+  - `final String? skip` — Why an incompatible block cannot be spoken (a `BlockLineRefusal`'s name, for one).
+  - `int get characters` — The characters the line costs, counted as code points.
+- **typedef** `typedef WindowLine` — A line placed in a window, spoken again as [context] or wanted.
+- **class `DialogueWindow`** — One Text to Dialogue call: its lines in scene order, at least one of them wanted.
+  - `const DialogueWindow(this.lines)` — A window's lines.
+  - `final List<WindowLine> lines` — The lines in scene order, context flagged.
+  - `int get characters` — Every line's characters, context included.
+  - `int get contextCharacters` — The context lines' characters.
+- **class `DialogueWindows`** — The windows of one request, and the wanted blocks that are not sent, each with its reason.
+  - `const DialogueWindows(this.windows, this.skipped)` — The planned windows and skips.
+  - `final List<DialogueWindow> windows` — The calls, in scene order.
+  - `int get contextCharacters` — The characters of earlier lines spoken again as context, over every window.
+- **function** `DialogueWindows dialogueWindows(List<DialogueLine> lines, Set<String> wanted, DialogueLimits limits)` — The Text to Dialogue windows that speak [wanted] of a scene's spoken [lines] (in scene order) within [limits].
 
 ### `lib/src/gpu_page.dart` — without comfyuiOf, comfyuiReady, comfyuiState
 
@@ -114,7 +141,7 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `const RenderContext(this.target, {this.designsVoice = false, this.from, this.stage})` — A render's place; [designsVoice] where the dialog designs a voice rather than renders; [from] the take a render continues, at [stage] where one is forced.
   - `final InsertionTarget target` — The place: a project, a version's stem and a group, which the request carries whatever the person opens next.
   - `final bool designsVoice` — Whether the dialog designs a voice (*Voice*): the models of voice design alone, a description of the voice and the words its previews say.
-  - `final MediaEntry? from` — The take of the place the render continues (*Render from this take*), whose record the dialog opens on; null for a new render.
+  - `final MediaEntry? from` — The take of the place the render continues, whose record the dialog opens on — the place's menu supplies one for *Render at final resolution*; null for a new render, *Render again* included.
   - `final MediaStage? stage` — The stage the render is asked at, forced (*Render at final resolution*); null for the version's own.
   - `String get source` — The stem of the version the render is of.
   - `Set<MediaKind> get kinds` — The kinds the place takes, which decide the models offered.
@@ -135,11 +162,13 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
 - **enum `BlockLineRefusal`** — Why a block's line cannot be spoken in its speaker's voice.
   - values: `noSpeaker`, `speakerUnseen`, `noVoice`, `noDialogue`
 - **class `BlockLine`** — A dialogue block's line and its speaker: what *Render* on the block's voice lines speaks, and in whose voice.
-  - `const BlockLine(this.text, this.speaker, this.refusal)` — The line; [refusal] where it cannot be spoken.
+  - `const BlockLine(this.text, this.speaker, this.refusal, {this.read})` — The line; [refusal] where it cannot be spoken; [read] the speaker's effective read, for the caller's log.
   - `final String text` — The block's `dialogue`, as the person sees the scene.
   - `final Entity? speaker` — The character the scene's reference names ([speakerOf]); null where it names none.
   - `final BlockLineRefusal? refusal` — Why the line cannot be spoken; null where it can.
+  - `final Map<String, Object?>? read` — The speaker's effective read ([speakerRead]) as its log carries it; null where the block names nobody.
   - `String? reason(AppLocalizations l10n)` — What *Render* says where the line cannot be spoken; null where it can.
+- **function** `({List<DialogueLine> lines, String source, Map<String, Object?> reads}) dialogueLinesAt(FilmProject? project, String stem, String projectKey, Strin…` — A scene's spoken blocks in scene order, as [dialogueWindows] takes them, read once from the scene as the person sees it — the open form's draft, else the file, as [blockLineAt] reads it — with the [source] read (`draf…
 - **function** `BlockLine? blockLineAt(FilmProject? project, InsertionTarget target, {Author? viewer})` — The line a block's voice lines at [target] speak, read from the scene as the person sees it — the open form's draft, else the file — and its speaker through [speakerOf]; null where [target] is not a block's voice lines.
 
 ### `lib/src/render_commands.dart`
@@ -165,6 +194,7 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `final DateTime Function() now` — The clock the request is stamped with.
   - `final ServerSessions? servers` — The servers started for renders.
   - `final PluginSettingsControl? plugins` — The plug-ins' settings, whose reading again holds *Render*; the application's where none is given.
+- **function** `String renderDialogTitleAt(AppLocalizations l10n, RenderContext render)` — The render dialog's title at [render]'s place (§9.3).
 - **class `RenderRequestView`** — The render dialog's body, opened at [render]'s place.
   - `const RenderRequestView({super.key, required this.backend, required this.render, required this.now, this.servers, this.plugins})` — The body.
   - `final RenderBackend backend` — Who says what can run, and at what price.
@@ -173,7 +203,7 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `final ServerSessions? servers` — The servers started for renders: a live one is a route, and where none is the dialog points to the GPU page.
   - `final PluginSettingsControl? plugins` — The plug-ins' settings, whose reading again holds *Render*; the application's where none is given.
 
-### `lib/src/render_offers.dart` — only RenderModel, renderModelsFor, renderValuesAllowed
+### `lib/src/render_offers.dart` — only ClipLengths, RenderModel, clipLengthsOf, renderModelsFor, renderValuesAllowed
 
 - **class `RenderModel`** — A model the dialog may offer: its catalogue id, its name and what its entry says it takes.
   - `const RenderModel({required this.id, required this.name, required this.kind, this.capabilities = const {}, this.variants = const {}})` — A model.
@@ -193,13 +223,32 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `(int?, int?) characters(String input)` — The least and the most characters the entry says [input] takes, where it says: a voice design's `text`.
 - **function** `List<RenderModel> renderModelsFor(Catalogue catalogue, Set<MediaKind> kinds, {bool voices = false, Set<String> givenInputs = renderGivenInputs, Str…` — Models of [kinds] the context's [givenInputs] can supply, grouped by kind and name; each one left out is handed to [leftOut] with the inputs it lacks.
 - **function** `List<Object?> renderValuesAllowed(RenderModel model, String name, List<Object?> values, {String? stack})` — The values of a route's choice [name] that [model]'s entry allows too, in the route's order.
+- **class `ClipLengths`** — The lengths a route makes a clip at (Project Specification §14.8): those it [offered], ascending, the largest the [maximum], and the [preferred] length a shot is planned to.
+  - `final List<num> offered` — The lengths offered, in seconds, ascending.
+  - `final num? preferred` — The entry's `preferred_length_s` where it is a number greater than zero, as written — possibly no offered length, or above the [maximum], which the caller rechecks —, else the [maximum].
+  - `num? get maximum` — The longest length offered; null where none is.
+  - `num? requestFor(num seconds, {num? maximum})` — The length a shot of [seconds] is asked at: the shortest offered length that covers it; null — `over-max` — where none does, or where it is above [maximum], the person's, which defaults to the route's.
+- **function** `ClipLengths clipLengthsOf(RenderModel model, {List<Object?> durations = const [], int? frames, num? fps, String? stack})` — The lengths [model]'s route offers (Project Specification §14.8): a fixed-frame route's one length, its [frames] over its [fps], exactly; else the route's [durations] that the entry allows too, as [renderValuesAllowed…
 
-### `lib/src/render_preparation.dart` — only prepareRender, prepareRenderBeforeWriting, renderResolutionsOf, renderSettledValue, renderSettingsPicked, renderSmallestResolution
+### `lib/src/render_preparation.dart` — only DialogueItem, DialoguePrepared, RenderOffer, RenderPick, prepareDialogue, renderFrameKind, renderPicked, renderStageFor, prepareRender, prepareRenderBeforeWriting, renderOffersOf, renderResolutionsOf, renderSettledValue, renderSettingsPicked, renderSmallestResolution
 
+- **class `RenderOffer`** — A model offered at a place, with the routes that can run it here.
+  - `const RenderOffer(this.model, this.candidates)` — An offer.
+  - `final RenderModel model` — The model.
+  - `final List<RenderCandidate> candidates` — Its routes here.
+  - `bool get ready` — Whether one of its routes is ready.
+- **function** `String renderFrameKind(FilmProject project, Entity scene, InsertionTarget target, {Author? viewer})` — The kind a frame at [target] of [scene] renders as (§9.8): `i2i` where its saved prompt names a picture the place may take, else `t2i` — the kind its preparation offers models of.
+- **function** `Future<List<RenderOffer>> renderOffersOf(Catalogue catalogue, RenderBackend backend, Set<MediaKind> kinds, {required bool voices, required Set<Stri…` — The models of [kinds] [catalogue] offers, of the place's [kind] where it has one, each with its routes [here]; a model with no route at all is offered with none, and one whose routes are all excluded here is not.
+- **typedef** `typedef RenderPick` — A default for a kind and stage: the model picker's, Settings → Models' or the last options'.
+- **function** `Future<RenderPicked> renderPicked(PluginInvocation plugins, String? kind, MediaStage stage, {String? ref, String? role, Map<String, Map<String, Obj…` — The default for [kind] at [stage] (§9.3, §9.4): Settings → Models' for [role] — the kind where none is given — where one is chosen in [defaults] ([renderSettingsPicked]), else [plugins]' model picker's for [kind], log…
 - **function** `Future<RenderPicked?> renderSettingsPicked(PluginInvocation plugins, String role, MediaStage stage, Map<String, Object?> chosen, {String? ref, Cata…` — Settings → Models' default [chosen] for [role] at [stage] as an answer (§9.4); null where it names no model or a route its codec does not read.
 - **function** `Future<Object?> renderSettledValue(RenderBackend backend, Catalogue catalogue, String model, RenderRoute route, String name, Object? asked, {Map<St…` — The value [route] renders the choice [name] at for [model] when asked [asked] — the asked value where the route's options take it, else their default, as the preparation settles a choice (§9.3) — or null where the rou…
 - **function** `List<Object?>? renderResolutionsOf(Catalogue catalogue, String model, String? variant)` — The resolutions [catalogue] lists for [model] under [variant] — the variant's own list where it has one —, or null.
 - **function** `Object? renderSmallestResolution(List<Object?> listed)` — The smallest of [listed] by [renderResolutionPixels], as listed; null where one is a form it cannot place.
+- **function** `MediaStage renderStageFor(Map<String, dynamic>? json, {RenderPrepareTrail? trail})` — The stage a render at [json] is asked at (§9.3): the version's own, as the person sees it, else `prototype`.
+- **typedef** `typedef DialogueItem` — One Text to Dialogue window prepared as an ordinary render (§6.15): its [request], its [target] — the first wanted block's voice lines —, every wanted place it speaks, and its [window].
+- **typedef** `typedef DialoguePrepared` — A scene's wanted voice lines prepared together: the windows, and the wanted places not spoken, each with its reason.
+- **function** `DialoguePrepared? prepareDialogue(FilmProject? project, Catalogue catalogue, RenderRequest template, List<InsertionTarget> wanted, {Author? viewer,…` — The one shared preparation of a scene's voice lines (§6.15), which the Workflow tab's *Render* and one block's *Render* both use: [wanted], voice lines of one scene, spoken in the windows [dialogueWindows] plans withi…
 - **function** `Future<RenderPreparation?> prepareRenderBeforeWriting(ProviderContainer container, RenderBackend backend, InsertionTarget target)` — Answers whether a prompt is worth writing for [target], before a writer is paid (§9.3).
 - **function** `Future<RenderPreparation?> prepareRender(ProviderContainer container, RenderBackend backend, InsertionTarget target, {String? prompt, String? negat…` — Prepares a render at [target] as a new dialog opens on it and sends it unchanged, [prompt] standing for the words of its prompt box where given (§6.15); null where nothing is offered at all, or not the picker's route.
 
@@ -232,6 +281,54 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `Map<String, Object?> toJson()` — The item as the record stores it, without its `n`, which the pending set gives it.
   - `static RenderQueueItem fromJson(Object? json)` — Reads an item of the record; a shape it cannot read is refused with a [RenderQueueRefusal].
 
+### `lib/src/renders_with.dart` — only RendersWith, RendersWithController
+
+- **class `RendersWithController`** — What *Renders with* holds: the models offered, the one chosen and its place, the route's answer, the way and the values, and whether its controls are shown.
+  - `List<RenderOffer>? offers` — The models offered, or null while they are read.
+  - `RenderOffer? offer` — The model chosen.
+  - `int route` — Its place, by its index among the offer's candidates.
+  - `RenderOptions? options` — What the route last answered it offers for the model; null before its first answer.
+  - `bool failed` — Whether the route could not say what it offers.
+  - `String? stack` — The way of running the model chosen, by the route's own id.
+  - `final params` — Each choice's value where it has one; a choice without one is left to the route's own default.
+  - `final invalid` — The choices whose box holds text that is no value they take, which holds *Render*.
+  - `final revision` — How often the owner itself changed each choice's value: its box or pull-down is drawn again with the new one, which a field's first value alone would not show.
+  - `bool open` — Whether the controls are shown: collapsed at first, opened by the arrow or by a refusal drawn among them (§9.3).
+  - `String? openedFor` — The refusal among the controls that last opened them, so that each opens them once and the person may close them again; null where none stands.
+  - `String? why` — Why the line names what it does — the last landing's `render.route` `opened.reason`, `chosen` once the person chose the model, the route, the way or a value since, `serverGone` where it moved off a server that went, o…
+  - `String? said` — The line last logged.
+  - `int stale` — How often a model or a place chosen from a menu was no longer offered when it was chosen: their pull-downs are drawn anew with what is, since a pull-down holding a value it does not list asserts.
+  - `Map<String, String> platformNames` — The catalogue's platforms' names, by id, which a key's reason names.
+  - `Catalogue? catalogue` — The catalogue, once read.
+  - `String speaker` — At a script line, its speaker's name, which a voice route's reason names; empty elsewhere.
+  - `String? Function(AppLocalizations l10n, RenderCandidate candidate)? voiceWords` — At a script line, the words saying how [candidate] voices its speaker (§9.1); null elsewhere, or for none.
+  - `void changed()` — Tells the listeners that the widget changed what it holds.
+  - `RenderCandidate? get candidate` — The chosen place's candidate, where the model has one.
+  - `String get place` — The chosen place's own name, which the way's and the values' boxes are keyed by; empty where there is none.
+  - `Map<String, Map<String, Object?>> get specs` — The choices the route's answer shows with the chosen way.
+  - `RenderStack? get chosenStack` — The way chosen, as the route's answer lists it.
+  - `List<Object?>? allowed(String name, Map<String, Object?> spec)` — For a choice among values, those both the route and the model's entry allow; null for any other kind.
+  - `static const imagesName` — The choice the Images box is: the route's whole-number count of images, where the way chosen offers one.
+  - `Map<String, Object?>? get imagesSpec` — The count's choice where the way chosen offers it as a whole number; null where it renders one image at a time.
+  - `static List<String> placesOf(RenderOffer offer)` — Each of [offer]'s places by its own name, the same for as long as it is offered: what the place's pull-down holds as its value and the way's and the values' boxes are keyed by, so that a reading that adds or removes a…
+  - `static String labelOf(AppLocalizations l10n, RenderCandidate candidate)` — What a route is called: a lent one by whose computer it runs on, then the offer's name (§6.11, *Lending*) — joined with ` · `, unless the backend's label is only the count it adds to tell two alike apart, which carrie…
+  - `String platformOf(RenderCandidate candidate)` — The platform [candidate] runs on, by its catalogue name, else the route's label.
+  - `String notReadyText(AppLocalizations l10n, RenderCandidate candidate)` — Why [candidate] cannot run, with a missing server key described without guessing its platform.
+  - `String summary(AppLocalizations l10n)` — What the line names, which is what Render sends: the model, the route's own label as *Runs on* names it, and the chosen value of each choice among values in the route's order, whoever chose them — the picker, the fall…
+- **class `RendersWith`** — *Renders with: model, place, settings*, what Render sends, read-only, with the arrow that shows or hides the controls that change them — the model, its place, its way and its values (§9.3).
+  - `const RendersWith({ super.key, required this.controller, required this.ms, required this.onModel, required this.onRoute, required this.onStack, req…` — The line and its controls.
+  - `final RendersWithController controller` — What is drawn.
+  - `final int Function() ms` — The time since the owner opened, which the log lines carry.
+  - `final void Function(RenderOffer offer, int? route) onModel` — A model chosen from the pull-down, with its place where it has one.
+  - `final void Function(int route) onRoute` — Another place of the model chosen.
+  - `final void Function(String id) onStack` — Another way chosen.
+  - `final void Function(String name, Object? value, Map<String, Object?> spec) onValue` — A choice set by the person: a value, or null for none, left to the route's default.
+  - `final VoidCallback onSettings` — Settings on Plugins, where a plug-in's key, its grants and its switch are.
+  - `final String? refusal` — The refusal drawn among the controls, as a code, which opens them once; null where none stands.
+  - `final bool reading` — Whether the plug-ins are being read again: no refusal opens the controls meanwhile.
+  - `final List<Widget> top, afterModel, afterRoute` — The owner's own lines at the top of the controls, after the model and after its place.
+  - `final String ids` — What its controls' identifiers start with (`<ids>.model`, `<ids>.recommend`, …): `render` by default, another where two stand in one view, so that each is driven by its own.
+
 ### `lib/src/server_panel.dart` — without serverClock, serverDollars
 
 - **class `ServerOffersDialog`** — A provider's priced catalogue and selected capacity check, with an explicit recheck before deployment.
@@ -247,3 +344,4 @@ Files under `lib/` the barrel does not reach; nothing outside the package may im
 - `lib/src/outfit_composition.dart`: `OutfitParent`, `OutfitBound`, `OutfitComposition`
 - `lib/src/share_audience.dart`: `ShareAudience`, `_ShareAudienceState`, `_Progress`
 - `lib/src/share_groups.dart`: `ShareGroups`, `_key`, `_Roster`, `_ShareGroupsState`, `_NameDialog`, `_NameDialogState`
+- `lib/src/shot_sound.dart`: `ShotLine`, `ShotLineLaid`, `ShotSound`, `ShotSoundBuilt`, `ShotSoundRefused`, `buildShotSound`, `_Pcm`

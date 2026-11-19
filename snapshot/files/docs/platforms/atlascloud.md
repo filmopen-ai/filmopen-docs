@@ -5,7 +5,7 @@ slug: docs/platforms/atlascloud
 sidebar:
   label: Atlas Cloud
   order: 8
-lastUpdated: 2026-11-09
+lastUpdated: 2026-11-18
 ---
 
 - [What it is and what FilmOpen uses it for](#what-it-is-and-what-filmopen-uses-it-for)
@@ -27,6 +27,10 @@ Atlas Cloud sells many makers' image and video models behind one account and one
 | Seedance 2.5 | Makes a shot from a prompt, reference images or a first frame |
 | Kling 3.0 | Makes a shot from a prompt or a first frame |
 | Wan 2.6 | Makes a shot from a first frame |
+| Midjourney v8.2 | Makes four images from a prompt in one job |
+| FLUX 3 | Makes an image from a prompt, or edits one with up to ten reference images; makes a shot from a prompt, a first frame, or a first and a last frame |
+| Nano Banana 2.1, Grok Imagine Image 2.0 Developer, Luma Uni-1, MAI Image 2.6, Vega Image 1.5 Pro, Wan 2.7 Image and Cosmos 3 Super | Make an image from a prompt; Wan 2.7 also edits one with up to nine reference images |
+| Grok Imagine Video 1.5 (Lite, and both Developer tiers), PixVerse V6 and C1, Vidu Q3 and Q4, Gemini Omni 1.2 Flash, Kling Video O3, HappyHorse 1.1 and Cosmos 3 Super | Make a shot from a prompt, a first frame, or a first and a last frame, as each model allows |
 
 ## Pricing
 
@@ -38,8 +42,13 @@ Atlas Cloud is prepaid: you top up, and what you use comes off your balance. The
 | Seedance 2.5 | About $0.14 a second at 480p, $0.30 at 720p, $0.59 at 1080p (Atlas's estimate from the video's tokens) |
 | Kling 3.0 | $0.1071 a second (Standard), $0.1428 (Pro), $0.357 (4K), with sound on, Atlas's default |
 | Wan 2.6 | $0.07 a second at 720p, $0.105 at 1080p |
+| Midjourney v8.2 | $0.086 a job of four images |
+| FLUX 3 | From $0.02255 an image (768 px square) to $0.4411 (4K); video $0.187 a second at 720p, $0.319 at 1080p |
+| Nano Banana 2.1 | $0.018 an image at 1k on its Developer tier, $0.04 on the standard one |
+| Other images | Grok Imagine Image 2.0 Developer from $0.021, Wan 2.7 $0.03 (Pro $0.075), MAI Image 2.6 Flash $0.04, Cosmos 3 Super $0.044, Ideogram 4 Turbo $0.008 (Quality $0.025), Kling Image 4.0 $0.057, Luma Uni-1 $0.04444 (Max $0.11), Vega Image 1.5 Pro from $0.067, MAI Image 2.6 $0.0792 |
+| Other video | A second at the lowest resolution: Grok Imagine Video 1.5 Lite Developer $0.007, Vidu Q3 Turbo $0.034, PixVerse V6 $0.035 and C1 $0.04 with sound, Cosmos 3 Super $0.055, Gemini Omni 1.2 Flash $0.0596, HappyHorse 1.1 $0.07, Kling Video O3 $0.0952 with sound |
 
-These are the prices in FilmOpen's catalogue, read on Atlas's pricing page on 25 and 29 October 2026; on 9 November 2026 that page didn't load its model prices for us. FilmOpen records what Atlas reports for a finished video, and the agreed quote for an image. See [Atlas's pricing](https://www.atlascloud.ai/pricing/models) for today's.
+These are the prices in FilmOpen's catalogue, read on Atlas's pricing page on 25 and 29 October 2026, and the newer models on 18 November 2026. FilmOpen records what Atlas reports for a finished video, and the agreed quote for an image. See [Atlas's pricing](https://www.atlascloud.ai/pricing/models) for today's.
 
 ## FilmOpen credit
 
