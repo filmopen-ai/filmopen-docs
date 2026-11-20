@@ -4,11 +4,11 @@
 
 Where a project's files come from and how they are written, as pure Dart: the folder source (`directory_source*.dart`, `dart:io` behind a stub), the loader, **the writer** (`project_writer.dart`) with its refusals, the creator and the template, `Guards` (development mode's policy), the log (`app_log.dart`, `log_file*.dart`) and the library install.
 
-**pure Dart.** 27 files, 4,740 lines under `lib/`; 568 tests in 50 files. Barrel: `lib/filmopen_store.dart`.
+**pure Dart.** 27 files, 4,999 lines under `lib/`; 603 tests in 54 files. Barrel: `lib/filmopen_store.dart`.
 
 ## Depends on
 
-- **filmopen_format** — uses `AllocatedId`, `AllocationInventory`, `Author`, `BatchStem`, `ChildEntry`, `Commentary`, `CommentaryStem`, `DuplicateKeyException`, `Entity`, `EntityGroup`, `EntityOrigin`, `EntityType`, `EntityVersions`, `EpochDeclaration`, `FileMedia`, `FileNameParser`, `FilmProject`, `MediaLocation`, `NotJsonObjectException`, `OfficialPointer`, `OfficialStem`, `ProjectArea`, `ProjectManifest`, `ProjectSource`, `ProjectWarning`, `PromptPath`, `PromptState`, `RenderBatch`, `SetRecord`, `ShortName` and 59 more
+- **filmopen_format** — uses `AllocationInventory`, `Author`, `BatchStem`, `ChildEntry`, `Commentary`, `CommentaryStem`, `ContentCheckMode`, `DuplicateKeyException`, `EffectiveDecision`, `Entity`, `EntityGroup`, `EntityOrigin`, `EntityType`, `EntityVersions`, `EpochDeclaration`, `FileMedia`, `FileNameParser`, `FilmProject`, `MediaLocation`, `NotJsonObjectException`, `OfficialPointer`, `OfficialStem`, `ProjectArea`, `ProjectManifest`, `ProjectSource`, `ProjectWarning`, `PromptPath`, `PromptState`, `RenderBatch`, `SetRecord` and 71 more
 - **filmopen_test_support (dev)** — uses nothing by name the digest could see
 
 Third-party: crypto.
@@ -39,6 +39,15 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
 - **class `LogSink`** — Where log lines go.
   - `void write(LogEntry entry)`
   - `Future<void> close()` — Flushes and releases resources.
+- **class `RotationHold`** — A sink whose file can be held from rotating: while the issue recorder copies the log, the bytes it took the lengths of stay where they are (§6.8).
+  - `void holdRotation()` — No rotation until [releaseRotation].
+  - `void releaseRotation()` — Rotation again, and the one that came due while held is done now.
+- **class `RotatingLogSink`** — A sink whose file may roll: the log lets it roll before deciding what an entry cites (§6.2).
+  - `void prepare()` — Rolls the file now where the next line would land past its limit, or where another window rolled it, calling [onRotated] either way; a held sink ([RotationHold]) rolls at its release instead, calling [onRotated] there.
+  - `void Function()? onRotated` — Called on every roll the sink makes or finds; the log forgets its citations there.
+- **class `LogCited`** — A value [AppLog.cite] writes whole the first time and, while that line is in the current file, cites after (§6.2).
+  - `const LogCited(this.value)`
+  - `final Object? value` — The value as it is, never shortened.
 - **class `MemoryLogSink`** — Keeps entries in memory, for tests.
   - `final List<LogEntry> entries`
 - **class `LineLogSink`** — Hands each line to a callback: the console, a test.
@@ -55,10 +64,15 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `void forceVerbose(bool on, {required String reason})` — Verbose while a recording runs, [on] at its start and off at its end, whatever the setting says (§6.8): in memory only, so the setting and the preferences are never touched and a crash leaves nothing to undo.
   - `String? filePath` — Where the file sink writes, when one is attached; shown in Settings.
   - `List<LogSink> get sinks`
-  - `void addSink(LogSink sink)`
+  - `void addSink(LogSink sink)` — Adds [sink], the citations forgotten so that it is handed each payload whole before any line cites it (§6.2).
+  - `void Function() holdRotation()` — Holds the rotation of every sink that rotates ([RotationHold]), and answers the release, which lets them go once however often it is called.
   - `void removeSink(LogSink sink)`
+  - `static const citedKept` — How many payloads the log remembers having written whole, the one used least recently dropping out first (§6.2).
+  - `void forgetCited()` — Forgets every payload written whole, so its next use is whole again: at every roll of the log file (§6.2).
   - `bool isEnabled(LogLevel level)`
   - `void log(LogLevel level, String event, {Map<String, Object?> data = const {}, Object? error, StackTrace? stackTrace})`
+  - `void cite(LogLevel level, String event, {Map<String, Object?> data = const {}, Map<String, Object?>? payload})` — Logs [event] like [log], a payload written whole once cited after by its hash and the time of its whole line (§6.2).
+  - `static String? hashOf(Object? value)` — The SHA-256 of [value]'s canonical JSON, the hash a citation names, or null for a value JSON cannot hold, which is then always whole.
   - `void error(String event, {Map<String, Object?> data = const {}, Object? error, StackTrace? stackTrace})`
   - `void warning(String event, {Map<String, Object?> data = const {}, Object? error})`
   - `void info(String event, {Map<String, Object?> data = const {}})`
@@ -112,7 +126,7 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
 - **class `NotAProjectFolderException`**
   - `const NotAProjectFolderException(this.path)`
   - `final String path`
-- **function** `Future<String> createProject({ required String parentPath, required String tag, required Author author, String? name, required String epochLabel, r…`
+- **function** `Future<String> createProject({ required String parentPath, required String tag, required Author author, String? name, required String sceneName, })`
 - **function** `Future<String> copyProjectTo({ required String parentPath, required String folder, required ProjectSource source, })`
 - **function** `Future<void> deleteProjectFolder(String path)`
 - **function** `bool isDeletableProjectFolder(String path)`
@@ -139,7 +153,7 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
 - **variable** `const String firstSceneTag` — The short name of the scene a new project starts with.
 - **variable** `const Set<String> firstSceneKeys` — The keys [writeNewProject] writes into the first scene: a scene with these and no other is as it was made.
 - **function** `bool isUntouchedFirstScene(Entity scene)` — Whether [scene] is the first scene a new project is made with, untouched: [firstSceneTag], v1, exactly [firstSceneKeys], and never saved since (`created` equal to `updated`).
-- **function** `Future<String> writeNewProject(ProjectSource target, { required String tag, required Author author, String? name, required String epochLabel, requi…` — Writes the root manifest and the scene and project documents in data/ (§4.1).
+- **function** `Future<String> writeNewProject(ProjectSource target, { required String tag, required Author author, String? name, required String sceneName, int? y…` — Writes the root manifest and the scene and project documents in data/ (§4.1).
 - **function** `String rfc3339Now([DateTime? now])` — RFC 3339 UTC to the second (§7 `created` / `updated`), without Dart's microseconds.
 
 ### `lib/src/project_writer.dart`
@@ -148,10 +162,10 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `const NoManifestException()`
 - **class `NoSelectedProjectException`** — Declaring an epoch requires the project version in use for the viewer (§8.2).
   - `const NoSelectedProjectException()` — Refuses a missing project file or an unresolved choice between project versions.
-- **class `EpochSourceUnavailableException`** — Creating at a missing epoch requires a resolved version at the chosen source epoch.
-  - `const EpochSourceUnavailableException(this.groupKey, this.epoch)` — Refuses a missing group, source epoch or viewer resolution without choosing another source.
-  - `final String groupKey` — The canonical entity group whose source could not be resolved.
-  - `final String epoch` — The explicitly chosen source epoch.
+- **class `EpochSourceUnavailableException`** — An overlay at an epoch requires its entity's base in use for the viewer (§8.2).
+  - `const EpochSourceUnavailableException(this.groupKey, this.epoch)` — Refuses an overlay where no base resolves — none, none that decides, or one deleted — without making a base.
+  - `final String groupKey` — The canonical entity group whose base could not be resolved.
+  - `final String epoch` — The epoch the overlay needed, [baseEpoch].
 - **class `OutfitParentUnavailableException`** — A new outfit requires an existing character group in the project or library.
   - `const OutfitParentUnavailableException(this.character)` — Refuses an absent character without copying or creating its parent.
   - `final String character` — The complete character tag whose group is missing.
@@ -203,13 +217,14 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `Author runner(Author viewer)` — The handle the run's files are written under (§5.6, §14.4).
 - **variable** `const List<String> identityKeys` — The header fields that must equal the filename's (§7).
 - **enum `ContentProblem`** — What a file must say to be worth writing (§7, §8.2, §18.3).
-  - values: `nameRequired`, `versionLabelTooLong`, `epochsRequired`, `childrenNotAList`, `folderIntoItself`, `childListedTwice`
+  - values: `nameRequired`, `versionLabelTooLong`, `epochsRequired`, `childrenNotAList`, `folderIntoItself`, `childListedTwice`, `recordShape`
 - **class `ForkSourceUnreadableException`** — A fork's source could not be read to check it against the text it was read as; the fork was not written.
   - `const ForkSourceUnreadableException(super.path)`
 - **class `InvalidContentException`**
-  - `const InvalidContentException(this.problem)`
+  - `const InvalidContentException(this.problem, {this.problems = const []})`
   - `final ContentProblem problem`
-- **function** `void validateContent(EntityType type, Map<String, dynamic> json)` — Refuses content the format requires otherwise.
+  - `final List<String> problems` — For [ContentProblem.recordShape], each problem as `path: code`.
+- **function** `void validateContent(EntityType type, Map<String, dynamic> json, {({String stem, Map<String, dynamic> json})? base})` — Refuses content the format requires otherwise, and logs the mode it read the document in and the answer.
 - **class `RecordedWrite`** — One write a [ProjectWriter] made or is making: the source it went to, the path, and the text, null for a deletion.
   - `final ProjectSource root` — The source written: the project's, or the library's for a development-mode save of a library entity (§9.5).
   - `final String path` — The path within [root].
@@ -242,9 +257,9 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `Future<VersionStem> fork(Entity entity, {required Author? viewer, Map<String, dynamic>? content, String? draftLabel})` — Copies [entity] as the viewer's own next version (§13.1), holding [content] where given, and returns its stem.
   - `Future<String> declareEpoch(String label, {int? year, required Author? viewer})` — Appends an allocated epoch to the viewer's project version in use and returns its token (§8.2).
   - `Future<String> relabelEpoch(String tag, String label, {int? year, required Author? viewer})` — Gives the declared epoch [tag] of the viewer's project version in use a new label and year, and returns its token.
-  - `Future<VersionStem> createAtEpoch(EntityGroup group, String targetEpoch, {required String sourceEpoch, required Author? viewer, bool clear = false,…` — Copies a character or location's exact resolved source into a declared missing epoch as the viewer's v1.
-  - `Future<VersionStem> createOutfit(String character, String epoch, String name, {required Author? viewer, String? draftLabel})` — Creates a named outfit under an allocated owner identity for an existing character (§9.2).
-  - `Future<VersionStem> createEntity({ required EntityType type, required String tag, String? epoch, required String name, String? kind, required Autho…` — Writes a new entity as the viewer's first version (§9, §10, §13.1).
+  - `Future<VersionStem> createAtEpoch(EntityGroup group, String epoch, {required Author? viewer, String? draftLabel, Map<String, dynamic>? content})` — Makes the viewer's overlay of a library entity at the declared [epoch], as its v1, empty or with [content] (§8.2).
+  - `Future<VersionStem> createOutfit(String character, String name, {required Author? viewer, String? draftLabel})` — Creates a named outfit under an allocated owner identity for an existing character (§9.2).
+  - `Future<VersionStem> createEntity({ required EntityType type, required String tag, required String name, String? kind, required Author? viewer, Stri…` — Writes a new entity as the viewer's first version (§9, §10, §13.1).
   - `Future<List<String>> writePluginRun({ required PluginRun run, required List<Entity> sources, required List<Map<String, dynamic>> outputs, required…` — Writes what a plug-in's entity hook returned (Project Specification §14.4, §12.4, §5.6).
   - `static const renderRequestRequired` — The members a render record's `request` must hold (§12.2); the others are written where known.
   - `static const renderRequestOptional` — The members a render record's `request` may hold beside [renderRequestRequired].

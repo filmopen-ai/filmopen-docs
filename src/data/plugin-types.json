@@ -8,12 +8,14 @@
       "fo-fal",
       "fo-google",
       "fo-openai",
+      "fo-qwen",
+      "fo-runninghub",
       "fo-wan2gp"
     ],
     "description": "Create still images from a generation request.",
     "subtypes": [
       "Text to image — implemented",
-      "Image to image / reference-guided editing — implemented by fo-fal and fo-google"
+      "Image to image / reference-guided editing — implemented by fo-fal, fo-google, fo-qwen and fo-runninghub"
     ]
   },
   {
@@ -23,11 +25,13 @@
       "fo-atlascloud",
       "fo-cui",
       "fo-fal",
+      "fo-qwen",
+      "fo-runninghub",
       "fo-wan2gp"
     ],
     "description": "Create moving images from text or reference media.",
     "subtypes": [
-      "Text to video — implemented by fo-fal and fo-atlascloud",
+      "Text to video — implemented by fo-fal, fo-atlascloud and fo-qwen",
       "Image to video — implemented, from a first frame",
       "Reference images to video — implemented for Seedance 2.5",
       "Video to video — future adapters"
@@ -71,12 +75,15 @@
     "title": "Voice Generation",
     "packages": [
       "fo-elevenlabs",
-      "fo-fal"
+      "fo-fal",
+      "fo-fish",
+      "fo-qwen"
     ],
-    "description": "Design and audition an original reusable voice from a description.",
+    "description": "Design and audition an original reusable voice from a description, or keep one cloned from a recording.",
     "subtypes": [
       "Prompt to voice design — implemented",
-      "Save selected design as a provider voice — implemented"
+      "Save selected design as a provider voice — implemented",
+      "Clone a provider voice from a recorded sample — implemented by fo-fish and fo-qwen"
     ]
   },
   {
@@ -84,7 +91,9 @@
     "title": "Speech Synthesis",
     "packages": [
       "fo-elevenlabs",
-      "fo-fal"
+      "fo-fal",
+      "fo-fish",
+      "fo-qwen"
     ],
     "description": "Generate spoken audio from text.",
     "subtypes": [
@@ -100,9 +109,12 @@
       "fo-atlascloud",
       "fo-cui",
       "fo-fal",
+      "fo-fish",
       "fo-google",
       "fo-openai",
       "fo-openrouter",
+      "fo-qwen",
+      "fo-runninghub",
       "fo-wan2gp",
       "fo-xai"
     ],
@@ -182,6 +194,17 @@
     "subtypes": [
       "Story development and screenplay — implemented by Script Aid and Script Aid Lite",
       "Parse an imported screenplay — planned"
+    ]
+  },
+  {
+    "slug": "directors",
+    "title": "Directors",
+    "packages": [
+      "fo-director"
+    ],
+    "description": "Plan and time a scene's work.",
+    "subtypes": [
+      "Block timing with the text model — implemented"
     ]
   }
 ]

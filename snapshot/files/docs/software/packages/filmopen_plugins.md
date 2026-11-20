@@ -4,7 +4,7 @@
 
 What a FilmOpen plug-in is, as pure Dart: the manifest and its schemas (`plugin_manifest.dart`, `setting_spec.dart`), key ids and their store names (`key_id.dart`), **the interface definition read** (`plugin_api.dart`: `PluginApi`, from `plugins/filmopen-plugin-api.json`) held to by the checker the format package keeps and this barrel re-exports (`JsonShape`, `filmopen_format`'s `json_shape.dart`), the locale files and their namespaces (`plugin_strings.dart`), the package a plug-in is read through (`plugin_package.dart`: `PluginPackage`, `SourcePluginPackage`, `PluginFolder`) and the zip it travels in (`plugin_archive.dart`). Problems are codes (`plugin_issue.dart`), never sentences.
 
-**pure Dart.** 12 files, 3,207 lines under `lib/`; 205 tests in 23 files. Barrel: `lib/filmopen_plugins.dart`.
+**pure Dart.** 11 files, 3,001 lines under `lib/`; 204 tests in 22 files. Barrel: `lib/filmopen_plugins.dart`.
 
 ## Depends on
 
@@ -202,6 +202,7 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `final List<KeySlot> keys`
   - `final List<KeyId> uses` — Keys of other plug-ins, or the app's, this plug-in asks to use.
   - `final String? kind` — What sort of plug-in this is: `platform`, `model` or `tool`.
+  - `final String? chatActions` — The path of the chat actions this plug-in ships (§14.4 `chatActions`), in the assistant catalogue's action format; null where none is named, or where it is no string, which is reported.
   - `final Map<String, ImplementedInterface> implemented` — The interfaces this plug-in implements, by name (`implements`, §14.4).
   - `final int? minRevision` — The least `revision` of the interface this plug-in needs (§14.4).
   - `Iterable<ImplementedInterface> implementing(String name)` — The interfaces that hold a function of [name].
@@ -215,7 +216,7 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `bool callsPlugin(String tag)` — Whether this plug-in declares a call on any function of [tag].
   - `static const serverStartingCalls` — The calls that start a server or keep one up, which a server provider bills by the hour: its `deploy` and `wake` offers, and the interface's `deployServer` and `wakeServer`.
   - `bool get isServerProvider` — Whether this plug-in makes servers on demand: it declares `server-provider`, even where the declaration is faulty, so that a draft's faulty declaration still keeps its deployments to a server's own screen.
-  - `String? get workflowPath` — The declared workflow file, or null where no usable script-writer declaration exists.
+  - `Map<String, String> get delegates` — The plug-ins whose chat actions this assistant takes, by job (`director`, `script-writer`): its `implements.assistant.delegates`; empty where it names none.
   - `bool startsAServer(String name)` — Whether calling [name] would start or wake one of this server provider's servers ([serverStartingCalls]): what only a server's own screen may ask for, since a server runs up its bill until it is stopped.
   - `final bool usesAi` — `capabilities.ai`: the format's sugar, `ctx.ai.complete`.
   - `final bool usesUpload` — `capabilities.upload`: it sends media of the film to its platform or its server through `ctx.upload`.
@@ -345,63 +346,3 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
 - **function** `bool isPluginText(List<int> bytes)` — Whether a file of a plug-in is text: its bytes are valid UTF-8 (Specification §6.11).
 - **variable** `const stockRecordPath` — Where the library records the stock files it holds and what each held when the app wrote it.
 - **function** `Future<StockInstallReport> installStockPlugins({ required ProjectSource library, required ProjectSource bundle, required bool Function(String tag)…` — Brings the library's stock plug-ins up to the app's own, at every start and before any plug-in is read.
-
-### `lib/src/workflow_spec.dart`
-
-- **enum `WorkflowScope`** — Where a workflow section applies.
-  - values: `project`, `folder`, `scene`
-- **enum `WorkflowFieldKind`** — The five kinds of input a workflow step may ask for.
-  - values: `text`, `note`, `number`, `choice`, `flag`
-- **class `WorkflowRefused`** — A workflow refused whole, with the code and location of its first problem.
-  - `const WorkflowRefused(this.code, this.at)` — Keeps the first problem's code and location for the host to log.
-  - `final String code` — The reason: tooLarge, json, shape, offer, duplicateId, choices or reservedField.
-  - `final String at` — The location, including the shape problem where applicable; empty for the whole file.
-- **class `WorkflowLoad`** — The host's checked workflow or its logged refusal or failure.
-  - `const WorkflowLoad({this.spec, this.code, this.at})` — Holds a spec on success or code and location on refusal.
-  - `final WorkflowSpec? spec` — The checked workflow, absent on refusal.
-  - `final String? code` — notEnabled, path, a reader refusal or failed; null on success.
-  - `final String? at` — Where the refusal happened, where known.
-- **class `WorkflowSpec`** — A checked workflow and the decoded JSON accepted by its reader.
-  - `final Map<String, Object?> json` — The complete decoded map, kept for the app's plain-JSON seam.
-  - `final List<WorkflowSection> sections` — Sections in file order.
-  - `List<WorkflowStep> get steps` — Every step, in file order.
-  - `WorkflowStep? step(String id)` — The step with this file-wide id, or null for none.
-  - `List<WorkflowSection> sectionsFor(WorkflowScope scope, {String? kind})` — Sections of this scope, with folders matching either all kinds or the given kind.
-  - `static WorkflowSpec read(String text, {required PluginApi api, required PluginManifest manifest})` — Checks size, JSON, schema, offers, ids, choices and reserved fields, in that order.
-- **class `WorkflowSection`** — One heading and its ordered steps at a workflow scope.
-  - `final WorkflowScope scope` — Where this heading applies.
-  - `final String? kind` — The folder kind, or null for every kind.
-  - `final String heading` — A matching string key or the heading as written.
-  - `final String? help` — Optional help, resolved as a string key or text.
-  - `final int level` — The heading level, from one to three.
-  - `final List<WorkflowStep> steps` — The section's steps in file order.
-- **class `WorkflowStep`** — One offer invocation, its inputs, model preferences and completion condition.
-  - `final String id` — The file-wide unique id.
-  - `final String label` — A matching string key or the label as written.
-  - `final String? help` — Optional help, resolved as a string key or text.
-  - `final String offer` — The manifest's offer name.
-  - `final Map<String, Object?> args` — Arguments before the filled fields and app-owned focus are added.
-  - `final List<WorkflowField> fields` — Inputs to ask for in file order.
-  - `final List<String> llms` — Preferred catalogue ids, in order, subject to Use the LLM.
-  - `final WorkflowEstimate? estimate` — The plug-in's estimate, where declared.
-  - `final int? minutes` — The declared wall time, from one to thirty minutes.
-  - `int get wallMinutes` — The wall time, ten minutes where none is declared.
-  - `final WorkflowDone? done` — The project-derived completion condition, or no checkbox where absent.
-- **class `WorkflowField`** — One input on a workflow step's run dialog.
-  - `final String name` — The argument name, never the reserved focus.
-  - `final String label` — A matching string key or the label as written.
-  - `final WorkflowFieldKind kind` — The input's presentation.
-  - `final bool required` — Whether the field must be filled, false by default.
-  - `final List<String> choices` — Choices in declared order, as string keys or text.
-- **class `WorkflowEstimate`** — The declared call and token estimate used to quote a step.
-  - `final int calls` — The estimated call count.
-  - `final int inputTokens` — Estimated input tokens.
-  - `final int outputTokens` — Estimated output tokens.
-- **class `WorkflowDone`** — A completion condition read from the project's current snapshot.
-- **class `WorkflowDoneEntities`** — Counts entities beneath the focus, or characters, locations and documents project-wide.
-  - `final String type` — The entity type: fo, sc, ch, lo or dc.
-  - `final String? kind` — An optional kind filter.
-  - `final String? tag` — An optional tag filter.
-  - `final int min` — The minimum matching count.
-- **class `WorkflowDoneField`** — Tests whether the focus has a non-empty field at this path.
-  - `final String path` — The field path to read from the focus.

@@ -4,7 +4,7 @@
 
 A recording that can be sent to FilmOpen support (Software Specification §6.8): the flash at every picture the issue recorder takes, what the person says beside the pictures, and the description at the stop. The recorder (`filmopen_recorder`) writes the report and sends nothing.
 
-**Flutter.** 20 files, 3,599 lines under `lib/`; 149 tests in 12 files. Barrel: `lib/filmopen_support.dart`.
+**Flutter.** 20 files, 3,622 lines under `lib/`; 153 tests in 12 files. Barrel: `lib/filmopen_support.dart`.
 
 ## Depends on
 

@@ -4,7 +4,7 @@
 
 The device's identity (Software Specification §6.6b): a **P-256 key pair** the installation makes the first time it registers, its private half kept in the device's credential store (`CredentialStore.current` — DPAPI, the Keychain, the Keystore, the Secret Service; the Portal Specification's P14), and **the device's id, the SHA-256 of the public half** in lower-case hex — not a MAC address, an IMEI or a serial number, which an app can no longer read. Unlike those, the id can prove itself: the device signs with its key.
 
-**Flutter.** 10 files, 915 lines under `lib/`; 61 tests in 4 files. Barrel: `lib/filmopen_device.dart`.
+**Flutter.** 10 files, 951 lines under `lib/`; 62 tests in 4 files. Barrel: `lib/filmopen_device.dart`.
 
 ## Depends on
 

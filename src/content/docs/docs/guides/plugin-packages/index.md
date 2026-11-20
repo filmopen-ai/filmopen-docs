@@ -33,6 +33,7 @@ For generation, open a writable character in **Edit**, find the relevant media g
 | [fo-script-aid](../fo-script-aid/) | A screenwriting team |
 | [fo-script-aid-lite](../fo-script-aid-lite/) | A lighter writing room, one writer in five roles |
 | [fo-parse-script](../fo-parse-script/) | Planned: refining an imported screenplay |
+| [fo-director](../fo-director/) | Timing for every block of your scenes |
 | [fo-model-picker](../fo-model-picker/) | Fixed model and route defaults for render kinds and stages |
 | [fo-prompts](../fo-prompts/) | Default prompts for every kind of Prompt card |
 | [fo-styles](../fo-styles/) | 50 visual treatment styles to add to a render's prompt |

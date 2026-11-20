@@ -4,16 +4,16 @@
 
 Renders asked for anywhere in the application, run in one queue that needs no film (Software Specification §6.15). Pure Dart: it depends on `filmopen_jobs` and `filmopen_format` and nothing else of FilmOpen, and imports no Flutter and no library the web build lacks, so that a render can run where no film and no screen is — a peer's request through a later sharing service among them. A test holds that boundary (`test/boundary_test.dart`).
 
-**pure Dart.** 12 files, 4,764 lines under `lib/`; 273 tests in 13 files. Barrel: `lib/filmopen_render.dart`.
+**pure Dart.** 12 files, 4,841 lines under `lib/`; 278 tests in 13 files. Barrel: `lib/filmopen_render.dart`.
 
 ## Depends on
 
 - **filmopen_jobs** — uses `JobAction`, `JobPhase`, `JobUnavailable`, `JobView`, `Produced`, `ProducedItem`, `Producer`, `ProducerEvent`, `ProducerFailed`, `ProducerRun`, `ProducerState`
-- **filmopen_format** — uses `Author`, `Entity`, `EntityType`, `ExactDecimal`, `FileNameParser`, `FilmProject`, `MediaKind`, `MediaStage`, `Money`, `MoneyBasis`, `RenderTreatment`, `UsageBasis`, `VersionStem`, `chargedFailure`, `frozenJson`, `newUsageId`, `sameJson`
+- **filmopen_format** — uses `Author`, `EffectiveRead`, `Entity`, `EntityType`, `ExactDecimal`, `FileNameParser`, `FilmProject`, `MediaKind`, `MediaStage`, `Money`, `MoneyBasis`, `RenderTreatment`, `UsageBasis`, `VersionStem`, `baseEpoch`, `chargedFailure`, `effectiveEntityOf`, `frozenJson`, `newUsageId`, `overlaid`, `sameJson`
 
 ## Used by
 
-`filmopen_app`, `filmopen_plugin_host`, `filmopen_render_ui`
+`filmopen_app`, `filmopen_browser`, `filmopen_plugin_host`, `filmopen_render_ui`
 
 ## Public API
 
@@ -96,6 +96,7 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `final RenderQuote? quote` — The price of the choices asked about; null where the route gives none.
   - `final bool busy` — Whether this options inspection is busy and may be asked again.
   - `final DateTime? retryAt` — When a busy options answer may be asked for again, in UTC.
+  - `final Map<String, Object?> limits` — The route's own limits, as the contract's `limits` holds them — a fixed-frame route's `frames` and `fps` among them —; empty where it says none.
 - **enum `RenderServicePhase`** — Where a pending render is at its service, as the interface's pending `phase` says.
   - values: `queued`, `running`, `downloading`
 - **enum `RenderCancelState`** — What a service says of a render it was asked to stop, as the interface's `Cancelled` says.
@@ -493,10 +494,12 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `final String prompt` — The composed prompt, applied once and retained verbatim at submission.
   - `final Map<String, Object?> inputs` — Structured reference strings and maps in the same frozen JSON shape as RenderRequest.inputs.
   - `String get source` — The primary picked version's full stem, which RenderRequest.source names.
-- **class `OutfitRenderComposer`** — An outfit sheet's frozen character and outfit, in that order, at their exact filename epoch.
+- **class `OutfitRenderComposer`** — An outfit sheet's frozen character and outfit, in that order: the wearer at the outfit's filename epoch (§8.2).
   - `OutfitRenderComposer({required this.dependency, required this.parentPrompt, Map<String, Object?> parentInputs = const {}})` — Captures the picked character, its words and its inputs without later source access.
   - `final SourceSnapshot dependency` — The character's exact picked version and caller-computed content hash.
   - `final String parentPrompt` — The character's captured positive prompt, before the outfit's words.
   - `final Map<String, Object?> parentInputs` — The character's frozen reference inputs, before the outfit's references.
-  - `static Entity? resolveParent(FilmProject project, VersionStem outfit, Author? viewer)` — Picks the parent character only at the outfit's filename epoch, without creating an index entry (§9.2).
+  - `static EffectiveRead? parentRead(FilmProject project, VersionStem outfit, Author? viewer, {Map<String, Map<String, dynamic>> snapshots = const {}})` — The parent character's effective read at the outfit's filename epoch, without creating an index entry (§8.2, §9.2): its base overlaid with its overlay there, the base alone for an outfit at the base or an epoch the ch…
+  - `static String? parentTagOf(VersionStem outfit)` — The tag of [outfit]'s wearer: the outfit tag without its last dotted segment (§9.2); null for no outfit stem.
+  - `static Entity? resolveParent(FilmProject project, VersionStem outfit, Author? viewer)` — The parent character [parentRead] finds, as a reader uses it ([effectiveEntityOf]); null where none resolves.
   - `RenderComposition compose({required SourceSnapshot primary, required String prompt, Map<String, Object?> inputs = const {}})` — Joins the exact parent and outfit's words with a blank line and their references without truncation.

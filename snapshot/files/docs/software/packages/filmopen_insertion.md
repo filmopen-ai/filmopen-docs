@@ -4,21 +4,21 @@
 
 Media insertion, separate from storage and playback. This pure Dart package may depend on `filmopen_jobs`, `filmopen_media`, `filmopen_store` and `filmopen_format`, through their public barrels. It imports no state, forms, plug-in host or Flutter package. Consumers import only `filmopen_insertion.dart`.
 
-**pure Dart.** 25 files, 3,946 lines under `lib/`; 264 tests in 33 files. Barrel: `lib/filmopen_insertion.dart`.
+**pure Dart.** 25 files, 4,074 lines under `lib/`; 276 tests in 33 files. Barrel: `lib/filmopen_insertion.dart`.
 
 ## Depends on
 
 - **filmopen_jobs** — uses `JobAction`, `JobActionAck`, `JobCheckpoint`, `JobEngine`, `JobPersistence`, `JobPhase`, `JobRequest`, `JobResult`, `JobRun`, `JobUnavailable`, `JobView`, `JobViews`, `Produced`, `ProducedItem`, `ProducedValue`, `Producer`, `ProducerFailed`, `ProducerRun`, `ProducerState`, `refuseCredentialKeys`
 - **filmopen_media** — uses `BytesInput`, `FileInput`, `LocalMediaStore`, `MediaInput`, `MediaRef`, `MediaStore`, `PlayableBytes`, `PlayableFile`, `PlayableUrl`, `ProjectMedia`, `StoreProblem`, `UrlInput`
 - **filmopen_store** — uses `AppLog`, `Guards`, `LogLevel`, `PluginRun`, `ProjectWriter`, `WriteCancelled`, `WriteRecord`
-- **filmopen_format** — uses `Author`, `BatchStem`, `Entity`, `EntityType`, `FileNameParser`, `FilmProject`, `MediaEntry`, `MediaKind`, `MediaSlot`, `MediaSpans`, `MediaStage`, `RenderBatch`, `ShortName`, `StaleFileException`, `TakeName`, `VersionStem`, `VoiceBinding`, `acceptedKindsFor`, `acceptsFile`, `blockMediaGroups`, `chargedFailureMark`, `documentPath`, `entryNaming`, `isDurableProjectKey`, `isMediaGroupName`, `mediaContainerKey`, `mediaExtensionOf`, `mediaFilePath`, `mediaKindOf`, `nextBatchId` and 9 more
+- **filmopen_format** — uses `Author`, `BatchStem`, `Entity`, `EntityType`, `FileNameParser`, `FilmProject`, `MediaEntry`, `MediaKind`, `MediaSlot`, `MediaSpans`, `MediaStage`, `RenderBatch`, `ShortName`, `StaleFileException`, `TakeName`, `VersionStem`, `VoiceBinding`, `acceptedKindsFor`, `acceptsFile`, `blockMediaGroups`, `chargedFailureMark`, `documentPath`, `entriesIn`, `entryNaming`, `isDurableProjectKey`, `isMediaGroupName`, `mediaContainerKey`, `mediaExtensionOf`, `mediaFilePath`, `mediaKindOf` and 11 more
 - **filmopen_test_support (dev)** — uses nothing by name the digest could see
 
 Third-party: convert, crypto, http, image.
 
 ## Used by
 
-`filmopen_app`, `filmopen_browser`, `filmopen_forms`, `filmopen_insertion_ui`, `filmopen_jobs_ui`, `filmopen_plugin_host`, `filmopen_prompt_ui`, `filmopen_render_ui`, `filmopen_state`
+`filmopen_app`, `filmopen_assistant_ui`, `filmopen_browser`, `filmopen_compare`, `filmopen_forms`, `filmopen_insertion_ui`, `filmopen_jobs_ui`, `filmopen_plugin_host`, `filmopen_prompt_ui`, `filmopen_render_ui`, `filmopen_state`
 
 ## Public API
 
@@ -138,6 +138,7 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `List<String> get references` — The references to add to the entity's draft (§9.0), in order.
 - **class `MediaImportCancelled`** — A person's Stop, seen between the files of an import or between the chunks of one (§6.13).
   - `const MediaImportCancelled()`
+- **typedef** `typedef ImportMeasure` — What a caller that built a sound measured of it, recorded on its item as §12.2's measured properties.
 - **class `MediaImporter`** — The one way media enters a project.
   - `const MediaImporter({ required this.project, required this.store, required this.writer, this.now, this.maxBytes, this.keepForThumbnailBytes = maxTh…`
   - `final FilmProject project`
@@ -148,7 +149,7 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `final int keepForThumbnailBytes` — How much of a picture is held as it passes, for its thumbnail and its size.
   - `final Future<AudioProbe> Function(String path)? probeAudio` — The binding's measure of a clip's sound ([InsertionBinding.probeAudio]); null where there is none.
   - `final Future<ChunkHasher> Function() startHasher` — Starts one file's hash: on a worker isolate where the platform has threads ([startChunkHasher]); a test's own.
-  - `Future<ImportedMedia> import(Entity entity, List<MediaInput> inputs, { required Author? viewer, required List<String?> groups, PluginRun? run, bool…` — Imports [inputs] as takes of [entity]'s version, in one batch.
+  - `Future<ImportedMedia> import(Entity entity, List<MediaInput> inputs, { required Author? viewer, required List<String?> groups, List<ImportMeasure?>…` — Imports [inputs] as takes of [entity]'s version, in one batch.
 
 ### `lib/src/producer_failure.dart` — only producerFailureCode, producerFailureOf
 
@@ -178,7 +179,7 @@ Files under `lib/` the barrel does not reach; nothing outside the package may im
 - `lib/src/hash_worker.dart`: `ChunkHasher`, `InlineChunkHasher`
 - `lib/src/hash_worker_io.dart`: `startChunkHasher`, `_work`, `_IsolateHasher`
 - `lib/src/hash_worker_stub.dart`: `startChunkHasher`
-- `lib/src/insertion_attach.dart`: `_producerOf`, `_reported`, `_whole`, `_Attachment`
+- `lib/src/insertion_attach.dart`: `_producerOf`, `_reported`, `_whole`, `_speechLanded`, `_Attachment`
 - `lib/src/insertion_runtime.dart`: `_RestoreRefusal`, `_Film`, `RuntimeInsertionService`, `_AcknowledgementFailed`, `_MutationHeld`, `_Binding`
 - `lib/src/insertion_view_projection.dart`: `_projectInsertionView`, `_InsertionRun`, `_ImportProgress`
 - `lib/src/local_file.dart`

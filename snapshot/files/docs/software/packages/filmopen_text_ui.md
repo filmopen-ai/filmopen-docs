@@ -4,7 +4,7 @@
 
 The reusable prose editor and controller for fields in forms and scripts keeps shown text separate from canonical source, projects mentions as atomic placeholders and offers a literal mode. The controller owns an editable-text target adapter exposed as `controller.target`, so insertion uses shown-text offsets while saved text comes from the canonical source.
 
-**Flutter.** 6 files, 1,975 lines under `lib/`; 255 tests in 34 files. Barrel: `lib/filmopen_text_ui.dart`.
+**Flutter.** 6 files, 2,010 lines under `lib/`; 259 tests in 35 files. Barrel: `lib/filmopen_text_ui.dart`.
 
 ## Depends on
 
@@ -124,5 +124,7 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `final bool autofocus` — Whether the field takes the focus when it is first drawn, as a dialog's first box does.
   - `final ValueChanged<String>? onSubmitted` — Reports the canonical source when the field is submitted, Enter or the keyboard's action.
   - `final ValueChanged<bool>? onChooserOpen` — Reports whether one of the field's choosers — a typed mention's or a chip's replacement — is open, as it opens and closes, for a consumer whose own keys must give way to it.
+  - `final MentionOpener? opener` — What a chip opens (§9.5): asked as the chooser opens on a chip (`chooser`), whose *Open {name}* then leads it, and, on a read-only box, for the chip's own tap (`chip`); null opens nothing, as before.
   - `final UndoHistoryController? undoController` — An optional observer/controller for the field's Undo and Redo.
+- **typedef** `typedef MentionOpener` — What a chip naming [target] opens from [source] through [door] — `chooser` for the chooser's *Open {name}*, `chip` for a read-only chip's tap — or null where it opens nothing; the consumer resolves, logs and opens (§9…
 - **function** `Widget proseChip(BuildContext context, ProseController controller, ProseMention mention, int ordinal, bool bold, {required String identifier, VoidC…` — A mention's chip, the editor's and a box's alike (§9.8): its name after `@` and its picture.

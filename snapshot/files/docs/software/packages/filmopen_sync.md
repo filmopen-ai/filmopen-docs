@@ -4,7 +4,7 @@
 
 Keeping a film's `data/` and `media/` in step with a target that shares them — a folder on a service, a folder on this computer — local first: what a target has and what it lacks is one difference, and the difference runs as sending and receiving jobs of `filmopen_jobs`, media four at a time and documents one at a time, through a lost connection, a closed application and a hold a sign-in or a person sets. Pure Dart; it imports the format and the jobs engine and nothing of the application, and it draws nothing: its state is `JobView`s.
 
-**pure Dart.** 27 files, 4,219 lines under `lib/`; 276 tests in 29 files. Barrel: `lib/filmopen_sync.dart`.
+**pure Dart.** 27 files, 4,222 lines under `lib/`; 277 tests in 29 files. Barrel: `lib/filmopen_sync.dart`.
 
 ## Depends on
 

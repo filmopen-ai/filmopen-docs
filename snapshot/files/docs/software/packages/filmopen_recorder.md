@@ -4,14 +4,14 @@
 
 The issue recorder (Software Specification §6.8). While `Recorder.instance` records, every tap, drag, scroll, key, typed text, draft change, navigation, tab, route, setting and log event goes into `tape.jsonl`, with a JPEG of the whole view after each action, into a report folder beside the app's logs (`reportsDirectory()`: on Windows `%LOCALAPPDATA%\FilmOpen\reports\<YYMMDDHHMMSS>\`). The folder also holds `environment.json`, the project's text files as they were at the start (`project/`) and at the stop (`project-after/`), the library's (`library/`) and the app log of this run and the one before, whole (`log.jsonl`, `copyLogRuns`, the runs named in `environment.json`'s `logRuns`). While it records the log is verbose (`AppLog.forceVerbose`), the setting untouched. On the web the tape is kept in memory and nothing is written.
 
-**Flutter.** 8 files, 1,468 lines under `lib/`; 45 tests in 7 files. Barrel: `lib/filmopen_recorder.dart`.
+**Flutter.** 8 files, 1,755 lines under `lib/`; 52 tests in 7 files. Barrel: `lib/filmopen_recorder.dart`.
 
 ## Depends on
 
-- **filmopen_format** — uses `Entity`
-- **filmopen_store** — uses `AppLog`, `LogEntry`, `LogSink`
+- **filmopen_format** — uses `Entity`, `ProjectSource`
+- **filmopen_store** — uses `AppLog`, `LogEntry`, `LogLevel`, `LogSink`, `MemoryLogSink`
 - **filmopen_platform** — uses `reportsDirectory`
-- **filmopen_state** — uses `AutomationHost`, `BrowserState`, `DraftObserver`, `DraftObservers`, `FieldRegistry`, `LifecycleHook`, `NavIndex`, `OpenDrafts`, `RouteChange`, `RouteEvent`, `RouteEvents`, `RouteListener`, `SemanticsHit`, `Settings`, `browserProvider`, `builtMoment`, `currentTab`, `describeControl`, `findById`, `focusedTextIdentifier`, `isDictationCaption`, `isLiveDictationControl`, `localizationsProvider`, `navIndexProvider`, `projectProvider`, `selectionToJson`, `semanticsNodeAt`, `semanticsOwnerOf`, `settingsProvider`, `settleFrames` and 2 more
+- **filmopen_state** — uses `AutomationHost`, `BrowserState`, `DraftObserver`, `DraftObservers`, `FieldRegistry`, `LifecycleHook`, `NavIndex`, `OpenDrafts`, `RouteChange`, `RouteEvent`, `RouteEvents`, `RouteListener`, `SemanticsHit`, `Settings`, `browserProvider`, `builtMoment`, `currentTab`, `describeControl`, `findById`, `focusedTextIdentifier`, `isDictationCaption`, `isLiveDictationControl`, `kSettleQuiet`, `localizationsProvider`, `navIndexProvider`, `nextFrame`, `projectProvider`, `selectionToJson`, `semanticsNodeAt`, `semanticsOwnerOf` and 4 more
 - **filmopen_test_support (dev)** — uses nothing by name the digest could see
 
 Third-party: flutter_riverpod, image.
@@ -33,6 +33,7 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `final ValueNotifier<bool> recording` — Whether a recording runs; the rail's button listens to it.
   - `final ValueNotifier<bool> busy` — Whether a recording is starting or stopping — the open drafts, the folder, the snapshot — so a button can wait rather than be pressed twice.
   - `ValueListenable<int> get shots` — How many pictures this recording has written: zero at [start], raised once a picture's bytes and its `shot` line are written, so that whoever listens acts after the capture — the flash that tells the person a picture…
+  - `ValueListenable<String?> get stopStep` — The step a [stop] is on — `drafts`, `project` or `log` — set as each starts, and null when no stop runs, after one ended and after one failed, so that the rail's finishing dialog can say what it waits for (§6.8).
   - `final Duration valueDelay` — How long after the last key the boxes are read for what was typed.
   - `final double dragDistance` — How far, in logical pixels, a pointer moves before a click is a drag.
   - `final Duration draftsLimit` — The longest [start] and [stop] wait for the open drafts to be written.
@@ -44,7 +45,7 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `int get elapsedMilliseconds` — The tape's clock while a recording runs — what a line's `t` says, so that a commentary's lines and the tape's share one clock — and zero while nothing records.
   - `bool get lastStopFailed` — Whether the last [stop] failed after giving the doors back (its folder may lack `project-after/` or `log.jsonl`); `recorder.failed` says why.
   - `Future<bool> start(ProviderContainer container, { String? appVersion, String? build, String? commit, String? builtAt, PictureSize pictures = const…` — Starts a recording of the app [container] runs.
-  - `Future<String?> stop({String reason = 'stopped'})` — Ends the recording: reads the boxes a last time, waits for the last picture and the open drafts, gives back every door, writes `stop`, the project's files as they are now and the log's tail.
+  - `Future<String?> stop({String reason = 'stopped', bool paintSteps = false})` — Ends the recording: reads the boxes a last time, waits for the last picture and the open drafts, gives back every door, writes `stop`, the project's files as they are now and the log's tail.
   - `Future<void> get idle` — Waits for the picture and the state after the last action.
 - **function** `Future<List<int>?> captureWindowJpeg({double? pixelRatio, int quality = 90})` — The whole view ([AutomationHost.windowKey]) painted at [pixelRatio] — the view's own where null — as JPEG of [quality] (§3.2).
 
@@ -61,8 +62,9 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
 
 - **class `ReportFolder`** — The files of one recording.
   - `String? get path` — The folder's path on disk; null for a recording kept in memory.
+  - `int get flushes` — How many writes this folder has forced to the disk: each line of the tape ([appendLine]), each picture ([writeBytes]) and each piece of the log appended ([appendBytes]); never a whole text file ([writeText]): a snapsh…
   - `void appendLine(String relativePath, String line)` — Appends [line] and a newline to the file at [relativePath].
-  - `void writeText(String relativePath, String text)` — Writes [text] as the whole file at [relativePath].
+  - `void writeText(String relativePath, String text)` — Writes [text] as the whole file at [relativePath], left to the system to put on the disk.
   - `void writeBytes(String relativePath, List<int> bytes)` — Writes [bytes] as the whole file at [relativePath].
   - `void appendBytes(String relativePath, List<int> bytes)` — Appends [bytes] to the file at [relativePath]: the log, copied a chunk at a time.
 - **class `LogRuns`** — What a report's `log.jsonl` holds of the app log (§6.8): the starts it begins at, what was copied, and where this run's own lines begin in it.
@@ -90,11 +92,13 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
 
 - **class `DirectoryReportFolder`** — A folder on disk: not here, where nothing is written.
   - `DirectoryReportFolder(this.path)`
+  - `Future<LogRuns> copyLog(String relativePath, String? logPath, {required Map<String, int> lengths, int runs = 2})` — Not available: no log file here.
+- **function** `Map<String, int> logLengths(String? path)` — No log file here.
 - **variable** `const bool hasReportFolders` — Whether recordings are written to disk here: not on the web.
 - **function** `Future<ReportFolder> openReportFolder({DateTime? now})` — Not available: a recording here is kept in memory.
 - **function** `String operatingSystemVersion()`
 - **function** `String? userHomeDirectory()` — No home here: the web has no paths of the person's.
-- **function** `Future<LogRuns> copyLogRuns(String? path, void Function(List<int> bytes) append, {int runs = 2})` — No log file here.
+- **function** `Future<LogRuns> copyLogRuns(String? path, void Function(List<int> bytes) append, {int runs = 2, Map<String, int>? lengths})` — No log file here.
 - **function** `Future<List<int>?> encodeJpeg(int width, int height, Uint8List rgba, {int quality = 90})` — No JPEG here: the web build writes no screenshot.
 - **function** `ReportFolder openReportFolderIn(String parent, {DateTime? now})` — Not available: a recording here is kept in memory.
 
@@ -121,4 +125,4 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
 
 Files under `lib/` the barrel does not reach; nothing outside the package may import them.
 
-- `lib/src/report_folder_io.dart`: `hasReportFolders`, `DirectoryReportFolder`, `openReportFolder`, `openReportFolderIn`, `operatingSystemVersion`, `userHomeDirectory`, `copyLogRuns`, `_eachChunk`, `_startLine`, `_startBytes`, `_mentionsStart`, `encodeJpeg`
+- `lib/src/report_folder_io.dart`: `hasReportFolders`, `DirectoryReportFolder`, `_copyOnIsolate`, `_copyInto`, `logLengths`, `_rotatedOf`, `openReportFolder`, `openReportFolderIn`, `operatingSystemVersion`, `userHomeDirectory`, `copyLogRuns`, `_collect`, +5

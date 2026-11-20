@@ -4,7 +4,7 @@
 
 Prototype A of the timeline engine (Software Specification §19): MLT behind `filmopen_engine`'s `TimelineEngine`, as a Flutter plug-in for Linux and Windows.
 
-**Flutter.** 7 files, 1,604 lines under `lib/`; 69 tests in 6 files. Barrel: `lib/filmopen_engine_mlt.dart`.
+**Flutter.** 7 files, 1,685 lines under `lib/`; 80 tests in 8 files. Barrel: `lib/filmopen_engine_mlt.dart`.
 
 ## Depends on
 

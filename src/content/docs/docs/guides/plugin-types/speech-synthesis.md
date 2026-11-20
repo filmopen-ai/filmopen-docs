@@ -10,6 +10,8 @@ For fo-elevenlabs, the host sends spoken text and the selected persistent voice 
 
 fo-fal renders the catalogue's Eleven v3 speech row on fal from text. Its audio is ordinary project media, added at **Voice samples** or **Sound samples**.
 
+fo-fish speaks a line, or a whole dialogue, in a voice kept on the person's Fish Audio account. fo-qwen speaks in one of Qwen's preset voices or a voice it kept.
+
 An uploaded WAV or MP3 alone is not a reusable ElevenLabs voice ID. Use [Voice Generation](../voice-generation/) to design, audition and save a voice first. The ElevenLabs integration produces 24 kHz WAV; streaming and cloning are outside its implemented scope.
 
 ## Subtypes
@@ -21,5 +23,7 @@ An uploaded WAV or MP3 alone is not a reusable ElevenLabs voice ID. Use [Voice G
 
 - [fo-elevenlabs](/docs/platforms/elevenlabs/)
 - [fo-fal](/docs/platforms/fal/)
+- [fo-fish](/docs/platforms/fishaudio/)
+- [fo-qwen](/docs/platforms/qwen/)
 
 [All types of plugins](../)

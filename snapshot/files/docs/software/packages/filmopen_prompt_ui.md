@@ -4,16 +4,16 @@
 
 The Prompt card (Software Specification §9.3): one prompt of a document (Project Specification §9.0) as a card of its own, on every editor that holds a prompt. It sits below its three consumers, `filmopen_forms`, `filmopen_render_ui` and `filmopen_browser`, and imports none; it imports `filmopen_insertion` and `filmopen_insertion_ui` for the box below.
 
-**Flutter.** 5 files, 1,077 lines under `lib/`; 56 tests in 4 files. Barrel: `lib/filmopen_prompt_ui.dart`.
+**Flutter.** 5 files, 1,326 lines under `lib/`; 81 tests in 4 files. Barrel: `lib/filmopen_prompt_ui.dart`.
 
 ## Depends on
 
-- **filmopen_format** — uses `Author`, `Entity`, `EntityGroup`, `EntityType`, `FilmProject`, `MediaKind`, `MediaLocation`, `MediaSlot`, `MediaStage`, `PathValue`, `PromptPath`, `PromptState`, `ReferenceKind`, `ReferenceTarget`, `entityPlacePrompts`, `isGroupDeleted`, `mediaContainerKey`, `parseInstant`, `projectKeyOf`, `promptAt`, `promptCreatedKey`, `promptPluginKey`, `promptStateOf`, `promptWriterKey`, `promptsKey`, `renderStageOf`, `sameJson`, `setPathText`, `setPathValue`, `stringField` and 2 more
-- **filmopen_store** — uses `AppLog`
-- **filmopen_state** — uses `DraftRefusal`, `EditableDraft`, `OpenDrafts`, `PluginCallControl`, `PluginCallDone`, `PluginCallFailed`, `PluginInvocation`, `PromptWriter`, `WriterToken`
-- **filmopen_media** — uses `MediaFetch`, `ProjectMedia`, `PromptToken`, `promptTokenCandidates`
-- **filmopen_media_ui** — uses `Function`, `stageBorder`
-- **filmopen_text_ui** — uses `MentionCandidate`, `MentionCandidates`, `mentionCandidateId`, `shownMentions`
+- **filmopen_format** — uses `Author`, `Entity`, `EntityGroup`, `EntityType`, `FilmProject`, `MediaKind`, `MediaLocation`, `MediaSlot`, `MediaStage`, `PathValue`, `PromptPath`, `PromptState`, `ReferenceKind`, `ReferenceTarget`, `baseEpoch`, `entityPlacePrompts`, `isGroupDeleted`, `mediaContainerKey`, `parseInstant`, `pathFits`, `projectKeyOf`, `promptAt`, `promptCreatedKey`, `promptHolderUpdated`, `promptPluginKey`, `promptSpansKey`, `promptStateOf`, `promptWriterKey`, `promptsKey`, `renderStageOf` and 6 more
+- **filmopen_store** — uses `AppLog`, `LogLevel`
+- **filmopen_state** — uses `DraftRefusal`, `EditableDraft`, `EntitySelection`, `OpenDrafts`, `PluginCallControl`, `PluginCallDone`, `PluginCallFailed`, `PluginInvocation`, `PromptWriter`, `WriterToken`, `canOpenEntity`, `selectionToJson`, `startingPromptWriter`
+- **filmopen_media** — uses `MediaFetch`, `ProjectMedia`, `PromptToken`, `TaggedMediaScan`, `promptKindNamesMedia`, `promptTokenCandidates`, `taggedMedia`
+- **filmopen_media_ui** — uses `Function`, `StageBorder`, `stageBorder`
+- **filmopen_text_ui** — uses `MentionCandidate`, `MentionCandidates`, `MentionOpener`, `mentionCandidateId`, `shownMentions`
 - **filmopen_ui** — uses `Breakpoints`, `DashedBorderPainter`, `scopedId`
 - **filmopen_l10n** — uses nothing by name the digest could see
 - **filmopen_insertion** — uses `BlockPlace`, `Function`, `InsertionTarget`, `SlotPlace`, `TargetPlace`
@@ -34,11 +34,13 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
 - **function** `String promptTitleOf(AppLocalizations l10n, String kind)` — The Prompt card's title for a prompt of [kind] (§9.0): *Reference prompt*, *Sheet prompt*, and so on; *Prompt* for a kind this app does not know.
 - **function** `bool promptFieldFocused(String stem, PromptPath at)` — Whether a text field of a card on the prompt at [at] of [stem] has the focus: read before a write, whose reseed may take the focus away.
 - **class `PromptCard`** — One prompt of a document as a card of its own (§9.3), framing the boxes of its words.
-  - `const PromptCard({ super.key, required this.kind, required this.at, required this.entity, required this.read, required this.binding, required this.…` — The card of the prompt at [at] in [entity], read through [read], written through [binding] where there is one.
-  - `final String kind` — The writers' target: `character-reference`, `character-sheet`, `first-frame`, … (revision 12).
-  - `final PromptPath at` — Where the prompt stands in the document: its path, or a block's id and its path within the block.
-  - `final Entity entity` — The file the prompt is in: its identity is the `Entity` the writer is given, its author the one a prompt with no plug-in's tag is written by.
-  - `final Map<String, dynamic> Function() read` — The document as it stands now: the form's draft on a page, read again at every build.
+  - `const PromptCard({ super.key, required String this.kind, this.title, required PromptPath this.at, required Entity this.entity, required Map<String,…` — The card of the prompt at [at] in [entity], read through [read], written through [binding] where there is one.
+  - `const factory PromptCard.request({Key? key, String? title, required List<Widget> fields})` — A card of words that are the request's own (§9.3) — a Layout's, a continued take's, a final render's —: the same frame and header around [fields], which its owner holds and logs.
+  - `final String? kind` — The writers' target: `character-reference`, `character-sheet`, `first-frame`, … (revision 12).
+  - `final String? title` — The header's title; null for the prompt's own ([promptTitleOf]): the render dialog's says just *Prompt*.
+  - `final PromptPath? at` — Where the prompt stands in the document: its path, or a block's id and its path within the block.
+  - `final Entity? entity` — The file the prompt is in: its identity is the `Entity` the writer is given, its author the one a prompt with no plug-in's tag is written by.
+  - `final Map<String, dynamic> Function()? read` — The document as it stands now: the form's draft on a page, read again at every build.
   - `final EditableDraft? binding` — The draft the card writes through; null where the prompt cannot be written here.
   - `final List<Widget> fields` — The boxes of the prompt's words, built by the page.
   - `final String? readOnlyReason` — Why the prompt cannot be written here, where [binding] is null; a general sentence by default.
@@ -50,13 +52,10 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
 ### `lib/src/prompt_generate.dart`
 
 - **variable** `final promptWritten` — Told each prompt *Render* has written, by stem, and whether its card's field had the focus as the write began (§9.3).
-- **variable** `const (String, String) basicPromptWriter` — The stock free writer the Workflow tab's *Render* asks (§9.3).
-- **function** `({(String, String) pair, ({String id, String name, String? rate, String? quote})? llm}) startingPromptWriter(List<PromptWriter> offered)` — The writer a prompt's card starts on and the Workflow tab's *Render* asks, of those [offered] (§9.3).
-- **typedef** `typedef WriterAnswer` — A writer's answer: its words, or the [code] and [reason] of having none, [failed] where it could not answer at all.
+- **typedef** `typedef WriterAnswer` — A writer's answer: its words — a voice's [auditionText] beside them —, or the [code] and [reason] of having none, [failed] where it could not answer at all.
 - **function** `Future<WriterAnswer> askWriter({required String target, required Entity source, required (String, String) writer, String? model, String? blockId, L…` — Asks [writer], a plug-in's tag and a writer's id, to write the prompt of [target] from [source] (§9.0).
 - **function** `String? writerAnswerLine(AppLocalizations l10n, WriterAnswer answer)` — The sentence for an [answer] without words.
-- **function** `void withWords(Map<String, dynamic> draft, PromptPath at, String positive, String? negative, String tag, String id)` — Sets a writer's words on the prompt at [at] of [draft], in place (§9.0): `positive`, `negative` (removed where the writer gave none) and the writer's pair, [tag] and [id], and no `created`, which the writer stamps; it…
-- **function** `String? promptHolderUpdated(Map<String, dynamic> document, PromptPath at)` — The holder's `updated`, what [promptStateOf] reads a prompt against (§9.0).
+- **function** `void withWords(Map<String, dynamic> draft, PromptPath at, String positive, String? negative, String tag, String id, {Map<String, dynamic>? inherite…` — Sets a writer's words on the prompt at [at] of [draft], in place (§9.0): `positive`, `negative` (removed where the writer gave none), on a voice its [auditionText] (kept as it was where the writer gave none) and the w…
 - **function** `String? promptWriterTarget(EntityType type, String kind)` — The writers' target of the stored [kind] of a prompt on a document of [type]; null for a kind with no box.
 - **function** `TargetPlace? promptPlaceOf(EntityType type, PromptPath at)` — The picture or clip place the prompt at [at] of a document of [type] is rendered into; null for any other prompt: a voice's, whose sample renders from its audition, and a treatment's, which renders into no place.
 - **function** `String generateKey(String placeKey, String kind)` — The key of a *Generate* box: the place's `InsertionTarget.placeKey`, then the kind of the prompt it is rendered from.
@@ -66,18 +65,24 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
 ### `lib/src/prompt_mentions.dart`
 
 - **class `ProjectMentionCandidates`** — The project's contextual names and resolved pictures for the shared mention chooser.
-  - `ProjectMentionCandidates(this._project, this._viewer, {this.prompt})` — Binds candidates to the rendered project and its current viewer; [prompt] names the prompt kind whose source holds it, for the log.
+  - `ProjectMentionCandidates(this._project, this._viewer, {this.prompt, AppLocalizations? l10n})` — Binds candidates to the rendered project and its current viewer; [prompt] names the prompt kind whose source holds it, for the log.
   - `final String? prompt` — The prompt kind of the [PromptMentionCandidates] this serves, or null for a prose box's own source.
   - `FilmProject get project` — The project the candidates are read from.
   - `Author? get viewer` — The viewer each entity resolves for.
   - `bool update(FilmProject project, Author? viewer)` — Updates contextual membership without replacing the controller's candidate source.
-- **class `PromptMentionCandidates`** — A prompt box's `@` source (§9.8): the media a prompt of the writers' [kind] may name, and nothing else offered.
-  - `PromptMentionCandidates(this.kind)` — A source for prompts of [kind] (`character-sheet`, `first-frame`…), empty until [update].
+  - `String? holderOf(ReferenceTarget target)` — The stem of the version holding the tagged media [target] names, as the tag scan resolved it; null for any other.
+- **class `PromptMentionCandidates`** — A prompt box's `@` source (§9.8): the media a prompt of the writers' [kind] may name, and nothing else offered; for its [notes] box, the film's characters, locations and props first.
+  - `PromptMentionCandidates(this.kind, {this.notes = false})` — A source for prompts of [kind] (`character-sheet`, `first-frame`…), empty until [update]; [notes] for the Notes box.
   - `final String kind` — The writers' prompt kind the tokens are for.
+  - `final bool notes` — Whether this is a Notes box's source, offering the entities a writer is to read beside the pictures.
   - `bool update(FilmProject project, Author? viewer, Entity document, AppLocalizations l10n)` — Binds to the project, viewer, the file the prompt is on and the names' language; true at the first binding and where the list a box has read changed.
+  - `String? holderOf(ReferenceTarget target)` — The stem of the version holding the media [target] names — the token's own resolution: the file the prompt is on, or in a frame the version in use — or, for a tag the film names, the tag scan's; null for any other; re…
+- **function** `({EntitySelection? target, String decision}) mentionDestination(FilmProject? project, Author? viewer, MentionCandidates? source, ReferenceTarget ta…` — Where a chip naming [target] from [source] opens (§9.5), with the decision: `opened` and the object's page — a character, location or prop unqualified, or a media token's holder at its version, so at its epoch —, else…
+- **function** `MentionOpener mentionOpenerWith({required FilmProject? Function() project, required Author? Function() viewer, required bool Function(EntitySelecti…` — What an `@` chip opens from the place [from] (§9.5): the object [mentionDestination] finds in [project] for [viewer], through [open] — `openEntity`, the one door every link uses.
 - **function** `String promptTokenName(AppLocalizations l10n, PromptToken token)` — What a prompt's chooser and chip call [token].
 
 ### `lib/src/prompt_words.dart`
 
 - **typedef** `typedef ClearedWriter` — The writer a person's words took away from a prompt: the plug-in's tag and the writer's id, as the prompt held them.
 - **function** `ClearedWriter? withPromptWordChanged(Map<String, dynamic> document, PromptPath at, String side, String text)` — Writes a person's words into one side of a prompt, taking its writer away where they changed (§9.0).
+- **function** `({Object? before, String? after})? withPromptNotesChanged(Map<String, dynamic> document, PromptPath at, String text)` — Writes a person's Notes into the prompt at [at] in [document] (§9.0): `notes` alone, trimmed, removed where empty; its words and its writer's pair kept, since Notes are what the writer is asked to follow, not words of…

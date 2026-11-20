@@ -5,7 +5,7 @@ slug: docs/platforms/fal
 sidebar:
   label: fal
   order: 2
-lastUpdated: 2026-11-09
+lastUpdated: 2026-11-18
 ---
 
 - [What it is and what FilmOpen uses it for](#what-it-is-and-what-filmopen-uses-it-for)
@@ -26,6 +26,7 @@ fal runs many makers' image, video and voice models behind one account and one k
 | GPT Image 2.5 | OpenAI | Makes an image from a prompt, or edits one with reference images |
 | Z-Image-Turbo | Alibaba (Tongyi Lab) | Makes an image from a prompt, quickly and cheaply |
 | FLUX.2 [klein] 4B | Black Forest Labs | Edits an image |
+| Krea 3 | Krea | Makes an image from a prompt |
 | MiniMax H3 Max and Seedance 2.5 | MiniMax and ByteDance | Make a shot from a prompt, or from its first frame |
 | Kling Avatar 2.0 and LTX-2.5 | Kuaishou and Lightricks | Make a speaking shot, or one timed to your own audio |
 | Eleven v3 | ElevenLabs | Speaks a line |
@@ -49,6 +50,7 @@ Images:
 | GPT Image 2.5 | Per million tokens: $5 text in, $8 image in, $30 image out |
 | Z-Image-Turbo | $0.005 a megapixel |
 | FLUX.2 [klein] 4B | $0.01 a megapixel |
+| Krea 3 | $0.025 a megapixel; FilmOpen quotes $0.025 at 1280×720 and 1024×1024, $0.10 at 2048×2048 |
 
 Video, per second:
 

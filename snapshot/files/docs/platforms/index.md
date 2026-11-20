@@ -5,12 +5,12 @@ slug: docs/platforms
 sidebar:
   label: Overview
   order: 0
-lastUpdated: 2026-11-09
+lastUpdated: 2026-11-18
 ---
 
 FilmOpen reaches AI models through plugins, one for each platform. You pay for a model in one of three ways:
 
-- **FilmOpen credit.** Top up your account on filmopen.ai and use the platforms below without a key of your own. FilmOpen passes on the provider's actual rate and charges 8% plus the payment processor's fees when you top up.
+- **FilmOpen credit.** Top up your account on filmopen.ai and use the platforms below without a key of your own. FilmOpen passes on the provider's rate, as each platform's page states it, and charges 8% plus the payment processor's fees when you top up.
 - **Your own key.** Open an account with a platform, add money there, create an API key, and save it on the plugin's page under **Settings → Plugins**. FilmOpen then sends your requests to that platform, and the platform bills you directly, at its own prices.
 - **Your own machine.** ComfyUI and WanGP run on your own computer or a server you name, with no key and no charge per use from FilmOpen.
 
@@ -29,10 +29,13 @@ Every page dates its prices. Platforms change them often, so each page links to 
 | [Anthropic (Claude)](/docs/platforms/anthropic/) | Writing, on your key or your Claude Code | `fo-anthropic` | Not yet |
 | [Google AI Studio](/docs/platforms/google/) | Gemini text and Nano Banana pictures | `fo-google` | Not yet |
 | [ElevenLabs](/docs/platforms/elevenlabs/) | Voice design and speech | `fo-elevenlabs` | Yes |
+| [Fish Audio](/docs/platforms/fishaudio/) | Voice design, speech and dialogue | `fo-fish` | Yes |
 | [Atlas Cloud](/docs/platforms/atlascloud/) | Images and video, from many makers | `fo-atlascloud` | Yes |
 | [Salad](/docs/platforms/salad/) | A rented GPU server for ComfyUI | `fo-salad` | Yes, as server compute |
 | [ComfyUI](/docs/platforms/comfyui/) | Images and video on your own machine or a server | `fo-cui` | Runs on your machine |
 | [WanGP](/docs/platforms/wan2gp/) | Frames, clips and writing on your own machine or a server | `fo-wan2gp` | Runs on your machine |
+| [Qwen Cloud](/docs/platforms/qwen/) | Pictures, video and speech from Alibaba's Qwen and Wan models | `fo-qwen` | Not yet |
+| [RunningHub](/docs/platforms/runninghub/) | FilmOpen's ComfyUI pictures and clips on RunningHub's GPUs | `fo-runninghub` | Yes |
 
 The sections below compare platforms' prices and what they ask of you. They were checked between 14 and 18 September 2026, and some name platforms FilmOpen doesn't use yet.
 

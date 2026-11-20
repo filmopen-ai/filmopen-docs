@@ -30,6 +30,32 @@ translated or regenerated.
 
 ## Changes in 1.45
 
+- **A placeholder** (§9, §10.3, A.8; 16 November 2026): a block's clip prompt may name the blocks its shot covers,
+  `spans` `{ "blocks": [...] }`, its own block first; in script order one no earlier live one covers is live. A
+  change of `spans` outdates the prompt, and a spanning clip prompt is read against every block it names.
+- **A shot rendered** (§10.3; 17 November 2026): a clip rendered at a live placeholder's head takes its `spans`; one attached over several blocks archives, in the same write, the usable clips of the blocks it covers.
+- **A preferred clip length** (§14.8; 16 November 2026): a video entry's optional `capabilities.preferred_length_s`,
+  absent the longest length the route offers.
+- **A folder's epoch** (§6.1, §10.1, §10.2, §8.7, A.5, Appendix B; 16 November 2026): a folder may name an
+  `epoch`, a declared token. A scene that names none is read at that of the nearest folder above it that
+  names a declared one, else at the project's default; each level overrides the one above, an undeclared
+  token is skipped, and the inherited epoch is never written into a scene.
+- **A treatment holds no prompt** (§8.7, §9, §9.0, §9.5, A.7, A.11; 15 November 2026): `prompts.treatment` is no
+  longer part of a project's or a folder's `visual_style` or of a Style, and `treatment` is no prompt kind a writer
+  serves. A render adds after the entity's own prompt the treatment's primary leaves alone; a treatment's other
+  leaves, its `preset` and the frozen `treatment` of a render's record stay. A prompt's words are edited in the
+  application's render dialog only. A file that still holds the old object is not read for it.
+- **One base entity with epoch overlays** (§5.7, Appendix B; 15 November 2026): the examples, after §8.2, and the worked
+  example name a library entity's base, at the reserved token `base`, and an epoch's overlay holding only what differs;
+  a character's age at an epoch is computed from its `birth_date`.
+- **Tags, Layouts and a prompt's Notes** (§9, §9.0, A.5; 14 November 2026): a media entry may carry a `tag`, the
+  name a person mentions it by, written in prose and prompts as `@md_<tag>`; a location, a folder and a scene have a
+  `layouts` place, pictures of where things stand, which a render takes only where its words name the Layout's tag;
+  a scene has `media`, `preview` and `render_stage` of its own, as a folder; a prompt may carry `notes`, the
+  person's own instructions to whoever writes its words, and may hold them before any `positive`. The application
+  offers tags in prose and prompts, refuses a tag another reference holds, leaves a tag two references hold
+  unresolved, sends a mentioned tag's picture to a render, a Layout's rendered by hand included, and hands a
+  writer `notes` and the tagged pictures they or a block's words name.
 - **New content is checked through every record** (§7, §9.1, §10.3, §18, Appendix A): every document and every
   block may carry `metadata`, an object of free-form attributes; the descriptive objects — `appearance`,
   `personality`, `voice`, `lighting`, … — are defined records, and new content a model submits holds to them, what
@@ -43,11 +69,14 @@ translated or regenerated.
 - **A chat's conversation** (§12.7): an `as` record keeps `messages`, the conversation as the model was told it, in
   order — the person's and the assistant's words with `at`, and each tool call with its arguments and the tool's
   answer — and is written from the chat's opening, so that a chat that changed nothing has a record too; absent on a
-  record from before it or of a chat not opened in a chat window, and nothing inferred in its place.
+  record from before it or of a chat not opened in a chat window, and nothing inferred in its place. A `run` action's
+  chat keeps the lines its code said as `{role: step, content, at}`, which no model is told (18 November 2026).
+- **A run action's state** (§12.7): an `as` record keeps `state`, the last state its `run` action's function answered,
+  as it answered it, `null` included (17 November 2026); absent on a record of any other chat.
 - **A character's gender** (A.1; 10 November 2026): `appearance.gender` is written as one of `male`, `female` or
   `nonbinary`, and absent while undecided; any other word an older file holds is still read as text and kept.
 - **A character's birth month** (§9.1, A.1): `birth_date` may also be a month, `YYYY-MM` (`"2014-01"`); its year
-  fills the age as a year's does. A month is 01–12 and a day 01–31; anything else is malformed.
+  counts for the age as a year's does. A month is 01–12 and a day 01–31; anything else is malformed.
 
 ## Changes in 1.44
 
@@ -309,9 +338,9 @@ translated or regenerated.
   scene names, then what a person sets for one render: a leaf a profile leaves out is inherited, a list
   replaces the one it inherits, and a leaf removed from a profile is inherited again. A scene whose place
   in the script is ambiguous or cyclic is reported and takes the project's treatment, as though no folder
-  held it. This is the one thing a folder passes to what it holds. A render made with a treatment records
-  it in its batch item as **`treatment`** (§12.2, A.10): the leaves that applied and the document each came
-  from.
+  held it. This, and a folder's `epoch` (§10.1; 16 November 2026), are what a folder passes to what it
+  holds. A render made with a treatment records it in its batch item as **`treatment`** (§12.2, A.10): the
+  leaves that applied and the document each came from.
 - **A shot's camera character** (§11.1, A.4): `camera_character`, how the camera feels in that shot,
   beside `lens.dof`, its depth of field; a render of the shot prefers both to the treatment's.
 - **A platform's hosts made per deployment** (§14.9): an entry of `hosts` may be `*.` and a domain of two
@@ -416,7 +445,9 @@ Written ahead of FilmOpen's own code, on the owner's word of 20 September 2026, 
   part of a filename.
 - **Nothing is inherited** (§6.1, §10.1, §10.2). A folder says nothing about what its scenes hold — no
   `epoch`, `cast`, `locations` or `styles` — and a scene says everything itself: one location, one epoch,
-  its cast. §6.1's step 1 loses its fallback through what 1.11 called the enclosing unit.
+  its cast. §6.1's step 1 loses its fallback through what 1.11 called the enclosing unit. (Amended
+  16 November 2026: a folder may name an `epoch`, which the scenes inside it are read at where they name
+  none, §6.1, §10.1.)
 - **`type` says what file this is, and `kind` what sort of thing it describes** (§7). The two keys that
   broke the rule are renamed: the manifest's locator is `"data": { "kind": "local", … }` (§4.4), and a
   placement's transition `"transition_in": { "kind": "dissolve", … }` (§11.3). The 1.11 spellings are not
@@ -753,7 +784,7 @@ history or pull requests; **history belongs to Git**, and the format does not du
 | **owner** | The person behind an author handle: its first segment. |
 | **entity** | Anything described by one JSON file: character, location, scene, shot, model, … |
 | **library entity** | A reusable thing with an **epoch** axis: character, outfit, location, prop, style, misc, document. |
-| **epoch** | How a library entity appears at a point in the story: `30yo`, `pre-war`, `1990s`, `wrecked`. Declared in the project file, at least one; the first is the default epoch. Each epoch of an entity is a separate, complete file that shares the entity's tag. |
+| **epoch** | How a library entity appears at a point in the story: `30yo`, `pre-war`, `1990s`, `wrecked`. Declared in the project file, none or more; the first is the default epoch. An entity has one epoch-independent **base** (the reserved token `base`) and, at an epoch, a sparse **overlay** of what differs there (§8.2). |
 | **folder** | What groups the script, as a folder groups files: a spec entity with a name, an optional kind — season, episode, act, sequence, … — a synopsis, and the ordered list of the folders and scenes it holds (§10.1). Folders nest to any depth, and a scene is the leaf. A folder is a file, not a directory on disk. |
 | **block** | One unit of script inside a scene: a line of dialogue, an action, a title. |
 | **shot** | A visual generation spec covering one or more blocks. |
@@ -1012,16 +1043,16 @@ Derived handles are not listed in the project file.
 pj_cartographer_john123_v1.json           John's project version
 pj_cartographer_suda_v1.json              Suda's remake; its own language and story roots
 pj_cartographer_official.json            → the chosen project version
-ch_main-hero_30yo_john123_v2.json          John's second version of the 30-year-old main hero
-ch_main-hero_30yo_maria_v1.json            Maria's fork of it
-ch_main-hero_30yo_official.json            → names one of the above
-ch_main-hero_50yo_maria_v1.json            a different epoch: a distinct file sharing the tag
-of_main-hero.suit_30yo_john123_v1.json     an outfit belonging to main-hero
-lo_cafe_1990s_john123_v1.json              the cafe as it looked in the 1990s
-lo_cafe.kitchen_1990s_john123_v1.json      a sub-area of the cafe
-pr_car_wrecked_susan_v1.json               the car, wrecked
-st_war-grade_default_maria_v1.json         a look
-dc_bible_default_john123_v3.json           the series bible
+ch_main-hero_base_john123_v2.json          John's second version of the main hero's base, at no epoch
+ch_main-hero_base_maria_v1.json            Maria's fork of it
+ch_main-hero_base_official.json            → names one of the above
+ch_main-hero_50yo_maria_v1.json            an overlay at the epoch 50yo: only the fields that differ (§8.2)
+of_main-hero.suit_base_john123_v1.json     an outfit belonging to main-hero, worn at any epoch
+lo_cafe_base_john123_v1.json               the cafe
+lo_cafe.kitchen_base_john123_v1.json       a sub-area of the cafe
+pr_car_wrecked_susan_v1.json               the car, wrecked: an overlay over its base
+st_war-grade_base_maria_v1.json            a look
+dc_bible_base_john123_v3.json              the series bible
 mo_seedance25_paul_v3.json                 a model, from the shared library
 pl_fal_paul_v1.json                        a platform
 pg_locale_paul_v2.json                     a plugin manifest; its code is pg_locale_paul_v2.js beside it
@@ -1036,7 +1067,7 @@ cu_e2.1_maria_v1.json                      a cue spanning the folder e2 — scor
 cm_ch_main-hero_maria.json                 Maria's commentary on main-hero
 rd_8af0_maria.json                         Maria's render batch 8af0
 
-cs_ch_main-hero_30yo_john123_v2_r8af0_maria_1.png   concept sheet, take 1, Maria's render of John's v2
+cs_ch_main-hero_base_john123_v2_r8af0_maria_1.png   concept sheet, take 1, Maria's render of John's v2
 ff_sh_5.1_john123_v1_r8af0_maria_2.png              first frame, take 2, of shot 5.1
 cl_sh_5.1_john123_v1_r8af0_maria_1.mp4              clip, take 1
 vo_cu_5.1_john123_v1_r8af0_maria_1.wav              voice, take 1
@@ -1056,9 +1087,9 @@ entities; media references name files.
 A tag: `"location": "cafe"`. The field determines the type. Resolved by the reader in three steps.
 
 **Step 1 — Epoch.** Use the explicit epoch on the referencing entry if present; else the scene's epoch;
-else the project's default epoch (§8.2). Nothing above a scene supplies one: a folder names no epoch
-(§10.1). An outfit takes its character's resolved epoch unless one is given. If the epoch was chosen
-**implicitly** and the entity has no file for it, fall back to the default epoch and show that fallback.
+else the `epoch` of the nearest folder above the scene that names a declared one (§10.1; 16 November 2026); else the
+project's default epoch (§8.2), else, with none declared, the base. An outfit takes its character's resolved epoch unless one is given. A declared epoch where the entity has
+no overlay reads as its base (§8.2).
 If the epoch was requested **explicitly** and does not exist, the reference is unresolved: report it;
 never substitute a different age or state silently.
 
@@ -1128,8 +1159,8 @@ folder for each media file whose basename, without its extension, is unique:
 
 ```
 thumbnails/tn_<basename without extension>.jpg
-cs_ch_main-hero_30yo_john123_v2_r68c8a1f0_john123_1.png
-  → thumbnails/tn_cs_ch_main-hero_30yo_john123_v2_r68c8a1f0_john123_1.jpg
+cs_ch_main-hero_base_john123_v2_r68c8a1f0_john123_1.png
+  → thumbnails/tn_cs_ch_main-hero_base_john123_v2_r68c8a1f0_john123_1.jpg
 ```
 
 a JPEG fitting within 300 × 300 (§4.2). A `thumbnails/` path is never a media reference in
@@ -1186,7 +1217,8 @@ batches use the headers shown in their own sections.
 | `epoch` | library entities | as in the filename. A spec entity that carries `epoch` — a scene naming the epoch it is set in (§10.2) — is stating content, not repeating its filename, and a writer must not refuse it. |
 | `name` | yes | display name, any language |
 | `version_label` | no | a short word for this version in version lists — `goth`, `classic` — at most 32 characters; never part of the filename or of any reference |
-| `created` `updated` | no | RFC 3339 UTC (§1.4). `updated` is when the content last changed: a write sets it only where the document differs from the file it replaces outside `media`, `picks`, `preview`, `notes`, `creator_notes`, `render_stage`, `updated` and each prompt's `created` (§9) — and, inside every block, `media`, `output_duration_sec` and `updated` (§10.3). A fork keeps its source's; a fork written with changes, a new entity and a plug-in's rewrite are stamped now. A save that stamps a prompt carries its holder's current neighbours where its other content is the same (§9). A prompt whose words or writer changed, or whose `created` was removed, is stamped `created` with the same time as its holder's `updated` (§9). Informational; never used for precedence |
+| `created` `updated` | no | RFC 3339 UTC (§1.4). `updated` is when the content last changed: a write sets it only where the document differs from the file it replaces outside `media`, `picks`, `preview`, `notes`, `creator_notes`, `render_stage`, `updated`, `updated_for` and each prompt's `created` (§9) — and, inside every block, `media`, `output_duration_sec` and `updated` (§10.3). A fork keeps its source's; a fork written with changes, a new entity and a plug-in's rewrite are stamped now. A save that stamps a prompt carries its holder's current neighbours where its other content is the same (§9). A prompt whose words or writer changed, or whose `created` was removed, is stamped `created` with the same time as its holder's `updated` (§9). Informational; never used for precedence |
+| `updated_for` | no | on a character file (12 November 2026): when each **place** of its media last changed — `{"reference": <time or null>, "voice": <time or null>}`, RFC 3339 UTC (§1.4). `reference` (its reference images, and its reference and sheet prompts) moves when a field of the character's General, Features, Body or Personality changes — `name`, `kind`, `birth_date`, `aliases`, `summary`, `default_outfit` and the form's boxes of `appearance` and `personality` (an attribute no box holds moves nothing); `voice` (its voice samples and voice prompt) when `voice`'s `description`, `pitch`, `pace`, `timbre`, `accent` or `lang` changes, or the voice prompt's `audition_text` (15 November 2026). Relationships, notes, other attributes, the other keys of the prompts, media and what keeping a voice writes (`provider_bindings`, `active_reference`) move neither. Written by the writer on every write of content from an existing file, against that file — a save, a fork, a new epoch's copy and a plug-in's rewrite —, a new character getting it at its first save, an unchanged place keeping that file's entry — and never taken from what a writer is handed; a file without the key is given its `updated` for each unchanged place. An explicit `null` means no earlier change is known; a missing entry is read as the file's `updated`. Not content, never copied, compared or exported; a sheet does not read it. Informational |
 | `forked_from` | no | stem this file was copied from. A note; nothing resolves through it |
 | `by` | no | plugin stem, when a plugin produced this version |
 | `source` | no | origin of imported material: `{ "batch": "rd_0001_john123" }`, or the provenance of a screenplay import under its format's key — `fdx`, `fountain`, `pdf`, `docx`, `rtf`, `fadein` (§16.6); both may be present |
@@ -1265,12 +1297,12 @@ as one scene can become a mini-series without its files changing. Nothing depend
 
 ### 8.2 Epochs
 
-Every project declares its epochs here, **at least one**, each with a `label`, an `order` and a
+A project declares its epochs here, **none or more** (none is a real state: an epoch-free film; 14 November 2026), each with a `label`, an `order` and a
 `year` (an application asks for the year; a reader tolerates its absence, proposing no ages then). Readers order them by `order` (an entry without one comes first, in the file's order); a writer
 that reorders them renumbers `order` from 1. The **first** epoch is the project's **default epoch**:
-the one an implicit reference resolves to (§6.1) and the one a new library entity is created at. The
-token `default` may be used as an epoch name. A new project starts with its creator's first allocated
-id, `<owner>-1`, as its one epoch, and `next_epoch` 2.
+the one an implicit reference resolves to (§6.1); with none declared, an implicit reference is the base. The
+token `default` may be used as an epoch name; the token `base` is reserved and never declared. A new project
+declares no epoch, its `next_epoch` 1, and the person adds the first when the story needs it.
 When import describes a new era, its first unknown trimmed label, unless the list names the era's own label,
 relabels that sole era if no filename or explicit content epoch uses its token (an implicit scene follows it),
 keeping the token and clearing an omitted year; later labels append, and eras are never merged by year.
@@ -1286,15 +1318,43 @@ between versions never moves it. A fork does not carry the original author's `ne
 Identities are unique as far as the folder has been read: two writers of one owner acting at once from bases that do not see each other may declare one id, which the loader reports as a warning.
 Owners' identity sets are disjoint; the workspace part does not participate in allocation.
 
-Every library entity has an epoch — there is no "base" file outside the epoch axis. An epoch variant is a
-**separate, complete file** that shares the entity's tag and is treated as a distinct entity: nothing
-propagates between epochs. A scene names an epoch and every library entity in it resolves to the
-matching file (§6.1). Comparing two epochs side by side and copying attributes across (§13.3) is the
-intended way to keep them consistent. `year`, when given, is the calendar year the epoch stands for;
-readers use it to propose a character's age at that epoch (§9.1). An epoch token appears in filenames,
-so an application does not rename one; it adds a new epoch and the author forks files into it.
+**The base and its overlays** (14 November 2026). A library entity's epoch-independent record is its
+**base**, an ordinary file at the reserved epoch token `base` (`ch_julius_base_ann_v1.json`), complete and
+named. An epoch's file is an **overlay**: it holds its own header and only the fields that differ at that
+epoch, `name` included only when it changes. Nothing merged is ever stored. A reader merges the base in use
+with the overlay in use, each chosen as §6.1 chooses a version: objects merge key by key, to any depth;
+a list, a scalar and a prompt record replace whole; an absent key is inherited, and an empty list replaces.
+The header keys (`filmopen`, `type`, `tag`, `epoch`, `author`, `v`, `created`, `updated`, `forked_from`,
+`version_label`, `updated_for`, `deleted`, `discarded`) are each file's own. A declared epoch without an
+overlay reads as the base; an undeclared epoch asked for explicitly is unresolved; several owners'
+overlays with nothing to decide are ambiguous, never the base. A deleted base hides the entity at every
+epoch, its overlays kept; a deleted overlay leaves the base at that epoch. `year`, when given, is the
+calendar year the epoch stands for: a character's age there is the overlay's own `appearance.age`, else
+computed from the effective `birth_date` and that year (§9.1), else the base's; the base alone has none computed. An epoch token appears in filenames,
+so an application does not rename one; it adds a new epoch, and an overlay is made there empty, holding
+nothing until a field is overridden. A new library entity is always created at the base, never at a story
+epoch, and nothing copies one epoch's file into another; a scene's cast is read through each character's base,
+so writing a scene makes no character file (14 November 2026). A change is written to the file it addresses: a
+change of the base reaches every epoch that does not override it; a change at an epoch is written to that
+epoch's overlay, made empty first where there is none, holding only the fields the change gives; removing a key
+from an overlay returns that field to the base's value. No value is dropped or removed for being equal to the
+base: an override equal to it stays until it is removed (14 November 2026).
 
-Readers **SHOULD** warn when a project file declares no epochs.
+An application handing entities to a plug-in (its exchange) hands each one complete at the epoch asked: the base
+merged with that epoch's overlay, a declared epoch with no overlay under its own id, never the sparse overlay nor the
+pair. It writes an answer back sparse: only what the answer changed from the entity it was handed, to the base or
+the overlay its id addresses, the overlay made only where something changed. A value handed back unchanged is not
+written, so it pins nothing at the epoch; an age computed at the epoch is not stored (14 November 2026).
+
+A project file that declares no epochs is valid and draws no warning (14 November 2026).
+
+An application shows an entity by its base (14 November 2026): the entity's own row in its tree opens the base's
+regular editor, the people's versions beneath it, and an epoch is a subfolder only where an overlay was added there,
+so an epoch-free film's entities have none. A character's, a location's, a prop's or an outfit's page begins with
+its general attributes — a character's age or `birth_date` among them —, then its media, then each declared epoch
+with its `year` — the project file's, never copied into the entity — and a way to add the overlay there, or *No
+epochs* where none is declared, the overlays added appearing as cards there; the rest follows (15 November 2026). `base` is never named as an epoch; "Base" names the epoch-independent version
+only where it stands beside the epochs.
 
 ### 8.3 Contributors and directors
 
@@ -1393,8 +1453,7 @@ on the project file and on any folder:
   "depth_of_field": "moderate",
   "camera_character": "patient, observing",
   "lighting": "overcast daylight, practicals at night",
-  "grading": { "shadows": "lifted, green-grey", "highlights": "clipped softly" },
-  "prompts": { "treatment": { "positive": "overcast coastal light, 16mm grain, muted palette", "negative": "glossy, saturated" } }
+  "grading": { "shadows": "lifted, green-grey", "highlights": "clipped softly" }
 }
 ```
 
@@ -1411,7 +1470,7 @@ reference no reader can resolve — its plugin not on, its entry gone — is kep
 overriding the one before, **leaf by leaf**: the project's `visual_style`; each folder's, from the
 outermost folder that holds the scene to the innermost (§8.5); the Style the scene names in `style`
 (§10.2, §9.5), through the leaves it shares with the profile — `description`, `look`, `palette`,
-`color_temp_bias`, `lens_character`, `prompts`; and what a person sets for one render, which is the
+`color_temp_bias`, `lens_character`; and what a person sets for one render, which is the
 render's and not a file's. A render made for an entity outside the script — a character's picture —
 takes the project's treatment and what the person sets.
 
@@ -1425,9 +1484,9 @@ takes the project's treatment and what the person sets.
   scene takes the project's treatment, its Style and what the person sets, as though no folder held it.
 - An application that renders with a treatment composes the prompt with **the entity's own prompt first**,
   then each primary leaf that applies, in A.11's order and named in
-  English whatever the application's language — `Camera: …`, `Camera mount: …`, `Lens: …`, `Depth of field: …`, `Color grading: …` — then the
-  treatment's `prompts.treatment.positive`, each part trimmed and an empty one left out, joined by `; `; the negatives
-  are the entity's then the treatment's. It never replaces the entity's prompt with the treatment's, nor writes
+  English whatever the application's language — `Camera: …`, `Camera mount: …`, `Lens: …`, `Depth of field: …`, `Color grading: …` —,
+  each part trimmed and an empty one left out, joined by `; `; the negatives are the entity's alone. A treatment
+  holds no prompt of its own (15 November 2026): its leaves are its words. It never replaces the entity's prompt, nor writes
   the composition back into it, so that rendering again names nothing twice. It freezes what applied when the
   render is asked for,
   so that a treatment changed while the render runs changes the next render, not that one, and the batch
@@ -1445,9 +1504,9 @@ and may carry `media`, `preview`, `picks` and a `prompts` object. The required c
 lists the recommended optional vocabulary. An entity with no media yet is valid.
 
 **Prompts.** Every holder of prompts carries one **`prompts`** object keyed by kind: a character's `reference`,
-`sheet` and `voice`; a location's, an outfit's and a prop's `reference` and `sheet`; a Style's
-`treatment` at its top, beside its other shared leaves (§9.5); a treatment's `treatment` under `visual_style`
-(§8.7, A.11); and a block's `first_frame` and `last_frame` (§10.3). A prompt is an object:
+`sheet` and `voice`; a location's, an outfit's and a prop's `reference` and `sheet`; and a block's `first_frame`,
+`last_frame` and `clip` (§10.3). A visual treatment and a Style hold none (§8.7, 15 November 2026). A prompt is an
+object:
 
 ```json
 "prompts": {
@@ -1458,20 +1517,46 @@ lists the recommended optional vocabulary. An entity with no media yet is valid.
 ```
 
 - **`positive`** — the words a render is asked with; **`negative`**, optional, what it is asked to avoid.
+- **`notes`** — optional, the person's own instructions for these words, for whoever writes them; its mentions are
+  written as prose's are (§6), a tagged picture's as `@md_<tag>`. A prompt may hold `notes` before it has any
+  `positive` (14 November 2026). A change of `notes` alone is no change of the words: `plugin` and `writer` stay.
+  A change of `notes` alone on a writer's prompt (one carrying `plugin` and `writer`) outdates it: its `created` is
+  written `""`, which names no time, so the next writer asked rewrites it and its `created` is stamped, its words the
+  same or not; on a person's own prompt a change of `notes` is stamped as any member's is. No other prompt is outdated
+  by it, and a change elsewhere in the film outdates none: the person asks the writer again. The application hands
+  `notes` to the writer it asks.
+- **`audition_text`** — on a character's voice prompt alone (`prompts.voice`, §9.1; 15 November 2026), what its
+  previews say. It is no part of the words: a change of it leaves `plugin` and `writer` as they are.
 - **`created`** — RFC 3339 UTC (§1.4), written by a writer, never by hand: where a prompt's words or `plugin`
   differ from the file it replaces, where it is new, or where its `created` was removed, it is stamped with the
-  time written to its holder's `updated` — the file's for a prompt at the top or of the treatment, the block's for
-  a block's. A prompt that differs only in its `created` is not content. Where a save stamps a prompt and its holder's
+  time of the write — the time written to the file's `updated` for a prompt at the top; for a block's, the save's
+  time, the block's `updated` left as it was, since it moves only on the block's text (18 November 2026). A character's reference and sheet prompts are read against its `updated_for.reference`, its voice
+  prompt against `updated_for.voice` (§7, 12 November 2026), so that a change of a section outdates only the prompts
+  of the place it belongs to. A prompt that differs only in its `created` is not content. Where a save stamps a prompt and its holder's
   content apart from its prompts is the same, each other prompt of that holder that was current is stamped the same
   time (`carried`), so that writing one prompt outdates none beside it; a change of the holder's content outdates them
-  all, and a block's new words carry nothing beyond the block.
+  all — on a character, those whose place's time it moved (below) —, and a block's new words carry nothing beyond the
+  block.
 - **`plugin`** — the tag of the plug-in that wrote the words; absent when a person wrote them. A person's change
   of the words takes it away; words a plug-in rewrote — a description of a picture — are that plug-in's.
 - **`writer`** — the id of the plug-in's writer that wrote the words, beside `plugin`: the pair names one of the
   writers the plug-in declares. Absent when a person wrote them, where a plug-in that is no writer rewrote them,
   and in a prompt written before writers had ids. It goes wherever `plugin` goes or changes.
+- **`spans`** — on a block's clip prompt alone (`prompts.clip`, §10.3; 16 November 2026), the shot it plans:
+  `{ "blocks": ["bl_4", "bl_5", "bl_6"] }`, the consecutive blocks the clip is to cover, its own block, the *head*,
+  first. A clip prompt with `spans` is a **placeholder**: the prompt and the span of a clip not yet rendered. The
+  covered blocks keep their own prompts, untouched. New content of another shape, or an empty list, is refused; a
+  stored value of another shape reads as none and is kept as written.
+  In script order, a placeholder that no earlier live one covers is **live**, and the blocks it names are covered;
+  one whose `spans` do not start at its own block, or no longer name consecutive blocks of the script, plans nothing.
+  A covered block's own clip prompt, its `spans` included, counts again once nothing covers it.
+  A change of `spans`, alone or with `notes`, outdates the clip prompt, whoever wrote it: its `created` is written `""`, its words
+  kept. A clip prompt with `spans` is read against every block they name: it is current only where its `created` is
+  not earlier than the `updated` of each, so that a change to a covered block's text outdates the shot — a covered
+  block's own prompts never do, its `updated` being its text's (18 November 2026) —, and writing another prompt on
+  its block carries it only where it is current so.
 - A prompt is **empty** where `positive` is blank or absent, **current** where `created` carries a zone and is not
-  earlier than its holder's `updated` to the second, and **outdated** otherwise. A tool may offer to write an empty or
+  earlier than its holder's `updated` — a character's place time, above — to the second, and **outdated** otherwise. A tool may offer to write an empty or
   outdated prompt before a render; what it writes is stamped as any other change.
 
 **Media tokens.** A prompt's `positive` may name the pictures a render is to be shown, each as a token:
@@ -1483,7 +1568,15 @@ lists the recommended optional vocabulary. An entity with no media yet is valid.
   outfit's `@<stem>:reference-<n>` and `@<stem>:outfit_sheet-<n>`, and a prop's `@<stem>:reference-<n>` and
   `@<stem>:prop_sheet-<n>`, for the characters, locations, outfits and props of the film, each in its version in use
   (§6.1) (the outfit's tokens and the two sheets of outfits and props since 11 November 2026);
-- the treatment and the voice none.
+- every prompt but the voice, a clip's among them, a **tagged picture's** `@md_<tag>` where its
+  notes, or for a block's prompt the block's words, mention it (14 November 2026; the application offers it in the
+  `@` chooser and hands it to the writer);
+- the voice none.
+
+A **tag** is one segment of lowercase letters, digits and hyphens, 1 to 32 characters, starting and ending with a
+letter or digit (§9.0). `@md_<tag>` names the entry holding that tag among the versions in use of the film; a
+sentence's punctuation after it ends it, and a tag that runs on past its grammar — a 33rd character, a letter,
+digit or underscore after it, or a dot or hyphen followed by one — is no token at all, never a shorter one.
 
 `<stem>` is an entity reference without its `@` (`ch_<tag>`, `lo_<tag>`, `of_<tag>`, `pr_<tag>`, a tag being dotted
 segments; an outfit is named only by its media, never by an `@of_<tag>` of its own); `<n>` is a positive decimal
@@ -1523,9 +1616,11 @@ person keeps beside it. It is one object whose keys are **groups** and whose val
 
 **Groups.** Each type has its places, in this order: a character `reference_images`, `character_sheets`,
 `voice_samples`, `inspirations`, `motion_clips`; an outfit `reference_images`, `outfit_sheets`,
-`inspirations`; a location `reference_images`, `location_sheets`, `inspirations`; a prop
+`inspirations`; a location `reference_images`, `location_sheets`, `layouts`, `inspirations`; a prop
 `reference_images`, `prop_sheets`, `inspirations`; the project and a folder `reference_images`, their cover
-image. A script block's are §10.3's. A group's name is a word in lowercase `snake_case` (§1.4); **`preview`
+image, and a folder `layouts` after it; a scene `layouts` alone. A **Layout** is a picture of where the people and
+things of a scene stand, uploaded or rendered by hand from no writer's prompt, and given to a render only where its
+words mention its tag (14 November 2026). A script block's are §10.3's. A group's name is a word in lowercase `snake_case` (§1.4); **`preview`
 and `media` are reserved** and never name a group. Every group is an array, and each epoch file has its own
 groups. A group holds what its name says: sounds in `voice_samples`, clips in `motion_clips`, pictures and
 other files in every other place the list names, and any kind in a group it does not name. A file may hold a
@@ -1536,7 +1631,11 @@ file name in `media/`, or an address. **`batch`** and **`item`** name the batch 
 and the `n` of its item that made the media (§12.2), where a record exists; a file a person put in `media/`
 under its own name, which no record describes, has neither. Four keys say what this version decides about
 it: **`favorite`** and **`archived`**, present only as `true`; **`deleted`**, present only as `true`; and
-**`note`**, the person's words about it. Eight describe the media: **`duration_ms`**, `0` for a still,
+**`note`**, the person's words about it. **`tag`**, optional, is the name a person mentions it by,
+`@md_<tag>` (§9; 14 November 2026); one tag names one media reference in the film's versions in use, so the same
+reference may carry it twice and another may not. A reader keeps a tag of another grammar as written. An
+application refuses a tag another reference holds where the tag is given, and leaves a mention of a tag two
+references hold unresolved, logging why. Eight describe the media: **`duration_ms`**, `0` for a still,
 measured, else as reported, and absent where unknown; **`width`** and **`height`**; **`audio`**, on a clip,
 `true` or `false` as measured once when it was inserted, and absent where the application could not measure it
 (no engine, or a file put in `media/` by hand) — a clip without it plays its sound where the file has one;
@@ -1595,7 +1694,7 @@ frames are chosen. A reference used in several files reuses the bytes and nothin
 
 ### 9.1 Character `ch`
 
-An automatically created version at another era clears the look, outfit choice, summary and picture media with their prompts, keeps voice, inspirations and other character data, and fills age from its own birth date or keeps the copied age when that gives none.
+A version at another epoch is an overlay made empty (§8.2): it copies nothing and stores no age; every field, voice and pictures included, comes from the base until the overlay overrides it, and the age there is computed (14 November 2026).
 
 ```json
 {
@@ -1637,20 +1736,18 @@ An automatically created version at another era clears the look, outfit choice, 
 - `kind` ∈ `principal` · `supporting` · `extra` · `group` · `narrator` · `creature` · `animal`. A `group`
   is a crowd described once.
 - `birth_date` — optional, a string `YYYY` (`"1988"`), `YYYY-MM` (`"1988-04"`) or `YYYY-MM-DD` (`"1988-04-12"`),
-  the month 01–12 and the day 01–31, carried in each
-  epoch file. When it is set or changed, an application fills `appearance.age` with the epoch's calendar year
-  minus the birth year; a month or a full date uses its year. A malformed date, no epoch year, a birth year after the
-  epoch, or an `appearance` that is not an object leaves the stored age as it is. No other ordinary write
-  recomputes age, and there is no load-time rewrite.
+  the month 01–12 and the day 01–31, normally on the base, which every epoch inherits (§8.2). No write stores an age
+  from it — not the assistant's commands nor an import (14 November 2026), nor the editor (15 November 2026) —: a birth
+  date is written as given, and the age at an epoch is computed where it is read, a month or a full date by its year
+  (§8.2); there is no load-time rewrite. An editor that shows the age and the birth date as one field writes one of the two to the
+  file it edits, removing the other there (15 November 2026).
 - `appearance.age` — optional, the apparent age at the file's epoch, stored in each epoch file: a whole
   number (`31`), a phrase (`"late thirties"`), or exactly `"N (YYYY)"` (`"31 (1999)"`: the age, one space and
   the year of birth in parentheses), which reads as the age N; anything else, `"31 (1999) "` included, is a
-  phrase. The legacy `"N (YYYY)"` remains a source of a birth year when `birth_date` is absent. When a
-  character's file is made at another epoch, an application fills a numeric age from the copy's birth data,
-  using the version in use at the project's default epoch as a second source when absent: birth year 1999
-  gives `41` at 2040. Otherwise it keeps the age the copy carried. Where the copied `appearance` is not an object — a sentence,
-  a list — there is no age to fill: the content is kept as written. The age is stored, not derived: an
-  epoch's year edited later recomputes no stored age. The older `birthdate` spelling stays an unknown key.
+  phrase. The legacy `"N (YYYY)"` remains a source of a birth year when `birth_date` is absent. Making a file
+  fills no age: an overlay is made empty, and the age at its epoch is computed from the effective birth date
+  and the epoch's year (§8.2) — birth year 1999 gives `41` at 2040 — unless the overlay sets its own, which
+  stays as written (14 November 2026). The older `birthdate` spelling stays an unknown key.
 - `aliases` — every name a script or transcript might use. Essential for import and for Fountain export.
 - `appearance`, `personality`, `voice` — **defined records** (A.1): new content holds to their keys, each value of
   its shape, and says an attribute they lack under the document's `metadata` (§7, §18.3). None of their keys is
@@ -1666,9 +1763,16 @@ An automatically created version at another era clears the look, outfit choice, 
     saved as, and the id of the temporary preview it was. It records **that sample's provenance**; a
     preview's `generated_voice_id` is never a voice for speech. An uploaded sample has no binding until it is
     kept as a voice; then it carries the chosen `provider` and `voice_id`, with no `generated_voice_id`.
+  - A designed voice kept carries **`recipe`** on its `voice_binding` (13 November 2026): `{ "model", "prompt",
+    "seed"?, "preview_index", "metadata" }` — the catalogue entry, prompt and seed its preview's render record
+    asked (`request`), the preview's place among its design's previews (the entry's `item` − 1), and that
+    record's `metadata` container, whole and unread — so that the voice can be designed again as it was. Its
+    `prompt` is the record's, not the character's `prompts.voice`. A record whose container says nothing of the
+    design gives no recipe. Picking a kept sample again keeps its recipe.
   - An entry may carry **`audition_text`**, the known words of that sample. Keeping a voice with known words
-    writes them on that entry and on `voice.audition_text` for older readers. Without known words, the entry
-    retains only its own text: another sample's words are never copied from the character field. The entry and
+    writes them on that entry alone (15 November 2026): the character's own audition text is the design's, in
+    its voice prompt, and a keep never changes it. Without known words, the entry retains only its own text:
+    another sample's words, and the design's, are never copied onto it. The entry and
     its text travel whole when copy-left brings a sample; an entry already held keeps its own text (§13.3).
   - **`active_reference`** — the `reference` of the live `voice_samples` entry whose voice is in use. It
     is cleared when that entry is deleted and kept when it is archived; copy-left copies it only where the
@@ -1676,8 +1780,8 @@ An automatically created version at another era clears the look, outfit choice, 
     where it names no live entry, and never takes another sample in its place. Where the sample it names
     was kept as another voice than `provider_bindings` holds — a copy-left moved one and not the other —
     `provider_bindings` is the voice speech uses, and an application says so rather than choose.
-  - **`audition_text`** — what a designed voice's previews say. The description a voice is designed from is
-    the character's `prompts.voice` (§9), not a key of `voice`; keeping a voice writes no prompt.
+  - The description a voice is designed from, and **`audition_text`**, what its previews say, are the
+    character's `prompts.voice` (§9; 15 November 2026), not keys of `voice`; keeping a voice writes no prompt.
 
   ```json
   "voice": {
@@ -1689,7 +1793,9 @@ An automatically created version at another era clears the look, outfit choice, 
     "voice_samples": [
       { "reference": "voice-calm.wav" },
       { "reference": "vo_ch_main-hero_30yo_john123_v2_r9c10_john123.fo-elevenlabs_2", "batch": "rd_9c10_john123.fo-elevenlabs",
-        "item": 2, "voice_binding": { "provider": "elevenlabs", "voice_id": "v0a1b2c3", "generated_voice_id": "g7d8e9" } }
+        "item": 2, "voice_binding": { "provider": "elevenlabs", "voice_id": "v0a1b2c3", "generated_voice_id": "g7d8e9",
+          "recipe": { "model": "ttv-elevenlabs-v3", "prompt": "low, unhurried, slight rasp", "seed": 12345, "preview_index": 1,
+            "metadata": { "v": 1, "design": { "voice_description": "low, unhurried, slight rasp", "text": "…" } } } } }
     ]
   }
   ```
@@ -1781,8 +1887,6 @@ dressing.
   "references": ["1970s political thrillers", "hand-processed 16mm"],
   "look": { "stock": "16mm colour negative", "grain": "medium", "halation": "slight", "contrast": "high", "saturation": "low" },
   "palette": ["#2b2f33", "#6b7076", "#b9bcb8", "#d9c9a3"],
-  "prompts": { "treatment": { "positive": "desaturated, cold grey palette, high contrast, 16mm grain, handheld",
-              "negative": "saturated, clean, glossy" } },
   "cdl": { "slope": [0.95, 0.98, 1.05], "offset": [-0.02, -0.02, 0.0], "power": [1.1, 1.1, 1.05], "saturation": 0.6 },
   "lut": "style/war-grade/war-grade.cube",
   "media": { "reference_images": [ { "reference": "cs_st_war-grade_default_maria_v1_r8af0_maria_1", "batch": "rd_8af0_maria", "item": 10 } ] }
@@ -1829,6 +1933,7 @@ files sit directly in `data/`, and the script's structure lives in their `childr
   "filmopen": 1, "type": "fo", "tag": "f3", "author": "john123", "v": 1,
   "name": "Act I — The harbour",
   "kind": "act",
+  "epoch": "1990s",
   "synopsis": "Kira arrives and finds the first altered chart.",
   "notes": "Cold open, no score until the reveal.",
   "children": ["sc_1", "fo_f4", "sc_5_maria_v1"],
@@ -1850,9 +1955,18 @@ another token, which a reader keeps and shows as written, and a folder may have 
 word, not a rule**: nothing is enforced by it — a season may hold seasons, a chapter may sit beside a
 scene — and it is never part of a filename, since it is a person's to change (§17).
 
-**A folder says nothing about what its scenes hold.** It carries no `epoch`, `cast`, `locations` or
-`styles`, and no scene inherits anything from the folders above it but their **visual treatment**,
-`visual_style` (§8.7): everything else about a scene is said on the scene (§10.2). A reader that meets
+**`epoch`** (16 November 2026) is the time the scenes inside the folder are set in, a declared epoch's
+token (§8.2); absent, the folder is at *Default* and says nothing. Each level overrides the one above: a
+scene is read at its own `epoch`; where it names none, at that of the nearest folder above it that names a
+declared one, walking up the script as the viewer reads it (§8.5); else at the project's default (§6.1). A
+token the project no longer declares is skipped at its level — a folder's or the scene's own, which stays stored
+as written —, reported, and the walk goes on; an empty or null `epoch` is no epoch; a scene whose place is
+ambiguous (§8.5) takes no folder's. The epoch a scene inherits is derived each time and never written into
+the scene. A folder's own `epoch` is content: the filename carries no epoch for `fo`.
+
+**A folder says nothing else about what its scenes hold.** It carries no `cast`, `locations` or `styles`,
+and no scene inherits anything from the folders above it but their **visual treatment**, `visual_style`
+(§8.7), and their `epoch`: everything else about a scene is said on the scene (§10.2). A reader that meets
 such a key on a folder keeps it, as it keeps any key it does not know (§18.2), and gives it no meaning. A
 folder holds no blocks. What the scenes beneath a folder use — their characters, locations and epochs — a
 reader can derive; it is never stored.
@@ -1864,7 +1978,9 @@ A cue that spans scenes hangs under a folder (§11.2).
 A scene is one time and one place. Its file holds the **blocks** — the script — in order. Everything
 about what a scene holds is said **on the scene**: it names **one** `location` and **one** `epoch`, and
 lists its `cast`. Nothing is inherited from the folders above it but their visual treatment (§8.7,
-§10.1), so a scene moved to another folder means what it meant before, in the look of its new place.
+§10.1) and, where the scene names none, their `epoch` (§10.1; 16 November 2026), so a scene moved to
+another folder means what it meant before, in the look of its new place — and, where it names no epoch, at
+its new place's time.
 
 ```json
 {
@@ -1899,7 +2015,8 @@ lists its `cast`. Nothing is inherited from the folders above it but their visua
 `story_day` is the script supervisor's continuity day. `purpose` states what the scene does for the
 story, which is the single most useful field for an AI reading the project. `shots` and `cues` fix the
 order of the scene's shots and cues; absent, natural tag order applies. A scene's `epoch` is the time it
-is set in, and the epoch its references resolve at (§6.1); what may differ from it is said beside it, on
+is set in, and the epoch its references resolve at (§6.1); absent, the nearest folder's above it applies, else
+the project's default (§10.1); what may differ from it is said beside it, on
 the scene: a cast entry's own `epoch` — the character's age in a scene set at another time — and its
 `outfit`, a prop's epoch (§6.4), and `location_epoch`, which overrides the scene epoch for the location
 alone.
@@ -1925,12 +2042,12 @@ one speaker at most.**
 | `direction` | the note for the actor — the screenplay parenthetical. Fountain's `(O.S.)`, `(V.O.)` and `(dual)` are written at its head (§10.4) |
 | `action` | what happens |
 | `duration_sec` | the seconds the writer asks the block to last, a number greater than zero; absent means *auto* |
-| `beats` | its beats in their order: instructions that guide the block's video, each `{position?, description?, duration_sec?}` — `position` `before_dialogue`, `during_dialogue` or `after_dialogue`, meaningful only where the block has dialogue — a new beat there starts `during_dialogue`, one elsewhere has none — and kept as written otherwise, another word included; `description` what happens, @-mentions as in `action`; `duration_sec` its seconds, greater than zero, as the block's own. Free order; a *before* after a *during*, or seconds adding up to more than the block's `duration_sec`, is a writer's warning, never refused. Addressed by place, no id; part of the block's text, so it travels with the block (copy-left, exchange); an empty list is not written |
+| `beats` | its beats in their order: instructions that guide the block's video, each `{position?, description?, duration_sec?}` — `position` `before_dialogue`, `during_dialogue` or `after_dialogue`, meaningful only where the block has dialogue — a new beat there starts `during_dialogue`, one elsewhere has none — and kept as written otherwise, another word included; `description` what happens, @-mentions as in `action`; `duration_sec` its seconds, greater than zero, as the block's own. Free order; a *before* after a *during*, or seconds adding up to more than the block's `duration_sec`, is a writer's warning, never refused. Addressed by place, no id; part of the block's text, so it travels with the block (copy-left, exchange); an empty list is not written A block's voice line starts after the sum of its `before_dialogue` beats' `duration_sec` — a *before* or *after* beat without one lasts 1 s —, its `during_dialogue` beats — and one of no position or another word — lie inside the line, and its `after_dialogue` beats follow from the line's end; where the line decides the block's output duration, the before and after sums are added to it — 3 s before, 5 s of speech and 2 s after make 10 s (13 and 16 November 2026). |
 | `subtitles` | its subtitles in their order: the lines shown over the picture while the block plays, each `{position?, text?, duration_sec?}` — `position` as a beat's, a label only, a new subtitle starting `during_dialogue` where the block has dialogue and with none elsewhere; `text` the words shown, exactly as written, a newline a line break; `duration_sec` its seconds, greater than zero. Timed as the beats are: in order from the block's start, each for its `duration_sec`, those without one sharing what is left, cut at the block's end, any past it not shown. Free order; addressed by place, no id; part of the block's text, so it travels with the block (copy-left, exchange); an empty list is not written |
-| `output_duration_sec` | the seconds the scene's output gives the block, a number greater than zero, set by a person or an assistant; **absent means the application's rule decides**, and nothing writes a derived value here. A value that is not a number greater than zero reads as absent and is kept as it is. Not the block's text: not cleared when the dialogue changes |
+| `output_duration_sec` | the seconds the scene's output gives the block, a number greater than zero, set by a person or an assistant; **absent means the application's rule decides** — its own clip in use, whose length is definitive; else its before beats, its voice line in use and its after beats; else its before beats, its words at 150 a minute and its after beats —, and nothing writes a derived value here; a voice line landing on the block removes it, in the same write, so that the rule decides again (16 November 2026). A value that is not a number greater than zero reads as absent and is kept as it is. Not the block's text: not cleared when the dialogue changes |
 | `lang` | BCP 47 override for this block |
-| `prompts` | the block's prompts, `first_frame`, `last_frame` and `clip` (its clip prompt), each a prompt of §9; part of its text |
-| `updated` | when the block's text — `character`, `dialogue`, `direction`, `action`, `lang`, `duration_sec`, `beats`, `subtitles`, `prompts` apart from each prompt's `created` — last changed: RFC 3339 UTC (§1.4), stamped by a writer when that text differs from the block of the same `id` in the file it replaces, and on a new block; never for its `media` or `output_duration_sec`. A block without one has not changed since it was written |
+| `prompts` | the block's prompts, `first_frame`, `last_frame` and `clip` (its clip prompt), each a prompt of §9, the clip prompt's `spans` naming the blocks its shot covers (§9); part of its text |
+| `updated` | when the block's text — `character`, `dialogue`, `direction`, `action`, `lang`, `duration_sec`, `beats`, `subtitles` — last changed: RFC 3339 UTC (§1.4), stamped by a writer when that text differs from the block of the same `id` in the file it replaces, and on a new block; never for its `media` or `output_duration_sec`, nor for its `prompts` — a prompt's write, stamp or words leave it (18 November 2026). A block without one has not changed since it was written |
 | `media` | the block's media: an object of the six groups below, each an array of §9.0's entries; `updated` never moves for it |
 | `start_ms` `end_ms` | observed timing, typically from import |
 | `screenplay_element` | optional source paragraph category in snake_case: `action`, `character`, `dialogue`, `parenthetical`, `transition`, `shot`, `general`, `lyrics`, `note`, or another source element's normalized name; informational, never the retired `kind` field |
@@ -1964,6 +2081,8 @@ its own block's start to the end of the last block it covers, never past the sce
 block's output duration. A covered block's own clip is drawn over it for as long as that clip lasts, the spanning
 clip showing again after it, and both sounds play where they overlap; where two spanning clips cover one block, the
 one whose block is nearer shows. A spanning clip shorter than its blocks holds its last frame.
+
+**A shot rendered, and the clips it replaces** (17 November 2026). A clip rendered or uploaded at a live placeholder's head (§9) covers the placeholder's blocks: its entry's `spans` are the placeholder's. When a clip whose `spans` cover more than one block is attached, the usable clips of every block it covers — its own block's included, the new clip apart — are flagged `archived` in the same write: kept, and restorable, never deleted. Nothing else is archived; a clip attached later at a covered block is drawn over the shot as above.
 
 **The number a new block takes.** A scene's `next_block` is the number the next new block takes. A new
 block takes the larger of `next_block` and one more than the highest `bl_<n>` the scene holds — 1 in a
@@ -2240,12 +2359,12 @@ The members of `request`:
 | `model` `platform` | the catalogue entry's id and the platform it ran on (§14.6) |
 | `stage` | `prototype` · `draft` · `final`: the stage the person asked at |
 | `prompt` | the fully resolved prompt as sent |
-| `params` | the options by the catalogue's names, the seed among them where one was sent |
+| `params` | the options by the catalogue's names, the seed among them where one was sent. A scene's lines spoken together in one call (13 November 2026) carry the call's window as **`lines`**, `[{ "id", "voice", "text", "context"? }]` in scene order — each line's block id, the voice it speaks in, its words, and `context: true` on a line spoken again only so that the next follow it — and each of the record's items is the take of the wanted line its `reported.id` names, attached to that block Both doors make such windows from one reading of the scene (13 November 2026): the Workflow tab's *Render* on a scene's checked voice lines, and one block's *Render*, whose window holds that block and up to two lines before it as context; each window is one item, its `prompt` its wanted lines' words, its `quote` the estimate of every line's characters, context included, its target its first wanted block. |
 | `seed_random` | `true` where no seed was given |
 | `inputs` `inputs_by_name` | what the render was given. `inputs` is the flat list of media references, written whatever the render was given and empty where it was given none. `inputs_by_name`, optional, is the same media under the input names of §14.8 (`first_frame`, `reference_images`, `audio`, …), **each a descriptor — `media`, `mime`, and the `bytes`, `width`, `height` and `durationMs` measured on ingest where they were measured (§12.3) — except `reference_images`, which is an array of them**, as §14.4 gives them to a plugin. It is written only where at least one name holds media: a name given an empty array is no input. A reader that would make the take again reads `inputs_by_name`, since a flat list cannot say which reference was which input |
 | `sources` | the version stems read beside the primary; may be empty |
 | `asked_at` | when the person asked: RFC 3339 UTC (§1.4) |
-| `treatment` | optional: the visual treatment the render was made with (§8.7), frozen when it was asked for: **`visual_style`**, the leaves that applied as §8.7 composes them, in A.11's shape (`prompts.treatment.positive` among them) — less any a shot's own `camera_character` or `lens.dof` replaced (§11.1), which the shot records itself — and **`sources`**, the stem of the document each leaf came from — the project file, a folder, a Style — by the leaf's dotted path (`look.grain`); a leaf set for that render alone names none. Absent where no treatment applied. It is the film's provenance, as `prompt` is: what the render was made from |
+| `treatment` | optional: the visual treatment the render was made with (§8.7), frozen when it was asked for: **`visual_style`**, the leaves that applied as §8.7 composes them, in A.11's shape — less any a shot's own `camera_character` or `lens.dof` replaced (§11.1), which the shot records itself — and **`sources`**, the stem of the document each leaf came from — the project file, a folder, a Style — by the leaf's dotted path (`look.grain`); a leaf set for that render alone names none. Absent where no treatment applied. It is the film's provenance, as `prompt` is: what the render was made from |
 | `purpose` | optional: what the render is for, in the target's word |
 | `from` | optional: the take the render continued, as its record holds it — **`record`**, the record's stem; **`item`**, the take's item whole; **`request`**, the record's `request` whole (a `from` of its own included where that take continued another); and **`metadata`**, **`seed_applied`** and **`stack`** from the record's top, each where the record has it. A description of the take, never an address to fetch from |
 | `destination` | optional: the server the render was sent to, as the application named it — **`id`**, its own name for the place; **`kind`**, `server` (a server a server-provider plug-in made) or `lent` (another computer's offer); and, where known, **`label`**, the words the place was offered under, **`provider`**, the server-provider plug-in's tag, and **`server`**, that provider's own reference to its server, or a lent offer's terms. A take continued returns to it where it is still offered. Absent for a render on the person's own computer or at a server address the person set, and on records written before 1.41 |
@@ -2334,7 +2453,7 @@ committed. Each lives in `data/` (§4.1) under its own grammar (§5.4), its `id`
 | Type | `kind` | `status` | An item | Members of its own |
 |---|---|---|---|---|
 | `cp` comp | `comp` | `pending` → `posting` → `posted`; a failed post goes back to `pending` and keeps `error: {code, at, detail}` | `{n, reference, batch?, item?, source, deliverable, added}` — the media reference (§6.3), the record and item that made it where one exists, the version it was made for, its purpose, when it was added | `title`, `description`, `visibility` (`public` · `private`), `posted: {at, url, revision}` once posted |
-| `as` assistant session | `session` | `open` → `closed` | `{n, stem, kind, base?, before?, result: {updated}, command, operation, label?, summary?, at, outcome}` — the version written; `fork`, `create` or `patch`, or `epoch` for a period the session declared, one item a token, `{n, stem, kind: epoch, epoch, before?, after, command, operation, summary?, at, outcome}`: the project version it was written to, the token, the entry it relabelled (only where it gave the untouched default a label and year) and the entry as written, discarding it removing an appended period, or restoring a relabelled one, where no retained version is at it; the stem a fork came from; the whole version before an in-place write; the version as the session left it, by its `updated` alone (no hash); what wrote it, and the command's own summary of what it did; when; what the person decided (`open` · `accepted` · `discarded`) | `started`, `ended`, `summary` (the session's, at its close), `run`, `assistant_session`, `assistant`, `action` (the catalog action's id the chat opened with), `entity` (the exchange id, such as `ch_julius_now`, of the entity a field's or form section's action opened at; absent for any other action), `picks: [{entity, from, to, at, operation?, item?}]` — each pick the session wrote, a pick being no item: the entity, the version picked before and after (`null` for none, on either side), when, under which operation, and the item a later write of that entity under the same operation made; `messages: [...]` — the conversation as the model was told it, in order: `{role: user, content, at}` for the person's words, `{role: assistant, tool_calls: [{id, name, arguments, argumentsError?}], content?}` for the tool calls an answer asked for, `{role: tool, tool_call_id, content}` for each tool's answer, whole, and `{role: assistant, content, at}` for the assistant's words; no system text, no context and no words shown only on screen; absent on a record from before it or of a chat not opened in a chat window |
+| `as` assistant session | `session` | `open` → `closed` | `{n, stem, kind, base?, before?, result: {updated}, command, operation, label?, summary?, at, outcome}` — the version written; `fork`, `create` or `patch`, or `epoch` for a period the session declared, one item a token, `{n, stem, kind: epoch, epoch, before?, after, command, operation, summary?, at, outcome}`: the project version it was written to, the token, the entry it relabelled (only where it gave the untouched default a label and year) and the entry as written, discarding it removing an appended period, or restoring a relabelled one, where no retained version is at it; the stem a fork came from; the whole version before an in-place write; the version as the session left it, by its `updated` alone (no hash); what wrote it, and the command's own summary of what it did; when; what the person decided (`open` · `accepted` · `discarded`) | `started`, `ended`, `summary` (the session's, at its close), `run`, `assistant_session`, `assistant`, `action` (the catalog action's id the chat opened with; `render` for a Render popup's director chat, which no catalogue holds), `title` (that chat's own title, *Render — <level>*, which its row under *Chats* reads before the action; absent on any other record; 18 November 2026), `entity` (the exchange id, such as `ch_julius_now`, of the entity a field's or form section's action opened at, or a page's action that reads the page's entity, such as *Describe the character* (14 November 2026); absent for any other action), `picks: [{entity, from, to, at, operation?, item?}]` — each pick the session wrote, a pick being no item: the entity, the version picked before and after (`null` for none, on either side), when, under which operation, and the item a later write of that entity under the same operation made; `messages: [...]` — the conversation as the model was told it, in order: `{role: user, content, at}` for the person's words, `{role: assistant, tool_calls: [{id, name, arguments, argumentsError?}], content?}` for the tool calls an answer asked for, `{role: tool, tool_call_id, content}` for each tool's answer, whole, `{role: assistant, content, at}` for the assistant's words, and `{role: step, content, at}` for a line a `run` action's code said in its chat, which no model is told (18 November 2026); no system text, no context and no words shown only on screen; absent on a record from before it or of a chat not opened in a chat window; `state` — the last state a `run` action's function answered, any JSON value, as it answered it, `null` included and `null` until it answers one; absent on a record of any other chat (17 November 2026) |
 | `rd` queue | `queue` | `pending` → `submitting` → `submitted`; a pass that leaves an item with neither a job nor an error ends `pending` again | `{n, target, request, added, submitting?, job?, error?, take?, record?}` — where the take will go and the render request exactly as it will be made, then the submission's trail: `take`, the reference of the take the job made (§6.3), and `record`, the stem of the `rd` record that holds it | — |
 
 - **`n`** numbers an item, from `next_item`; it is never renumbered and never reused. **`next_item`** is the next `n`,
@@ -2572,7 +2691,7 @@ Parameters a provider does not support are reported, not silently dropped.
   "defaults": { "durationSec": 5, "fps": 24 },
   "platforms": ["fal", "runninghub"],
   "hooks": {
-    "buildPrompt": "(ctx) => [ctx.shot.prompt, ctx.style && ctx.style.prompts.treatment.positive, ctx.cast.map(c => c.prompts.reference.positive).join(', ')].filter(Boolean).join('. ')",
+    "buildPrompt": "(ctx) => [ctx.shot.prompt, ctx.cast.map(c => c.prompts.reference.positive).join(', ')].filter(Boolean).join('. ')",
     "validate":    "(ctx) => !ctx.params || ctx.params.durationSec == null || ctx.params.durationSec <= 15 || 'Seedance 2.5 clips are 15 s max'"
   }
 }
@@ -2635,6 +2754,7 @@ another version, remove the package and install the one wanted.
 | `api` | yes | the version of the interface the plugin was written against (the interface definition's `api`); a host refuses one it does not support, naming both |
 | `minRevision` | no | the least `revision` of that interface the plugin needs, 1 where absent; a host that has less says so, and does not run it |
 | `implements` | no | the interfaces the plugin implements, below: `{ "<interface>": { … } }`, the value holding what that interface has a manifest add — `platform`, a platform's id (§14.9), for `render`, `text` and `key-check`, and optionally `models`, the catalogue entries (§14.7) the plugin speaks for; what each other interface's row says it adds. One platform to an interface |
+| `implements.assistant.delegates` | no | an assistant's helpers, `{ "director"?: "<tag>", "script-writer"?: "<tag>" }`: the plugins whose `chatActions` the assistant offers beside its own catalogue's, and no other plugin's; the director a directed action runs and the writer of the script's steps are the one named here, else the person's preference (17 November 2026) |
 | `entry` | no | a file name, or a list of them in the order they are loaded, each a `.js` file of the plugin's own folder named by a relative path; `<stem>.js` when absent |
 | `description` | no | one sentence; a string key when the plugin's strings have it |
 | `docs` | no | an absolute site path under `/docs/`, such as `/docs/platforms/comfyui/`; Settings shows a Docs link resolved against the app's development or release documentation origin. Only plain letter, digit, hyphen and underscore path segments are accepted; authorities, queries, fragments, encoded segments and traversal are refused |
@@ -2649,6 +2769,7 @@ another version, remove the package and install the one wanted.
 | `settings` | no | the plugin's options, `{ "<key>": { "type", "default"?, "label"?, "help"?, "scope"? } }`; `type` is `string`, `text`, `number` (`min`, `max`), `boolean`, `enum` (`values`), `model` (a catalogue entry of `category`, optionally on one `platform`, §14.6) or `server` (the address of a server the user runs or chooses: `http` or `https`, a host, and a port and a base path where it has them). A setting whose `scope` is `project` (the default) is kept in the project file under `plugins.<tag>` (§7); `machine` keeps it on one computer, outside the project. A `server` setting is always kept on one computer, whatever `scope` says, and is not allowed under `entitySettings`; its `default` may only name the computer itself |
 | `entitySettings` | no | per entity type named in `applies`, fields of the same vocabulary kept in that entity's own file under `plugins.<tag>` — a character's version can carry other notes for a plugin than its sibling |
 | `actions` | no | `{ "<id>": { "label", "call" } }`: commands an application offers on the plugin's own page; `call` names a function of the code |
+| `chatActions` | no | the path, under `assets/`, of the chat actions any plugin may ship, in the assistant catalogue's action format without its portrait and conversation; an assistant offers them only where its `implements.assistant.delegates` names the plugin. Not `actions`, the page's buttons (17 November 2026) |
 | `x` | no | an object an application reads nothing of: another tool's data, a proposal. Kept as written, never reported as unknown, and never a promise to the user — but `x.dependencies`, a list of plug-in tags the application reads as presentation alone — the Plugins page's grouping — granting nothing |
 | `sharing` | no | the operations the plugin offers to others, `{ "operations": [ { "function": "render" \| "speak", "model": "<catalogue id>", "unit": "image" \| "second" \| "character", "scale": 1000 } ] }`, `scale` only with `character`, an empty `operations` valid. Read and checked — a wrong shape reported at its path; a `render` operation by `image` is what lending publishes and renders on, the others read and not yet acted on (7 November 2026) |
 
@@ -2681,7 +2802,7 @@ and types are generated from it; this section names the interfaces and states th
 | `reference-analysis` | **`describeReference`** — what a picture or a recording of a character shows, in the character's own leaves | `kinds`, `platform?` | the application |
 | `style-analysis` | **`describeStyle`** — a visual treatment's leaves from a picture (§8.7) | `platform?` | the application |
 | `prompt-builder` | *(no function: declared, never called)* — a catalogue of entries a person picks from, each with a prompt; the application stores the entry chosen and does not add its prompt to a render's; it reads the catalogue, the plugin's strings and its pictures without running it | `catalog`, `target` | nobody: the application reads it |
-| `voice` | **`speak`** — speech in a kept voice; `designVoice`, preview voices from a description; `saveVoice`, a preview kept on the account | `platform` | the application |
+| `voice` | **`speak`** — speech in a kept voice; `speakDialogue`, optional, consecutive lines of a scene spoken together (13 November 2026); `designVoice`, preview voices from a description; `saveVoice`, a preview kept on the account | `platform` | the application |
 | `server-provider` | **`serverCapabilities`**, **`serverOffers`**, **`deployServer`**, **`listServers`**, **`resolveServer`**, **`wakeServer`**, **`stopServer`** — servers on demand for an engine, each with one replica and a lease its provider enforces | `engines`, `platform` | the application |
 | `lifecycle` | **`onEnable`** — told it was turned on, and may look quickly whether it can work, reading only the routes it declares; `onDisable` — told it was turned off, to tidy its own state | `discovery?` | the application, on the person's switch |
 
@@ -3029,6 +3150,8 @@ a selector where the body is a list of parts (`content[role=first_frame].image_u
 A setting with no name here keeps the platform's own, in snake_case: `person_generation`,
 `resize_mode`, `storage_uri`, `input_fidelity`, `moderation`.
 
+**Declared hold terms (12 November 2026).** An access row may declare `worst`, a list of positive `{ "usd", "per" }` terms beside `pricing`, without `when` or `match`. It is the owner's declared hold term, not a verified provider maximum. The application does not read it, so screen estimates and Usage prices are unchanged. For each unit kind, the website's hold rate is the highest `usd` over `pricing` and `worst` of that `per`.
+
 **Prices.** A row is `{ "usd", "per", "when", "match" }`: the price the platform publishes, in US dollars, for one
 unit; `when` says when the row applies — a resolution, audio on or off, a quality, a date. A discount is
 said in `when` or `notes`, and a run on the user's own machine has no row, or a row of zero. `match`, where a
@@ -3045,6 +3168,7 @@ and only where no row has a `match` does it fall back to the least of all.
 | `image`, `video`, `request` | one image, one video, one request |
 | `clone` | one recording kept as a voice |
 | `1k_characters` | a thousand characters of text |
+| `1k_bytes` | a thousand UTF-8 bytes of the text sent, tags and directions included (17 November 2026) |
 | `1m_input_tokens`, `1m_output_tokens` | a million tokens in or out; a video model billed by tokens uses `1m_output_tokens` |
 | `1m_cached_input_tokens`, `1m_audio_input_tokens` | a million input tokens read from a cache, or of audio |
 | `megapixel` | a megapixel of output |
@@ -3093,7 +3217,7 @@ and only where no row has a `match` does it fall back to the least of all.
 catalogue's vocabulary. A key that does not apply is left out; a key not listed here **MAY** be added, and
 a reader that does not know it **MUST** ignore it.
 
-**Inputs.** Image, video and voice design entries describe each input the mode accepts as
+**Inputs.** Image, video and voice design entries (a speech entry's `inputs` holds only its `dialogue` bounds, below) describe each input the mode accepts as
 `{ "required": true }` or `{ "required": false }`, with its limits:
 
 | Input | Limits |
@@ -3160,6 +3284,7 @@ A video entry **MUST** mark as required the inputs its tag names: `prompt` in `t
 | `voice_cloning` | object | `{ "instant", "professional", "min_sample_s" }` |
 | `voice_design` | boolean | A voice made from a description |
 | `emotion_control` | string | How delivery is directed: inline tags, a style note |
+| `inputs` | object | `dialogue` (13 November 2026): `{ "max_characters", "max_voices" }`, what one call speaking several lines together takes in all, its context lines included. It names no media, so the entry takes no media input, as an entry with no `inputs` would not |
 | `multi_speaker` | boolean | One request voices several speakers |
 | `streaming`, `timestamps` | boolean | |
 | `max_characters_per_request`, `latency_ms` | number | |
@@ -3198,6 +3323,7 @@ A video entry **MUST** mark as required the inputs its tag names: `prompt` in `t
 | `inputs` | object | `prompt`, `negative_prompt`, `first_frame`, `last_frame`, `reference_images`, `audio`, `seed` |
 | `supported_durations_s` | array | Every allowed length, in whole seconds |
 | `max_length_s` | number | The longest clip |
+| `preferred_length_s` | number | Optional (16 November 2026): the length a shot is planned to; absent, the longest length the route offers. No entry gives one until somebody has measured it |
 | `supported_resolutions` | array | `480p` to `2160p`, `2K`, `4K` |
 | `supported_aspect_ratios` | array | `W:H`, or `adaptive`: the output follows an input frame or the model chooses, and `inputs.first_frame.sets_aspect_ratio` says which |
 | `fps` | array | Frame rates |
@@ -3213,9 +3339,10 @@ Each platform is one file, `platforms/<id>.json`, that says where requests go an
 sent and checked; `platforms` in the index lists the files. Access rows name a platform by its id; an id
 is lower case, it is the file's name, and a new platform takes a new one. FilmOpen's catalogue uses
 `openai`, `xai`, `anthropic`, `google` (the Gemini API), `vertex`, `elevenlabs`, `deepgram`, `kling`,
-`byteplus`, `minimax`, `ltx`, `openrouter`, `fal`, `replicate`, `comfyui` and `huggingface`. FilmOpen's
-first version supports `openrouter`, `fal`, `openai` and `xai`, and the index marks the others pending
-(§14.6).
+`byteplus`, `minimax`, `ltx`, `openrouter`, `fal`, `replicate`, `atlascloud`, `comfyui`, `wan2gp`, `huggingface`,
+`runninghub` and `qwen` (Qwen Cloud, in Singapore). FilmOpen's first version supports `openrouter`, `fal`, `openai`, `xai`,
+`anthropic`, `google`, `elevenlabs`, `atlascloud`, `wan2gp`, `runninghub` (17 November 2026) and `qwen`, and the index
+marks the others pending (§14.6).
 
 ```json
 {
@@ -3257,7 +3384,7 @@ first version supports `openrouter`, `fal`, `openai` and `xai`, and the index ma
 | `base_url` | string | yes | Where requests go. |
 | `hosts` | array | unless `auth.kind` is `none` | Every host a request carrying the platform's credentials may go to: at least the hosts of `base_url`, of `verify.url`, and of each `endpoint` in the access rows that name the platform. An entry may instead be `*.` and a domain of two labels or more — `*.salad.cloud` — which stands for each host of exactly one label before that domain, and only as the endpoint a server provider resolved for the server a call is bound to (§14.4, `server-provider`): the hosts a provider makes per deployment. A `*` anywhere else makes the file unusable. |
 | `paths` | object | | Where, on a host, a request carrying the platform's credentials may go: `{ "<host>": ["<prefix>", …] }`. A request to a host named here must match one of its prefixes by whole segments — `/v1/key` is not `/v1/keys` — after its path is made plain, and a path that cannot be made plain is refused before anything is matched: a `.` or `..` segment, however it is escaped and whatever `;` parameter follows it; a slash or a backslash that is escaped, and a backslash of any kind; an empty segment, a trailing `/` included; a control character; and a `%` that is not two hexadecimal digits standing for a printable ASCII character other than `%` itself, which a server that decodes twice would read as an escape again. The path judged is the one the request was written with, before any reader resolved it. A host of `hosts` that is not named here takes any path, which is right for a host that serves nothing but models. Each host named here is one of `hosts`, named once whatever its case, and each prefix is itself a plain path; a file that breaks any of these, or whose `paths` names no host at all, is not used — an empty `paths` is not an absent one. It exists because a platform's hosts can serve more than models — an endpoint that creates keys, or reads an account — and **a plugin allowed to use a key has that key's whole authority on every path it may reach**: `verify.url` and each `endpoint` of the access rows must pass it. |
-| `auth` | object | yes | `kind`, one of `api_key`, `oauth`, `token` or `none`; `header`, the header with a placeholder that names a `credentials` id, such as `Authorization: Key <key>`; `env`, the environment variable the vendor's own SDKs read, where one is documented; `keychain`, the name an application keeps the platform's credentials under, as a `pl` file's `auth.keychain` (§14.3). `auth.kind: oauth` alone does not offer application sign-in: that route is defined by the sibling `oauth` object, on a platform of any kind. |
+| `auth` | object | yes | `kind`, one of `api_key`, `oauth`, `token` or `none`; `header`, the header with a placeholder that names a `credentials` id, such as `Authorization: Key <key>`; `body` (17 November 2026), where the platform also reads the key from the request's body, the field written as `header` is, such as RunningHub's `apiKey: <key>`: an application adds it on a person's own key, after it has logged the request, as a field at the top level of a JSON object or as one more part of a form, never by replacing text, and sends any other body as it is; `secret_answers` (17 November 2026), the dotted paths of the credentials the platform's answers carry, such as `["data.netWssUrl"]`: an application deletes each from a JSON answer, at any status, before it logs the answer or hands it on, and keeps every other value; `env`, the environment variable the vendor's own SDKs read, where one is documented; `keychain`, the name an application keeps the platform's credentials under, as a `pl` file's `auth.keychain` (§14.3). `auth.kind: oauth` alone does not offer application sign-in: that route is defined by the sibling `oauth` object, on a platform of any kind. |
 | `headers` | object | | Other headers every request needs, such as `anthropic-version`. |
 | `credentials` | array | when `auth.kind` is `api_key` or `token` | What a user copies from the platform, one object per field: `id`, the field's name in the stored value and in `auth.header`'s placeholder; `label`, the platform's word for it; `secret`, whether it is hidden while it is typed; `prefix`, how the platform's values start, where it says. |
 | `verify` | object | | A documented authenticated request at a fixed URL that runs no model, to check a key: `method` and `url`. It carries `auth.header` and `headers` like any other request. A `2xx` answer means the key is good. `rejected`, where the file has it, is the whole list of the HTTP statuses, each from `400` to `599`, with which the platform refuses a key; left out, it is `401` and `403`. xAI lists `[400, 401, 403]`: it answers a wrong key with `400`, and keeps `401` for a request with no credentials. Any other answer says nothing about the key: the check could not be made. A reader decides by the status alone, and need not read a refusal's body, which may repeat what it was sent. |
@@ -3280,7 +3407,7 @@ where they differ from the file's, the file is right.
 credential store under a name built on `auth.keychain` — the name itself, or, where a key belongs to a
 plugin (§14.4), `filmopen/<owner>/<slot>`, the plugin's tag and the key's slot added to the name's
 `filmopen` base, so that two plugins' keys for one platform never share a name — as one value: a JSON object keyed by the `credentials` ids,
-whose values fill `auth.header`'s placeholders. It **MUST** send them only over `https` or `wss`, only
+whose values fill `auth.header`'s and `auth.body`'s placeholders. It **MUST** send them only over `https` or `wss`, only
 to the hosts in `hosts` — to a host a `*.` entry stands for only where it is the endpoint a server provider's
 `resolveServer` answered for the server the call is bound to, and then to that one origin, never to an address
 a plugin names itself, since another customer's server may answer under the same domain; it **MUST NOT**
@@ -3413,7 +3540,9 @@ structural change — reordering shots after cutting has begun — which no form
 
 A scene can be exported alone, as it plays: **one scene, assembled from its blocks** in script order, with
 **direct file references** to the media it uses. It is not the film's conform of §15.2–§15.4: there are no
-conform slots, no relinking and no import back, and a film or a folder is not exported this way.
+conform slots, no relinking and no import back, and a film or a folder is not exported this way — except to
+Final Cut Pro, where a folder or the film is exported as its scenes end to end, in script order (18 November
+2026); OTIO stays a scene's.
 
 The timeline is the scene's as an application derives it — each block's picture, speech, music and sound
 effects (§10.3), and each block's output duration — and **every block boundary is a whole frame**: the seconds
@@ -3448,6 +3577,12 @@ frames and source in and out frames, in exclusive — and a **report**, one entr
 (a `format` field the project does not give, for which the application used its default),
 `still` (a first or last frame on the picture), and
 `unknown_block` (a `spans` naming no later block, read as the owning block alone).
+
+**A cut** (18 November 2026). Where the application shows the scene through a script filter (only the blocks with
+dialogue, or each line without its silent beats), the export is the cut as it plays: the OpenTimelineIO file is
+the cut's flat edit list — each piece of each source one `Clip.1` at the cut's frames, its `source_range` starting
+where the cut resumes it — with no `Marker.2`, no manifest and no report, since a cut has no blocks of its own;
+its `Timeline.1` metadata names the filter as `filmopen.cut` (for example `"dialogue only"`).
 
 ---
 
@@ -3619,9 +3754,9 @@ scene's `source.fdx` by their own names.
 Missing, unsafe or conflicting IDs receive deterministic unused sequential tags; the mapping is recorded
 by the entity's tag and provenance, and a diagnostic records a remapped or duplicate source ID. Block
 IDs remain `bl_<n>` (§10.3), with source paragraph IDs in provenance. The imported author is the current
-viewer, its files are version 1, and that author's owner is the first director. Its one epoch is the
-owner's first allocated id, `<owner>-1`, with `next_epoch` 2, as for any new project (§8.2), labelled as
-the import asks and without inventing a story year.
+viewer, its files are version 1, and that author's owner is the first director. It declares no epoch, as a new
+project made in the app declares none (§8.2): its characters, locations and props are made at the base, and a
+scene carries an epoch only where the script states one (14 November 2026).
 
 Dialogue and lyrics retain the concatenated `Text` runs exactly, including their whitespace and spoken
 names. Descriptive action, parentheticals, summaries and resource descriptions replace unambiguous whole
@@ -3726,7 +3861,7 @@ A conforming reader:
 - **SHOULD** warn, and continue, on: a header that disagrees with its filename; a file whose author is
   not the current user being modified; an `_official.json` written by a non-director; a version named by
   `_official.json` being edited; a reference that resolves
-  ambiguously; an explicit epoch that does not exist; a project file that declares no epochs; a
+  ambiguously; an explicit epoch that does not exist; a
   `pick` (or its 1.5 spelling `prefer`) that names no file or a discarded version (§7); an `_official.json` that names a
   discarded version.
 
@@ -3739,7 +3874,7 @@ A conforming writer:
 
 - **MUST** write lowercase filenames matching §5;
 - **MUST** write `filmopen-project.json` when creating a project folder (§4.4), and **SHOULD** write the
-  creator's first project version with the creator as director and at least one epoch (§8.2, §8.3);
+  creator's first project version with the creator as director and no epoch (§8.2, §8.3);
 - **MUST** write the required header for the file's category;
 - **MUST** check the new content a model submits — a whole document or a change to one — against the type's
   records, recursively: each object holds only the keys its record defines (§7–§14, Appendix A), each value of
@@ -3818,7 +3953,7 @@ vocabulary, not a constraint. "media ref" means a media reference as defined in 
 | `kind` | enum | `principal` `supporting` `extra` `group` `narrator` `creature` `animal` |
 | `aliases` | string[] | script cue names, nicknames, transcript labels |
 | `summary` | string | one or two sentences |
-| `birth_date` | string | `YYYY`, `YYYY-MM` or `YYYY-MM-DD`; its year fills age only on a birth-date change or creation at another epoch (§9.1) |
+| `birth_date` | string | `YYYY`, `YYYY-MM` or `YYYY-MM-DD`; no age is stored from it: the age at an epoch is computed from its year where it is read (§8.2, §9.1) |
 | `appearance.age` | number or string | `30`, `"late thirties"`, or `"31 (1999)"` — the age with the year of birth; stored per epoch file (§9.1) |
 | `appearance.gender` | string | `male` `female` `nonbinary` — what an application writes; an older file's other word (`woman`, …) is read as it is and kept until one is chosen; absent while undecided |
 | `appearance.ethnicity` | string | free; optional; for continuity only |
@@ -3847,10 +3982,9 @@ vocabulary, not a constraint. "media ref" means a media reference as defined in 
 | `voice.accent` `voice.lang` | string | free; BCP 47 |
 | `voice.provider_bindings` | object | platform tag → provider voice id: the active binding, the voice speech uses there (§9.1); samples and text remain the portable truth |
 | `voice.active_reference` | media ref | the live `voice_samples` entry whose voice is in use (§9.1) |
-| `voice.audition_text` | string | what a designed voice's previews say |
 | `relationships[]` | object | `{ character, relation }` |
 | `default_outfit` | tag | outfit used when a scene does not say; resolved at the character's epoch |
-| `prompts.reference` `prompts.sheet` `prompts.voice` | prompt | `{ positive, negative?, created?, plugin?, writer? }` (§9); `voice` the description a voice is designed from |
+| `prompts.reference` `prompts.sheet` `prompts.voice` | prompt | `{ positive, negative?, created?, plugin?, writer? }` (§9); `voice` the description a voice is designed from, with `audition_text?`, what its previews say (15 November 2026) |
 | `creator_notes` | string | for people; excluded from prompts unless explicitly included |
 | `picks.sheet` `picks.turnaround` `picks.expressions` | media ref or media ref[] | chosen concept sheets |
 | `media` | object of groups, each an array of entries | §9.0 |
@@ -3981,20 +4115,23 @@ vocabulary, not a constraint. "media ref" means a media reference as defined in 
 | `scene_heading` `scene_number` | string | the source's heading and printed number, from import (§10.2) |
 | `outfits` | tag[] | outfits explicitly used in the scene (§10.2) |
 | `resources` | stem[] | other production resources as typed short stems, `mi_smoke` (§10.2) |
+| `media` `preview` | | its own `layouts` and the one shown for it (§9.0; 14 November 2026) |
+| `render_stage` | enum | `prototype` `draft` `final`; the stage this version's renders are asked at, `prototype` where absent or of another shape (§9.0) |
 
 **Folder**
 
 | Key | Type | Values |
 |---|---|---|
 | `kind` | token | `season` `installment` `episode` `act` `arc` `sequence` `part` `chapter`; another token is kept and shown as written; a folder may have none (§10.1) |
+| `epoch` | token | a declared epoch (§8.2): the time of every scene inside that names none, unless a folder nearer the scene names its own; absent, *Default* — the folder says nothing (§6.1, §10.1; 16 November 2026) |
 | `synopsis` | string | |
 | `children` | entry[] | what the folder holds, in order: `<type>_<tag>` or a full reference, of type `fo` or `sc` (§8.5) |
 | `visual_style` | object | the folder's visual treatment, over its parents' (§8.7, A.11) |
-| `media` `preview` | | its `reference_images` and the one shown as its cover (§9.0) |
+| `media` `preview` | | its `reference_images` and `layouts`, and the one shown as its cover (§9.0) |
 | `render_stage` | enum | `prototype` `draft` `final`; the stage this version's renders are asked at, `prototype` where absent or of another shape (§9.0) |
 
-A folder cascades nothing but its `visual_style`: it carries no `epoch`, `cast`, `locations` or `styles`
-(§10.1).
+A folder cascades nothing but its `visual_style` and its `epoch`: it carries no `cast`, `locations` or
+`styles` (§10.1).
 
 ### A.6 Cue `cu`
 
@@ -4044,7 +4181,7 @@ A folder cascades nothing but its `visual_style`: it carries no `epoch`, `cast`,
 | `lens_character` | string | flare, breathing, distortion |
 | `cdl` | object | `{ slope[3], offset[3], power[3], saturation }` |
 | `lut` | media ref | `.cube` |
-| `prompts.treatment` `media` `preview` | | `prompts.treatment` at the top, as the leaves it shares (§9.5) |
+| `media` `preview` | | as every entity's (§9) |
 
 ### A.8 Block
 
@@ -4060,7 +4197,7 @@ A folder cascades nothing but its `visual_style`: it carries no `epoch`, `cast`,
 | `subtitles` | array of objects | each `{ position?, text?, duration_sec? }`; `position` as a beat's (§10.3) |
 | `output_duration_sec` | number | greater than zero; absent, the application's rule decides |
 | `lang` | BCP 47 | |
-| `prompts` | object | `first_frame`, `last_frame`, `clip`: each a prompt `{ positive, negative?, created?, plugin?, writer? }` (§9) |
+| `prompts` | object | `first_frame`, `last_frame`, `clip`: each a prompt `{ positive?, negative?, notes?, created?, plugin?, writer? }`, the clip prompt also `spans?` `{ blocks }` (§9) |
 | `updated` | RFC 3339 | when the block's text last changed (§10.3) |
 | `media` | object of groups, each an array of entries | §10.3; the groups and their `spans` |
 | `start_ms` `end_ms` | number | observed timing, from import |
@@ -4076,7 +4213,7 @@ rule.
 
 `author` `v` `forked_from?` `version_label?` `name` `kind?` (`short-film` `film` `mini-series` `series`) `genre[]` `year`
 `logline` `synopsis` `lang` `rating` `format{aspect,fps,resolution,color,width?,height?,pixel_aspect?,sample_rate?,channels?,subtitles?{font,size}}` `runtime_min`
-`credits[{role,name,handle}]` `epochs{<token>: {label?, order?, year?}}` (at least one; the first is the
+`credits[{role,name,handle}]` `epochs{<token>: {label?, order?, year?}}` (none or more, never `base`; the first is the
 default) `next_epoch` (a whole number, the allocation floor, §8.2) `contributors` `tracks` `license` `hooks` `media` `preview`
 (its `reference_images` and its cover, §9.0) `visual_style` (the film's visual treatment, §8.7,
 A.11), and `children[]`, the script: its folders and scenes in order, each entry `<type>_<tag>` or a full
@@ -4127,7 +4264,6 @@ are the primary leaves, which a render's prompt names (§8.7).
 | `composition` | string | |
 | `texture` | string | |
 | `grading.shadows` `grading.midtones` `grading.highlights` | string | the grade in words, never a calibrated value |
-| `prompts.treatment.positive` `prompts.treatment.negative` | string | composed after the entity's own prompt (§8.7); the prompt's `created` and `plugin` (§9) are no leaves and are never composed |
 | `preset` | string | `<tag>:<entry id>` of a prompt builder's entry, `fo-styles:family-3d`: the style chosen, stored, never composed into a render's prompt (§8.7) |
 
 ---
@@ -4148,14 +4284,15 @@ the-cartographer/
   filmopen-project.json
   data/
     pj_cartographer_john123_v1.json
-    ch_main-hero_30yo_john123_v1.json
-    ch_main-hero_30yo_maria_v1.json
-    ch_main-hero_30yo_official.json
+    ch_main-hero_base_john123_v1.json
+    ch_main-hero_base_maria_v1.json
+    ch_main-hero_base_official.json
     cm_ch_main-hero_maria.json
+    lo_archive_base_john123_v1.json
     lo_archive_mid-war_john123_v1.json
-    pr_chart_default_john123_v1.json
-    st_war-grade_default_maria_v1.json
-    st_war-grade_default_official.json
+    pr_chart_base_john123_v1.json
+    st_war-grade_base_maria_v1.json
+    st_war-grade_base_official.json
     fo_s1_john123_v1.json
     fo_e2_john123_v1.json
     sc_5_john123_v1.json
@@ -4174,7 +4311,7 @@ the-cartographer/
     rd_8af6_maria.json
     rd_8af7_maria.json
   media/
-    cs_ch_main-hero_30yo_maria_v1_r8af0_maria_1.png
+    cs_ch_main-hero_base_maria_v1_r8af0_maria_1.png
     voice-calm.wav
     cs_lo_archive_mid-war_john123_v1_r7c21_john123_1.png
     ff_sh_5.1_john123_v1_r8af1_maria_1.png
@@ -4203,7 +4340,8 @@ The script's structure is in the files of B.5, never in directories on disk.
   "logline": "A mapmaker discovers her charts are rewriting the coastline.",
   "lang": "pt-BR",
   "format": { "aspect": "2.39:1", "fps": 24, "resolution": "1920x804", "color": "rec709" },
-  "epochs": { "default": { "label": "Present day", "order": 1, "year": 2026 }, "mid-war": { "label": "During the war", "order": 2, "year": 1943 } },
+  "epochs": { "default": { "label": "Present day", "order": 1, "year": 2026 }, "30yo": { "label": "Kira at thirty", "order": 2, "year": 2026 },
+              "mid-war": { "label": "During the war", "order": 3, "year": 1943 } },
   "contributors": { "john123": { "name": "João Silva", "role": "director" }, "maria": { "name": "Maria Costa" } },
   "tracks": [
     { "id": "pic", "kind": "av", "name": "Picture" },
@@ -4221,10 +4359,10 @@ The script's structure is in the files of B.5, never in directories on disk.
 
 ```json
 {
-  "filmopen": 1, "type": "ch", "tag": "main-hero", "epoch": "30yo", "author": "john123", "v": 1,
-  "name": "Kira Voss", "kind": "principal", "aliases": ["KIRA"],
+  "filmopen": 1, "type": "ch", "tag": "main-hero", "epoch": "base", "author": "john123", "v": 1,
+  "name": "Kira Voss", "kind": "principal", "aliases": ["KIRA"], "birth_date": "1996",
   "summary": "A cartographer who discovers her maps are rewriting the coastline.",
-  "appearance": { "age": 30, "gender": "woman", "build": "lean", "skin": "olive",
+  "appearance": { "gender": "woman", "build": "lean", "skin": "olive",
                   "hair": { "color": "black", "length": "shoulder", "style": "loose" },
                   "eyes": { "color": "dark brown" }, "marks": ["burn scar, left forearm"] },
   "personality": { "summary": "Guarded, precise.", "speech": "Short sentences." },
@@ -4238,28 +4376,28 @@ The script's structure is in the files of B.5, never in directories on disk.
 
 ```json
 {
-  "filmopen": 1, "type": "ch", "tag": "main-hero", "epoch": "30yo", "author": "maria", "v": 1,
-  "name": "Kira Voss", "kind": "principal", "aliases": ["KIRA"],
-  "forked_from": "ch_main-hero_30yo_john123_v1",
+  "filmopen": 1, "type": "ch", "tag": "main-hero", "epoch": "base", "author": "maria", "v": 1,
+  "name": "Kira Voss", "kind": "principal", "aliases": ["KIRA"], "birth_date": "1996",
+  "forked_from": "ch_main-hero_base_john123_v1",
   "summary": "A cartographer who discovers her maps are rewriting the coastline.",
-  "appearance": { "age": 30, "gender": "woman", "build": "lean", "skin": "olive",
+  "appearance": { "gender": "woman", "build": "lean", "skin": "olive",
                   "hair": { "color": "copper red", "length": "short", "style": "cropped, undercut" },
                   "eyes": { "color": "dark brown" }, "marks": ["burn scar, left forearm", "small compass-rose tattoo, right wrist"] },
   "personality": { "summary": "Guarded, precise.", "speech": "Short sentences." },
   "voice": { "description": "low, unhurried, slight rasp", "pitch": "low", "pace": "slow", "lang": "pt-BR" },
   "prompts": { "reference": { "positive": "30yo woman, olive skin, cropped copper-red hair with undercut, lean build, burn scar left forearm, small compass tattoo right wrist",
               "negative": "cartoon, plastic skin" } },
-  "picks": { "sheet": "cs_ch_main-hero_30yo_maria_v1_r8af0_maria_1" },
-  "media": { "character_sheets": [ { "reference": "cs_ch_main-hero_30yo_maria_v1_r8af0_maria_1", "batch": "rd_8af0_maria", "item": 1, "duration_ms": 0, "width": 320, "height": 180, "stage": "final" } ],
+  "picks": { "sheet": "cs_ch_main-hero_base_maria_v1_r8af0_maria_1" },
+  "media": { "character_sheets": [ { "reference": "cs_ch_main-hero_base_maria_v1_r8af0_maria_1", "batch": "rd_8af0_maria", "item": 1, "duration_ms": 0, "width": 320, "height": 180, "stage": "final" } ],
              "voice_samples": [ { "reference": "voice-calm.wav" } ] },
-  "preview": "cs_ch_main-hero_30yo_maria_v1_r8af0_maria_1",
+  "preview": "cs_ch_main-hero_base_maria_v1_r8af0_maria_1",
   "created": "2026-09-06T09:12:00Z", "updated": "2026-09-06T10:31:02Z"
 }
 ```
 
 ```json
-{ "filmopen": 1, "type": "ch", "tag": "main-hero", "epoch": "30yo",
-  "official": "ch_main-hero_30yo_maria_v1",
+{ "filmopen": 1, "type": "ch", "tag": "main-hero", "epoch": "base",
+  "official": "ch_main-hero_base_maria_v1",
   "set_by": "john123", "set_at": "2026-09-06T14:20:00Z", "note": "The red hair reads better against the archive." }
 ```
 
@@ -4267,13 +4405,27 @@ The script's structure is in the files of B.5, never in directories on disk.
 
 ```json
 {
-  "filmopen": 1, "type": "lo", "tag": "archive", "epoch": "mid-war", "author": "john123", "v": 1,
+  "filmopen": 1, "type": "lo", "tag": "archive", "epoch": "base", "author": "john123", "v": 1,
   "name": "The municipal archive", "aliases": ["ARCHIVE"], "kind": "interior",
-  "geography": { "city": "Lisbon", "country": "PT" }, "era": "1930s building, wartime neglect",
+  "geography": { "city": "Lisbon", "country": "PT" }, "era": "1930s building",
   "description": "Long reading room, iron shelving to the ceiling, one skylight, dust in the air.",
-  "dressing": ["oak reading table", "green-shade lamps", "map drawers", "sandbags at the windows"],
+  "dressing": ["oak reading table", "green-shade lamps", "map drawers"],
   "lighting": { "default": "single skylight, cold; lamps warm and low", "practicals": ["green-shade desk lamps"] },
-  "sound": { "room_tone": "large, dead, high ceiling", "ambience": "rain on skylight, distant sirens" },
+  "sound": { "room_tone": "large, dead, high ceiling", "ambience": "rain on skylight" },
+  "prompts": { "reference": { "positive": "1930s municipal archive reading room, iron shelving, skylight, green desk lamps, dust" } },
+  "created": "2026-09-05T18:30:00Z", "updated": "2026-09-05T18:30:00Z"
+}
+```
+
+The archive at `mid-war` is an overlay (§8.2): only what the war changes. The scene at `mid-war` reads it merged over
+the base — the name, lighting and room tone inherited, the dressing list replaced whole, `sound` merged key by key.
+
+```json
+{
+  "filmopen": 1, "type": "lo", "tag": "archive", "epoch": "mid-war", "author": "john123", "v": 1,
+  "era": "1930s building, wartime neglect",
+  "dressing": ["oak reading table", "green-shade lamps", "map drawers", "sandbags at the windows"],
+  "sound": { "ambience": "rain on skylight, distant sirens" },
   "prompts": { "reference": { "positive": "1930s municipal archive reading room, iron shelving, skylight, green desk lamps, sandbagged windows, wartime, dust" } },
   "picks": { "sheet": "cs_lo_archive_mid-war_john123_v1_r7c21_john123_1" },
   "media": { "location_sheets": [ { "reference": "cs_lo_archive_mid-war_john123_v1_r7c21_john123_1", "batch": "rd_7c21_john123", "item": 1 } ] },
@@ -4283,7 +4435,7 @@ The script's structure is in the files of B.5, never in directories on disk.
 
 ```json
 {
-  "filmopen": 1, "type": "pr", "tag": "chart", "epoch": "default", "author": "john123", "v": 1,
+  "filmopen": 1, "type": "pr", "tag": "chart", "epoch": "base", "author": "john123", "v": 1,
   "name": "The 1994 harbour chart", "kind": "document", "hero": true,
   "description": "Hand-drawn nautical chart, yellowed linen-backed paper, sepia ink, folded twice.",
   "prompts": { "reference": { "positive": "hand-drawn nautical chart, yellowed linen paper, sepia ink, fold creases" } },
@@ -4293,19 +4445,18 @@ The script's structure is in the files of B.5, never in directories on disk.
 
 ```json
 {
-  "filmopen": 1, "type": "st", "tag": "war-grade", "epoch": "default", "author": "maria", "v": 1,
+  "filmopen": 1, "type": "st", "tag": "war-grade", "epoch": "base", "author": "maria", "v": 1,
   "name": "War — gritty, desaturated",
   "look": { "stock": "16mm colour negative", "grain": "medium", "contrast": "high", "saturation": "low" },
   "palette": ["#2b2f33", "#6b7076", "#b9bcb8", "#d9c9a3"],
-  "prompts": { "treatment": { "positive": "desaturated, cold grey palette, high contrast, 16mm grain, handheld", "negative": "saturated, glossy" } },
   "cdl": { "slope": [0.95, 0.98, 1.05], "offset": [-0.02, -0.02, 0.0], "power": [1.1, 1.1, 1.05], "saturation": 0.6 },
   "created": "2026-09-06T08:00:00Z", "updated": "2026-09-06T08:00:00Z"
 }
 ```
 
 ```json
-{ "filmopen": 1, "type": "st", "tag": "war-grade", "epoch": "default",
-  "official": "st_war-grade_default_maria_v1", "set_by": "john123" }
+{ "filmopen": 1, "type": "st", "tag": "war-grade", "epoch": "base",
+  "official": "st_war-grade_base_maria_v1", "set_by": "john123" }
 ```
 
 ### B.5 Folders
@@ -4326,8 +4477,9 @@ The script's structure is in the files of B.5, never in directories on disk.
 }
 ```
 
-The folders say nothing about what their scenes hold: the epoch, the cast, the location and the style of
-scene 5 are the scene's own (B.6).
+The folders say nothing about what scene 5 holds: its epoch, which it names, its cast, its location and its
+style are the scene's own (B.6). A scene that named no epoch would be read at its nearest folder's, where one
+names it, else at the project's default (§6.1, §10.1; 16 November 2026).
 
 ### B.6 Scene
 
@@ -4366,7 +4518,7 @@ scene 5 are the scene's own (B.6).
   "duration_sec": 8,
   "deliverables": {
     "first_frame": { "model": "nanobanana", "prompt": "Kira leaning over two nautical charts on an oak table, green desk lamp, archive shelving behind, 16mm grain",
-                    "refs": ["cs_ch_main-hero_30yo_maria_v1_r8af0_maria_1", "cs_lo_archive_mid-war_john123_v1_r7c21_john123_1"] },
+                    "refs": ["cs_ch_main-hero_base_maria_v1_r8af0_maria_1", "cs_lo_archive_mid-war_john123_v1_r7c21_john123_1"] },
     "clip": { "model": "seedance25", "prompt": "slow push in as she traces the coastline with a finger and speaks without looking up", "from": "first_frame" }
   },
   "place": { "track": "pic", "with": "scene", "offset_ms": 0 },
@@ -4387,7 +4539,7 @@ scene 5 are the scene's own (B.6).
   "vfx": "glass shatter, no debris toward lens",
   "duration_sec": 5,
   "deliverables": {
-    "first_frame": { "model": "nanobanana", "prompt": "low angle, Kira in medium shot at the archive table, the window behind her blown white", "refs": ["cs_ch_main-hero_30yo_maria_v1_r8af0_maria_1"] },
+    "first_frame": { "model": "nanobanana", "prompt": "low angle, Kira in medium shot at the archive table, the window behind her blown white", "refs": ["cs_ch_main-hero_base_maria_v1_r8af0_maria_1"] },
     "clip": { "model": "seedance25", "prompt": "the window flashes white, glass falls, she does not turn", "from": "first_frame" }
   },
   "place": { "track": "pic", "after": "sh_5.1", "offset_ms": 0, "transition_in": { "kind": "cut" } },
@@ -4458,8 +4610,8 @@ scene 5 are the scene's own (B.6).
     "params": {}, "seed_random": true, "inputs": [], "sources": [], "asked_at": "2026-09-06T15:30:00Z" },
   "cost_usd": 0.08,
   "items": [
-    { "n": 1, "source": "ch_main-hero_30yo_maria_v1", "deliverable": "sheet", "group": "character_sheets",
-      "output": "cs_ch_main-hero_30yo_maria_v1_r8af0_maria_1.png", "sha256": "0faa…", "bytes": 2216,
+    { "n": 1, "source": "ch_main-hero_base_maria_v1", "deliverable": "sheet", "group": "character_sheets",
+      "output": "cs_ch_main-hero_base_maria_v1_r8af0_maria_1.png", "sha256": "0faa…", "bytes": 2216,
       "mime_type": "image/png", "width": 320, "height": 180, "reported": { "width": 2048, "height": 2048 },
       "human": { "selected_from": 6 } }
   ]
@@ -4472,12 +4624,12 @@ ambience the same way, one render job each.
 ```json
 {
   "filmopen": 1, "type": "cm", "target": "ch_main-hero", "author": "maria",
-  "pick": { "30yo": "ch_main-hero_30yo_maria_v1" },
-  "picked_at": { "30yo": "2026-09-06T15:41:00Z" },
-  "visited": { "30yo": "2026-09-06T15:42:00Z" },
+  "pick": { "base": "ch_main-hero_base_maria_v1" },
+  "picked_at": { "base": "2026-09-06T15:41:00Z" },
+  "visited": { "base": "2026-09-06T15:42:00Z" },
   "entries": [
-    { "on": "ch_main-hero_30yo_john123_v1", "at": "2026-09-06T09:05:00Z", "rating": 1, "text": "Good bones. Hair is too safe for the archive — trying red." },
-    { "on": "cs_ch_main-hero_30yo_maria_v1_r8af0_maria_1", "at": "2026-09-06T15:40:00Z", "rating": 1 }
+    { "on": "ch_main-hero_base_john123_v1", "at": "2026-09-06T09:05:00Z", "rating": 1, "text": "Good bones. Hair is too safe for the archive — trying red." },
+    { "on": "cs_ch_main-hero_base_maria_v1_r8af0_maria_1", "at": "2026-09-06T15:40:00Z", "rating": 1 }
   ]
 }
 ```

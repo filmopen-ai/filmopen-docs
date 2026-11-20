@@ -4,7 +4,7 @@
 
 QuickJS-NG, bound for one call at a time. It knows nothing of FilmOpen: the plug-in host (`filmopen_plugin_host`) gives it a script, a function name, JSON arguments and the data `ctx` is built from, and answers the script's requests through a `JsDoor`.
 
-**pure Dart.** 3 files, 568 lines under `lib/`; 60 tests in 2 files. Barrel: `lib/filmopen_js.dart`.
+**pure Dart.** 3 files, 571 lines under `lib/`; 62 tests in 2 files. Barrel: `lib/filmopen_js.dart`.
 
 ## Depends on
 
@@ -55,11 +55,12 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `final int? line`
   - `final int? column`
 - **class `JsDoorRefusal`** — A door's refusal, which the script receives as an error with [code] and [reason].
-  - `const JsDoorRefusal(this.code, {this.reason, this.message, this.stage})` — A refusal with its [code], and why where the door says.
+  - `const JsDoorRefusal(this.code, {this.reason, this.message, this.stage, this.details})` — A refusal with its [code], and why where the door says.
   - `final String code`
   - `final String? reason`
   - `final String? message` — Words for the person, where the door has some of its own.
-  - `final String? stage` — Where a request door refused: `admission`, before anything left the machine, or `transport`, once it was being sent; null for a door that sends nothing.
+  - `final String? stage` — Where a request door refused: `admission` before provider dispatch, `transport` while sending, or `provider` on an answered refusal; null for a door that sends nothing.
+  - `final Object? details` — The values the refusal carries, as JSON, which the script reads as the error's `details`; null for none.
   - `JsDoorRefusal at(String stage)` — This refusal, said to have happened at [stage].
 - **typedef** `typedef JsDoor` — Answers the script's requests with a JSON value, or throws [JsDoorRefusal].
 - **typedef** `typedef JsNote` — Told of a door the call's own isolate answered, which therefore never reaches [JsDoor]: `sleep` alone today.

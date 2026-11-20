@@ -4,7 +4,7 @@
 
 Pure Dart FilmOpen Cloud client and `FilmOpenCloudTarget`, implementing the same `SyncTarget` contract as Drive and folders. It depends on the format, sync, store and HTTP packages, its tests on crypto too; it draws no UI and imports no account or platform code.
 
-**pure Dart.** 3 files, 632 lines under `lib/`; 43 tests in 4 files. Barrel: `lib/filmopen_cloud.dart`.
+**pure Dart.** 3 files, 685 lines under `lib/`; 48 tests in 5 files. Barrel: `lib/filmopen_cloud.dart`.
 
 ## Depends on
 
@@ -18,7 +18,7 @@ Third-party: http.
 
 ## Used by
 
-`filmopen_sharing`
+`filmopen_app`, `filmopen_sharing`
 
 ## Public API
 
@@ -28,6 +28,9 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
 
 - **class `CloudClient`** — The bearer-only Cloud connection settings, without refresh or replay (§6.10).
   - `CloudClient({ required Future<String?> Function() accessToken, required String host, http.Client? client, Duration timeout = const Duration(seconds…` — Gets the bearer inside each operation and bounds token, response and stream waits.
+- **typedef** `typedef CloudBatchFile` — A document the batch route answered: its path, its size and MD5 as the Cloud measured them, and its text whole.
+- **typedef** `typedef CloudBatchMissing` — A path the batch route left out: `not-found`, `read-failed` or `answer-full` (the answer was full), and its code.
+- **typedef** `typedef CloudBatch` — One batch's answer: the op id its whole answer was logged under, the files and the paths left out.
 
 ### `lib/src/cloud_sync_target.dart`
 

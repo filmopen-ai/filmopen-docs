@@ -4,7 +4,7 @@
 
 Every user-facing string of FilmOpen, **one ARB file per language** (`lib/l10n/app_en.arb`, `app_es.arb`), the generated `AppLocalizations`, and `labels.dart`, which turns the format's codes (warning kinds, account problems, field names) into sentences and gives widgets `context.l10n`.
 
-**Flutter.** 4 files, 51,885 lines under `lib/`; 88 tests in 21 files. Barrel: `lib/filmopen_l10n.dart`.
+**Flutter.** 4 files, 54,102 lines under `lib/`; 88 tests in 21 files. Barrel: `lib/filmopen_l10n.dart`.
 
 ## Depends on
 

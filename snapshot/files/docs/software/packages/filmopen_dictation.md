@@ -4,7 +4,7 @@
 
 Dictation on a text box, as Software Specification §9.6 describes it.
 
-**Flutter.** 15 files, 4,405 lines under `lib/`; 144 tests in 19 files. Barrel: `lib/filmopen_dictation.dart`.
+**Flutter.** 16 files, 4,779 lines under `lib/`; 154 tests in 20 files. Barrel: `lib/filmopen_dictation.dart`.
 
 ## Depends on
 
@@ -50,8 +50,8 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
 - **class `DictationController`** — One dictation's microphone, transcription sessions, usage chains and timers (§9.6).
   - `DictationController({ required DictationSetup setup, this.creditSetup, required this.language, required this.app, this.purpose, this.owner = 'dicta…` — Creates a dictation lifecycle with an independent, nonsecret microphone owner kind.
   - `final DictationSetup selected` — The person's chosen speech service, whose own key is read first (§9.6).
-  - `final DictationSetup? creditSetup` — The catalogue's OpenAI setup, on which a session opens on FilmOpen credit where [selected] has no key (§9.6).
-  - `DictationSetup get setup` — The setup the session in use runs on: [creditSetup] where it fell back to OpenAI on credit, else [selected].
+  - `final DictationSetup? creditSetup` — The chosen service's setup on credit, as `dictationCreditSetupProvider` answers it: [selected]'s own, so the session runs on [selected] on credit as on a key (§9.6).
+  - `DictationSetup get setup` — The setup the session in use runs on: [selected], on its own key or on FilmOpen credit.
   - `final String language` — What the platform listens for: the app's language.
   - `final String app` — The app's version, which every record names (§6.7).
   - `final UsagePurpose? purpose` — The project, the entity and the box the text is for, which every record names; never the text.
@@ -100,9 +100,10 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `final Transcriber Function(ChannelConnector connect) transcriber` — Its sessions' messages, over connections the connector given makes.
 - **variable** `const openAiDictation` — OpenAI's `gpt-live-transcribe`, also the engine of an endpoint on no engine's host.
 - **variable** `const xaiDictation` — xAI's `grok-voice-transcribe-2.0`, the default speech service.
+- **variable** `const qwenDictation` — Qwen Cloud's `qwen-audio-3.1-asr-flash-streaming`, on the person's own Qwen key or on FilmOpen credit.
 - **variable** `const dictationEngines` — The engines, the one for an endpoint on no engine's host first.
-- **variable** `final portalTranscriptionEndpoint` — The website's transcription pass-through, which speaks OpenAI's own protocol both ways (§6.6, §9.6).
-- **function** `DictationEngine dictationEngineAt(Uri endpoint)` — The engine whose host [endpoint] is on; OpenAI's for [portalTranscriptionEndpoint], by name.
+- **function** `Uri portalTranscriptionEndpoint(String engine)` — The website's transcription relay for [engine], an engine's id (each is its platform's), which passes that engine's own messages both ways unchanged (§6.6, §9.6).
+- **function** `DictationEngine dictationEngineAt(Uri endpoint)` — The engine whose host [endpoint] is on, or whose relay address it is ([portalTranscriptionEndpoint]), by its path.
 - **class `EngineTranscriber`** — The device's transcriber, for `lib/main.dart`.
   - `const EngineTranscriber(this.connect)`
   - `final ChannelConnector connect` — How a connection is made: a WebSocket in the app.
@@ -111,7 +112,7 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
 
 ### `lib/src/dictation_engine_card.dart`
 
-- **variable** `final dictationRouteProvider` — The selected speech service's metadata route, following dictation's own-key and OpenAI-credit rule.
+- **variable** `final dictationRouteProvider` — The selected speech service's metadata route, following dictation's rule: its own key, else its own credit.
 - **class `DictationEngineCard`** — Settings → Models chooses the speech service and opens its provider's page through Configure.
   - `const DictationEngineCard({super.key})`
 
@@ -136,7 +137,7 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `final String keychain` — The name the key is stored under (`filmopen/fo-openai/openai`): the speech service's provider plug-in owns it (§6.7).
   - `final String credentialId` — The field of the stored object that holds the key (`key`).
 - **variable** `final dictationSetupProvider` — The selected service's validated bundled setup, or null where it cannot be used.
-- **variable** `final dictationCreditSetupProvider` — OpenAI's validated setup, on which a dictation runs on FilmOpen credit where the chosen service has no key (§9.6).
+- **variable** `final dictationCreditSetupProvider` — The setup a dictation runs on FilmOpen credit where the chosen service has no key: the chosen service's own (§9.6).
 - **variable** `final dictationEngineSetupsProvider` — Served speech-service setups and a null row for an unavailable selected identifier.
 - **function** `DictationSetup? dictationSetupFrom(Catalogue catalogue, {DictationEngine engine = openAiDictation})` — [DictationSetup] out of [catalogue] for [engine], the first by default: its entry, then its platform's file.
 
@@ -176,6 +177,14 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
   - `OpenAiTranscriber(this.connect, {this.acceptTimeout = const Duration(seconds: 15)})`
   - `final ChannelConnector connect` — How a connection is made: a WebSocket in the app, a channel controller in the tests.
   - `final Duration acceptTimeout` — How long the platform has to accept the session once connected.
+
+### `lib/src/qwen_transcriber.dart`
+
+- **variable** `const qwenSentenceSilenceMs` — The silence after which Qwen ends a sentence by itself, in milliseconds: below the device's 0.8 s (`SpeechGate`), so that long speech is still cut into sentences as it is spoken.
+- **class `QwenTranscriber`** — Opens sessions with Qwen through [connect].
+  - `QwenTranscriber(this.connect, {this.acceptTimeout = const Duration(seconds: 15)})`
+  - `final ChannelConnector connect` — How a connection is made: a WebSocket in the app, a channel controller in the tests.
+  - `final Duration acceptTimeout` — How long the platform has to start the first task once connected.
 
 ### `lib/src/speech_gate.dart`
 

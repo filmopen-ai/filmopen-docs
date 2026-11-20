@@ -4,7 +4,7 @@
 
 A desktop browser for **FilmOpen projects**: a folder of plain JSON files that describes a film completely (characters, outfits, locations, props, styles, the script as folders and scenes, shots, cues, models, platforms, plugins, render batches, commentary and official pointers). Every entity is a versioned file per author, can be forked, and an `_official.json` pointer names the version the project has chosen. See `docs/FilmOpen-Project-Specification v1.0.md`. How the application itself is built is in `docs/software/` (the Software Specification, in parts, with a generated page per package).
 
-**Flutter.** 16 files, 4,525 lines under `lib/`; 1222 tests in 124 files. The application: no barrel; `lib/main.dart` wires the packages together.
+**Flutter.** 16 files, 4,863 lines under `lib/`; 1338 tests in 137 files. The application: no barrel; `lib/main.dart` wires the packages together.
 
 ## Depends on
 
@@ -14,7 +14,7 @@ A desktop browser for **FilmOpen projects**: a folder of plain JSON files that d
 - **filmopen_l10n** — uses nothing by name the digest could see
 - **filmopen_ui** — uses `Breakpoints`, `ChromeClearance`, `ChromeInsets`, `EmptyState`, `SectionCard`, `ShortNameField`, `SidebarSplitView`, `SlideOut`, `buildTheme`, `kLongMessage`, `kMonoFontFallback`, `showMessage`
 - **filmopen_platform** — uses `AudioSource`, `CredentialStore`, `IncomingLinks`, `KeyVerifier`, `UnavailableAudioSource`, `UnavailableCredentialStore`, `UnavailableIncomingLinks`, `UnavailableKeyVerifier`, `canRevealFiles`, `createDeviceAudioSource`, `createDeviceBackgroundTransfers`, `createDeviceCredentialStore`, `createDeviceIncomingLinks`, `hasAppFiles`, `isDesktop`, `jobsDirectory`, `logFilePath`, `logLevelFromEnvironment`, `readEnvironment`, `revealInFileManager`, `syncDirectory`, `usageDirectory`
-- **filmopen_state** — uses `AccountAuthentication`, `AccountLedger`, `AccountProjects`, `AccountSnapshot`, `AccountSnapshots`, `AutomationHost`, `ClipboardAsksMessenger`, `Command`, `CommandAllowedKeys`, `CommandCaller`, `CommandRegistry`, `CommandValidator`, `CommunityGroups`, `CompPostException`, `CompPostOutcome`, `CompPostState`, `CompPoster`, `CompPosting`, `DeviceRegistration`, `DraftsNotSettledException`, `EntitySelection`, `ExitTasks`, `InsertionAppBinding`, `LeavingOutcome`, `LeavingResult`, `Lending`, `MediaClient`, `NavIndex`, `NoAccountLedger`, `NoAccountProjects` and 73 more
+- **filmopen_state** — uses `AccountAuthentication`, `AccountLedger`, `AccountProjects`, `AccountSnapshot`, `AccountSnapshots`, `AutomationHost`, `ClipboardAsksMessenger`, `Command`, `CommandAllowedKeys`, `CommandCaller`, `CommandRegistry`, `CommandValidator`, `CommunityGroups`, `CompPostException`, `CompPostOutcome`, `CompPostState`, `CompPoster`, `CompPosting`, `DeviceRegistration`, `DraftsNotSettledException`, `EntitySelection`, `ExitTasks`, `InsertionAppBinding`, `LeavingOutcome`, `LeavingResult`, `Lending`, `MediaClient`, `NavIndex`, `NoAccountLedger`, `NoAccountProjects` and 77 more
 - **filmopen_media** — uses `MediaStore`, `PlayableFile`, `ProjectMedia`
 - **filmopen_insertion** — uses `Function`, `InsertionService`, `InsertionSource`, `InsertionTarget`, `maxImportBytesWeb`
 - **filmopen_jobs** — uses `JobAction`, `JobActionAck`, `JobPhase`, `JobView`, `JobViews`, `describeJobError`
@@ -35,8 +35,8 @@ A desktop browser for **FilmOpen projects**: a folder of plain JSON files that d
 - **filmopen_plugin_host** — uses `closePluginProcesses`, `createPluginRuntime`, `installAssistantService`, `pluginsSettled`, `pokeLendingSupplier`, `refreshAssistantReadiness`, `startRenders`, `startServers`
 - **filmopen_plugins_ui** — uses `PluginsTab`, `openPluginDocs`
 - **filmopen_plugin_dev** — uses `showPluginDevPage`
-- **filmopen_render** — uses `BackendRenderManager`, `ManagedRenderProducer`, `RenderAttentionManager`, `RenderBackend`, `RenderJob`, `RenderManager`, `RenderRoute`, `isRenderJobId`, `renderProducerKind`
-- **filmopen_render_ui** — uses `Function`, `GpuPage`, `GpuStatus`, `GpuStatusKind`, `RenderQueue`, `RenderQueueItem`, `gpuSessionsProvider`, `gpuStatusProvider`, `mintedLinks`, `mintedMedia`, `prepareRender`, `prepareRenderBeforeWriting`, `refreshLocalStatus`, `registerAutoReferences`, `registerMachineCommand`, `registerRenderCommands`, `renderActionOver`, `renderQueueProvider`, `renderResolutionsOf`, `renderSettingsPicked`, `renderSettledValue`, `renderSmallestResolution`
+- **filmopen_render** — uses `BackendRenderManager`, `ManagedRenderProducer`, `RenderAttentionManager`, `RenderBackend`, `RenderJob`, `RenderManager`, `RenderPhase`, `RenderRequest`, `RenderRoute`, `isRenderJobId`, `renderProducerKind`
+- **filmopen_render_ui** — uses `Function`, `GpuPage`, `GpuStatus`, `GpuStatusKind`, `RenderQueue`, `RenderQueueItem`, `gpuSessionsProvider`, `gpuStatusProvider`, `mintedLinks`, `mintedMedia`, `prepareDialogue`, `prepareRender`, `prepareRenderBeforeWriting`, `refreshLocalStatus`, `registerAutoReferences`, `registerMachineCommand`, `registerRenderCommands`, `renderActionOver`, `renderQueueProvider`, `renderResolutionsOf`, `renderSettingsPicked`, `renderSettledValue`, `renderSmallestResolution`
 - **filmopen_timeline_ui** — uses `MonitorViews`
 - **filmopen_engine** — uses `EngineException`, `FakeEngine`, `LoggingEngine`, `MediaProbe`, `TimelineEngine`
 - **filmopen_engine_android** — uses `AndroidEngine`
@@ -50,6 +50,7 @@ A desktop browser for **FilmOpen projects**: a folder of plain JSON files that d
 - **filmopen_compare (dev)** — uses nothing by name the digest could see
 - **filmopen_prompt_ui (dev)** — uses nothing by name the digest could see
 - **filmopen_test_support (dev)** — uses nothing by name the digest could see
+- **filmopen_cloud (dev)** — uses nothing by name the digest could see
 
 Third-party: flutter_riverpod, file_selector, shared_preferences, app_links, http.
 
@@ -191,6 +192,8 @@ No package of FilmOpen.
   - `final String? badgeLabel`
   - `final List<String> lines` — Lines under the label, one line each, ellipsised rather than wrapped — a lone line has the room of two, as the account's lone status line has —; said by the tooltip after the badge's sentence, then [linesNote], and so…
   - `final String? linesNote` — What the tooltip adds after [lines].
+- **class `_FinishingDialog`** — The modal the rail's stop shows from the press until the recording is written (§6.8): a spinner, *Finishing the recording…* and the step under way.
+  - `final ValueListenable<String> step`
 
 ### `lib/screens/settings_models.dart`
 
@@ -234,6 +237,8 @@ No package of FilmOpen.
 - **class `_IdentityCard`** — The username (§9.4): its box, and what came of the last change.
 - **class `_IdentityCardState`**
 - **class `_LibraryCard`** — The shared library folder (§14.5): where it is, choose another, go back to the app's own.
+- **class `_WriterCeilingCard`** — The spending limit a scriptwriter's chat stops at (§9.4), in USD per message: empty is no limit.
+- **class `_WriterCeilingCardState`**
 - **class `_LogsCard`** — The log: verbosity, and where the file is.
 - **class `_DevelopmentCard`** — Development mode (§9.5): whether the rules about who may do what warn instead of refusing.
 - **class `_AboutCard`**

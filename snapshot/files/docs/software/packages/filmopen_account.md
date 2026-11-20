@@ -4,7 +4,7 @@
 
 The filmopen.ai account: sign-in through Supabase with PKCE (`account_auth.dart`), the `ai.filmopen.desktop://` callback registration (Windows; a phone's scheme is in its manifest) and the callback's arrival through the platform's link door, the account's state for the app (`accountModelProvider`, made as the rail's profile is first built and kept as long as the app, so that no sign-in's result is dropped while the popup is closed), the account's public snapshot for the app (`AccountSnapshotAdapter`, installed and let go with the state: a passive observer that starts nothing — signed out, loading, or signed in with the account's id, the balance unavailable until the website reports one), the rail's profile (`AccountProfileButton`: from that snapshot, the username in effect with *Login* and *Signup*, *Loading…*, or with the balance as its state says it; it keeps the account's names alive, so signing in sets the username, §6.6 — an amount only where one is known, zero included), the account's popup (`AccountPopup`: who is signed in, the username chosen from the account's names, and the way in or out), the sign-in dialog and the provider marks.
 
-**Flutter.** 23 files, 3,986 lines under `lib/`; 158 tests in 15 files. Barrel: `lib/filmopen_account.dart`.
+**Flutter.** 23 files, 3,994 lines under `lib/`; 161 tests in 15 files. Barrel: `lib/filmopen_account.dart`.
 
 ## Depends on
 
@@ -162,13 +162,12 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
 ### `lib/src/account_portal.dart`
 
 - **class `PortalCredential`** — A portal credential as the website issued it, held in memory alone: never logged, never written.
-  - `const PortalCredential({required this.token, required this.expiresAt, required this.scopes, required this.spendCeilingCents})` — The credential's four facts.
+  - `const PortalCredential({required this.token, required this.expiresAt, required this.scopes})` — The credential's three facts.
   - `final String token` — Sent as `X-FilmOpen-Portal-Token` beside the person's bearer.
-  - `final DateTime expiresAt`
-  - `final List<String> scopes`
-  - `final int spendCeilingCents` — What it may hold and spend together, in cents.
+  - `final DateTime expiresAt` — When the website stops accepting this credential.
+  - `final List<String> scopes` — The operations the website admits for this credential.
 - **typedef** `typedef PortalAnswer` — A credential, or why there is none.
-- **class `PortalSessions`** — Asks `POST https://<kFilmOpenDomain>/v1/portal/session` for one credential per operation, of the operation's scope, and holds it by the operation's id until it expires or is let go ([drop], [forget]).
+- **class `PortalSessions`** — Holds one website-issued portal credential per operation until it expires or is let go.
   - `PortalSessions({http.Client? client, DateTime Function()? clock})` — Sessions through [client], a real one where none is given.
   - `Future<PortalAnswer> credential(({String id, String build}) device, Future<String?> Function() accessToken, {required String scope, required String…` — The credential held for [operationId] while it is valid, else one of [scope] asked for [device] — the registered id and build stamp — and held for that operation.
   - `void drop(String operationId, String reason)` — Lets [operationId]'s credential go, for [reason] — `ended`, `unsent`, `settled`, `expired`, `refused` or `signedOut` — so that a later query for it asks once more.

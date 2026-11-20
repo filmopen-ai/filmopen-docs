@@ -4,7 +4,7 @@
 
 The MCP server for FilmOpen (the MCP Specification). It is a Dart command-line program that an agent's MCP client spawns, and it drives a running FilmOpen agent build through Flutter's driver extension. The MCP library (`dart_mcp`) lives here and nowhere in the app.
 
-**Flutter.** 7 files, 2,219 lines under `lib/`; 98 tests in 7 files. Barrel: `lib/filmopen_mcp.dart`.
+**Flutter.** 7 files, 2,392 lines under `lib/`; 111 tests in 7 files. Barrel: `lib/filmopen_mcp.dart`.
 
 ## Depends on
 
@@ -108,23 +108,33 @@ What the barrel exports, file by file. A name is `class`, `enum`, `mixin`, `exte
 
 - **variable** `final RegExp kVmServiceLine` — The line `flutter run` prints once the app's VM service answers.
 - **function** `String? parseWindowSize(String? spec)` — `<width>x<height>` with each side in 320–4096.
-- **class `LaunchFailed`** — A `flutter run` that ended, or ran out of time, before its app answered.
+- **class `LaunchFailed`** — A `flutter run` that ended, or ran out of time, before its app answered, or a launch whose MLT readiness refused.
   - `const LaunchFailed(this.reason, {this.exitCode, this.output = const []})`
   - `final String reason`
   - `final int? exitCode`
   - `final List<String> output`
 - **class `AppLauncher`** — An agent build the server started itself: `flutter run -d <platform> -t test_driver/agent_main.dart` from the repository root, under `setsid xvfb-run -a` on Linux.
-  - `AppLauncher({required this.repositoryRoot, this.flutter = 'flutter'})`
+  - `AppLauncher({required this.repositoryRoot, this.flutter = 'flutter', this.log})`
   - `final String repositoryRoot` — The folder holding `pubspec.yaml` and `test_driver/agent_main.dart`.
   - `final String flutter` — The Flutter tool to run.
+  - `final void Function(String line)? log` — Where the launch's own lines go — `launch.engine` and the native readiness's; stderr when null.
   - `static const int outputLines` — How many of `flutter run`'s last lines a [LaunchFailed] carries.
   - `bool get isRunning` — Whether an app this launcher started is still running.
   - `static (String, List<String>) commandFor(String platform, { String flutter = 'flutter', String size = '1280x720', String? keysFolder, String? devic…` — The command line [launch] runs for [platform]: `setsid xvfb-run` on Linux, with the Xvfb screen matching [size], this machine's build-time keys, and the moment it is built.
+  - `static bool needsNativeEngine(String platform, {Map<String, String>? environment})` — Whether a launch on [platform] needs the MLT engine readied first: Linux with `FILMOPEN_ENGINE` unset, empty or `mlt` in [environment] (this process's by default), the app's default engine there.
+  - `static Future<void> readyNativeEngine(String platform, {required String repositoryRoot, Map<String, String>? environment, void Function(String line…` — Readies the MLT engine before a Linux launch through the wrappers' own entry point, `python3 scripts/native_stamp.py ready linux` in [repositoryRoot]: a skip when its stamp matches every input, a build of what changed…
   - `static String? dartDefinesFile({String? keysFolder})` — This machine's `dart-defines.json`, or null where there is none.
   - `static String makeAgentHome({String? parent})` — Makes a fresh private desktop home: under [parent] where given (Windows: the repository's `build/sandbox-home/`, since the sandbox refuses the temporary folder), else under the temporary directory's `filmopen-agent/`.
   - `static (String?, bool) desktopHome(String platform, {String? home, required String repositoryRoot})` — The home a desktop launch on [platform] runs under, and whether it was made for this launch.
   - `static String prepareAgentHome(String home)` — Creates the private desktop home and its data children.
   - `static Map<String, String> launchEnvironment({ required String platform, required String size, String? agentHome, bool realHome = false, bool owned…` — Gives the launched desktop app its window size and private render data, and logs `launch.home`.
+  - `static const androidPackage` — The Android app a debug agent build is, whose own folder `run-as` reaches (`android/app/build.gradle.kts`).
+  - `static const accountKeyFileName` — The test account's key file in the keys folder, which the account mode signs in with (CLAUDE.md §5).
+  - `static Map<String, String> androidOptions(Map<String, String> environment)` — What `launch android` carries to the app in its options file: [environment]'s `FILMOPEN_AGENT_*` options and `FILMOPEN_FRAME_TIMINGS`, since an Android app is given none of its launcher's environment (§4.3).
+  - `static List<(List<String>, String)> androidPushCommands(String device, {required String optionsFile, String? keyFile})` — The `adb` arguments that write the options file and, where given, the test account's [keyFile] into [device]'s debug app's own folder, each with the local file that is its input: streamed through `run-as`, so neither…
+  - `static List<String> androidRemoveCommand(String device)` — The `adb` arguments that remove the options file and the key from [device]'s debug app, at the launch's end.
+  - `static Future<bool> placeAndroidOptions(String device, Map<String, String> environment, {required String keysFolder, String adb = 'adb', void Funct…` — Places on [device] the options [environment] asks of an Android agent build ([androidOptions]) and, where `FILMOPEN_AGENT_ACCOUNT` is `1`, the test account's key from [keysFolder]; answers whether there were any.
+  - `static Future<bool> removeAndroidOptions(String device, {String adb = 'adb', void Function(String line)? log})` — Removes the options file and the test account's key from [device]'s debug app ([androidRemoveCommand]); answers whether `adb` said it did.
   - `static String? repositoryOf(Uri script)` — The repository an executable at [script] belongs to: `bin/../../..`, when that folder holds the agent entrypoint.
   - `static Future<void> killGroup(int pid, {Duration grace = const Duration(seconds: 10)})` — TERM, then KILL after [grace], the process group led by [pid].
   - `String? get home` — The private home held by this desktop launch, or null.
