@@ -99,6 +99,16 @@ describe('scripts/check-no-keys.sh, the staged check', () => {
     expect(answer.out).toContain('notes.md');
     expect(answer.out).not.toContain('Q'.repeat(10));
   });
+
+  it('knows the shape of an xAI key', () => {
+    const value = ['xai', 'X'.repeat(48)].join('-'); // put together here, as above
+    writeFileSync(join(repo, 'grok.md'), `the key is ${value}\n`);
+    sh('git', ['add', 'grok.md']);
+    const answer = sh('scripts/check-no-keys.sh', [], as(NOREPLY));
+    expect(answer.status).toBe(1);
+    expect(answer.out).toContain('grok.md');
+    expect(answer.out).not.toContain('X'.repeat(10));
+  });
 });
 
 describe('scripts/check-no-keys.sh --push, as the pre-push hook', () => {
